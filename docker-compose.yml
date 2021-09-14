@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  Q3-Frontend:
+    container_name: Q3-Frontend
+    image: ${DOCKER_REGISTRY-}q3frontend
+    build:
+      context: Frontend/clientapp/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    volumes: 
+      - "/app/node_modules"
+      - "./:/app"
+
+    networks:
+      - custom-network
+
+  # Q3-Backend:
+  #   container_name: Q3-Backend
+  #   image: ${DOCKER_REGISTRY-}q3backend
+  #   build:
+  #     context: Backend/Backend
+  #     dockerfile: Backend-User-Server/Dockerfile
+
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:5000
+
+  #   ports:
+  #     - "5000:5000"
+  #     - "5001:5001"
+
+  #   networks:
+  #     - custom-network
+
+  mysql-db:
+    image: mysql:latest
+    container_name: Mysql-Database
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes: 
+      - ./Database/Mysql/docker/provision/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: gymshare
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+    networks:
+      - custom-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: Phpmyadmin
+    environment:
+      PMA_HOST: mysql-db
+    restart: always
+    ports:
+      - 8080:80
+
+    networks: 
+      - custom-network
+
+networks: 
+  custom-network:
+    driver: bridge
