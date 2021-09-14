@@ -41,11 +41,11 @@ services:
       dockerfile: Authentication/Dockerfile
 
     environment:
-      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_URLS=http://+:5100
 
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "5100:5100"
+      - "5101:5101"
 
     networks:
       - custom-network
