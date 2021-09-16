@@ -14,9 +14,9 @@ export default function MachineMonitoringPage() {
                 </thead>
                 <tbody>
                     {/* incommingData.map() */}
-                    <MachineDetails amount={521} status={true} machine="A1" product="Mes"/>
-                    <MachineDetails amount={3654} status={false} machine="B1" product="Vork"/>
-                    <MachineDetails amount={1247} status={true} machine="A2" product="Lepel"/>
+                    <MachineDetails uptime={[true, false, true, true, false, true, false, true, true, true]} amount={5} status={true} machine='A1' product='Mes'/>
+                    <MachineDetails uptime={[true, true, true, true, false, true, false, true, true, false]} amount={3} status={false} machine='B1' product='Vork'/>
+                    <MachineDetails uptime={[true, false, false, false, false, true, false, true, true, true]} amount={2} status={true} machine='A2' product='Lepel'/>
                 </tbody>
             </table>
         </div>

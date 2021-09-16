@@ -1,9 +1,17 @@
-import React from 'react'
+import './MachineStatus.scss'
 
-export default function MachineStatus() {
+interface IMachineStatus {
+    uptime: boolean[]
+}
+
+export default function MachineStatus(props: IMachineStatus) {
     return (
-        <div>
-            
+        <div className='MM-Uptime'>
+            {props.uptime.map((value: boolean, index: number) => {
+                return (
+                    <div key={index} style={{ background: value ? '#99CB0E' : 'red' }} />
+                )
+            })}
         </div>
     )
 }

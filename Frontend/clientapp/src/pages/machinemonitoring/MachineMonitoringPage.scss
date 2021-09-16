@@ -12,9 +12,14 @@
     thead th {
         width: 10%;
         border-bottom: 2px solid black;
+        font-size: x-large;
+
+        &:nth-child(3) {
+            width: 20%;
+        }
 
         &:nth-child(4) {
-            width: 50%;
+            width: 40%;
         }
     }
 }
