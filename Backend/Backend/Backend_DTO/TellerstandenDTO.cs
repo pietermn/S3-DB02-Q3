@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Backend_DAL.DataAccess.DataObjects
+namespace Backend_DTO
 {
-    public partial class Tellerstanden
+    public partial class TellerstandenDTO
     {
         public int Id { get; set; }
         public decimal Waarde { get; set; }

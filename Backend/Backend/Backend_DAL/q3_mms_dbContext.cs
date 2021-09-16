@@ -1,4 +1,5 @@
 ﻿using System;
+using Backend_DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -17,12 +18,12 @@ namespace Backend_DAL.DataAccess.DataObjects
         {
         }
 
-        public virtual DbSet<MachineMonitoringPoorten> MachineMonitoringPoortens { get; set; }
-        public virtual DbSet<MonitoringData202009> MonitoringData202009s { get; set; }
-        public virtual DbSet<ProductionDatum> ProductionData { get; set; }
-        public virtual DbSet<Tellerbasis> Tellerbases { get; set; }
-        public virtual DbSet<Tellerstanden> Tellerstandens { get; set; }
-        public virtual DbSet<Treeview> Treeviews { get; set; }
+        public virtual DbSet<MachineMonitoringPoortenDTO> MachineMonitoringPoortens { get; set; }
+        public virtual DbSet<MonitoringData202009DTO> MonitoringData202009s { get; set; }
+        public virtual DbSet<ProductionDatumDTO> ProductionData { get; set; }
+        public virtual DbSet<TellerbasisDTO> Tellerbases { get; set; }
+        public virtual DbSet<TellerstandenDTO> Tellerstandens { get; set; }
+        public virtual DbSet<TreeviewDTO> Treeviews { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,7 +36,7 @@ namespace Backend_DAL.DataAccess.DataObjects
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MachineMonitoringPoorten>(entity =>
+            modelBuilder.Entity<MachineMonitoringPoortenDTO>(entity =>
             {
                 entity.ToTable("machine_monitoring_poorten");
 
@@ -54,7 +55,7 @@ namespace Backend_DAL.DataAccess.DataObjects
                 entity.Property(e => e.Volgorde).HasColumnName("volgorde");
             });
 
-            modelBuilder.Entity<MonitoringData202009>(entity =>
+            modelBuilder.Entity<MonitoringData202009DTO>(entity =>
             {
                 entity.ToTable("monitoring_data_202009");
 
@@ -111,7 +112,7 @@ namespace Backend_DAL.DataAccess.DataObjects
                     .HasColumnName("timestamp");
             });
 
-            modelBuilder.Entity<ProductionDatum>(entity =>
+            modelBuilder.Entity<ProductionDatumDTO>(entity =>
             {
                 entity.ToTable("production_data");
 
@@ -175,7 +176,7 @@ namespace Backend_DAL.DataAccess.DataObjects
                 entity.Property(e => e.TreeviewId).HasColumnName("treeview_id");
             });
 
-            modelBuilder.Entity<Tellerbasis>(entity =>
+            modelBuilder.Entity<TellerbasisDTO>(entity =>
             {
                 entity.ToTable("tellerbasis");
 
@@ -211,7 +212,7 @@ namespace Backend_DAL.DataAccess.DataObjects
                 entity.Property(e => e.Optie).HasColumnName("optie");
             });
 
-            modelBuilder.Entity<Tellerstanden>(entity =>
+            modelBuilder.Entity<TellerstandenDTO>(entity =>
             {
                 entity.ToTable("tellerstanden");
 
@@ -236,7 +237,7 @@ namespace Backend_DAL.DataAccess.DataObjects
                     .HasColumnName("waarde");
             });
 
-            modelBuilder.Entity<Treeview>(entity =>
+            modelBuilder.Entity<TreeviewDTO>(entity =>
             {
                 entity.ToTable("treeview");
 

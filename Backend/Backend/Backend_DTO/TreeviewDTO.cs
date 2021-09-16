@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Backend_DAL.DataAccess.DataObjects
+namespace Backend_DTO
 {
-    public partial class Treeview
+    public partial class TreeviewDTO
     {
         public int Id { get; set; }
         public string Object { get; set; }

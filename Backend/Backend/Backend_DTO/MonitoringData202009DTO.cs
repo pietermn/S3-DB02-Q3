@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Backend_DAL.DataAccess.DataObjects
+namespace Backend_DTO
 {
-    public partial class MonitoringData202009
+    public partial class MonitoringData202009DTO
     {
         public int Id { get; set; }
         public byte Board { get; set; }
