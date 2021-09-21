@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import { Switch, Route, Redirect } from 'react-router'
 import PageLoader from '../layout/PageLoader'
 
