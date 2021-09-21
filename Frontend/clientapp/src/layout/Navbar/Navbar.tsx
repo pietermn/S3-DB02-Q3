@@ -19,7 +19,7 @@ function NavbarRedirects() {
 
     return (
         <section>
-            <img alt="Q3" src={require("../../assets/LOGO_Q3.png").default} />
+            <img alt="Q3" src={require("../../assets/LOGO_Q3_White.png").default} />
             <p className={pathname === "/monitoring" ? "bold-text" : ""} onClick={() => history.push("monitoring")}>Machine Monitoring</p>
             <p className={pathname === "/chealth" ? "bold-text" : ""} onClick={() => history.push("chealth")}>Component Health</p>
         </section>

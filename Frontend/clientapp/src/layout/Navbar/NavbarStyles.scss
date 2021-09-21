@@ -3,6 +3,8 @@ nav {
     flex-direction: row;
     justify-content: space-between;
     box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
+    background-color: rgba(11, 40, 58, 1);
+    margin-bottom: 1rem;
 
     img {
         height: 50px;
@@ -14,6 +16,7 @@ nav {
         display: flex;
         flex-direction: row;
         align-items: center;
+        color: rgba($color: #ffffff, $alpha: 1);
 
         p {
             padding-inline: 1.5rem;
@@ -28,16 +31,17 @@ nav {
             font-size: 14px;
             margin: 0;
             text-align: end;
-            padding-inline: .5rem;
+            padding-inline: 0.5rem;
 
             &:last-child {
                 font-size: 12px;
             }
         }
-        
-        #Profile-Icon, #Logout-Icon {
+
+        #Profile-Icon,
+        #Logout-Icon {
             font-size: 36px;
-            padding-inline: .5rem;
+            padding-inline: 0.5rem;
         }
     }
 }
