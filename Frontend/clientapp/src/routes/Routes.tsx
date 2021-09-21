@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Switch, Route, Redirect } from 'react-router'
 import PageLoader from '../layout/PageLoader'
+import MachineMonitoringPage from '../pages/machinemonitoring/MachineMonitoringPage'
 
 export default function Routes() {
     return (
@@ -10,6 +11,7 @@ export default function Routes() {
                 <Route exact path='/'>
                     <Redirect to='/home' />
                 </Route>
+                <Route path='/monitoring' component={() => <MachineMonitoringPage />} />
             </Switch>
         </Suspense>
     )
