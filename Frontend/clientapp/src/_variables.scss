@@ -16,3 +16,13 @@ $accent-colors: (
     width: 10%;
     border-bottom: 1px solid white;
 }
+
+#page-container {
+    min-height: 100vh;
+    background-color: map-get($map: $background, $key: "white");
+}
+
+#content-wrapper {
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+}

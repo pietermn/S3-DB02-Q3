@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Switch, Route, Redirect } from 'react-router'
 import PageLoader from '../layout/PageLoader'
 import MachineMonitoringPage from '../pages/machinemonitoring/MachineMonitoringPage'
+import ComponentHealthPage from '../pages/componenthealth/ComponentHealthPage';
 
 export default function Routes() {
     return (
@@ -11,7 +12,8 @@ export default function Routes() {
                 <Route exact path='/'>
                     <Redirect to='/home' />
                 </Route>
-                <Route path='/monitoring' component={() => <MachineMonitoringPage />} />
+                <Route path="/chealth" component={ComponentHealthPage} />
+                <Route path='/monitoring' component={MachineMonitoringPage} />
             </Switch>
         </Suspense>
     )
