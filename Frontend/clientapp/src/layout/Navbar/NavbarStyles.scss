@@ -1,9 +1,11 @@
+@import '../../../variables';
+
 nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
-    background-color: rgba(11, 40, 58, 1);
+    background-color: map-get($map: $background, $key: 'blue');
     margin-bottom: 1rem;
 
     img {
@@ -16,7 +18,7 @@ nav {
         display: flex;
         flex-direction: row;
         align-items: center;
-        color: rgba($color: #ffffff, $alpha: 1);
+        color: rgba(255, 255, 255, 1);
 
         p {
             padding-inline: 1.5rem;

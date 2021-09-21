@@ -1,0 +1,18 @@
+$background: (
+    "blue": rgba(11, 40, 58, 1),
+    "white": rgba(255, 255, 255, 1),
+);
+
+$accent-colors: (
+    "orange": rgb(229, 50, 18),
+    "green": rgb(126, 211, 33),
+);
+
+@mixin line-padding {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    height: 1px;
+    width: 10%;
+    border-bottom: 1px solid white;
+}

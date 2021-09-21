@@ -9,7 +9,7 @@ export default function MachineStatus(props: IMachineStatus) {
         <div className='MM-Uptime'>
             {props.uptime.map((value: boolean, index: number) => {
                 return (
-                    <div key={index} style={{ background: value ? '#99CB0E' : 'red' }} />
+                    <div key={index} className={ value ? 'good' : 'bad' } />
                 )
             })}
         </div>
