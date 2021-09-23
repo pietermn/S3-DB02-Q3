@@ -4,13 +4,13 @@ namespace Backend_Logic
 {
     public class Component
     {
-        public int Id { get;}
-        public string Name { get;}
-        public string Description { get;}
-        public int BuildYear { get;}
-        public int Port { get; }
-        public int Board { get; }
-        public int AmountOfUses { get; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public int BuildYear { get; private set; }
+        public int Port { get; private set; }
+        public int Board { get; private set; }
+        public int AmountOfUses { get; private set; }
 
         public Component(int id, string name, string description, int buildYear, int port, int board, int amountOfUses)
         {
@@ -22,5 +22,7 @@ namespace Backend_Logic
             Board = board;
             AmountOfUses = amountOfUses;
         }
+
+
     }
 }

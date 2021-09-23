@@ -4,7 +4,15 @@ using System.Text;
 
 namespace Backend_Logic
 {
-    class ProductionLine
+    public class ProductionLine
     {
+        public int Id { get; private set; }
+        public string Description { get; private set; }
+
+        public ProductionLine(int id, string description)
+        {
+            Id = id;
+            Description = description;
+        }
     }
 }
