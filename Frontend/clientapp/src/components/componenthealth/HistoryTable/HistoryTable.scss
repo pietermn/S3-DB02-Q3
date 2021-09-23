@@ -1,0 +1,51 @@
+@import "../../../variables";
+
+.History-Table, .Components-Table {
+    width: 55%;
+    height: 300px;
+    scroll-padding: 1rem;
+
+    .thead {
+        height: 10%;
+        display: grid;
+        align-items: center;
+
+        p {
+            margin: 0;
+            font-weight: bold;
+        }
+        border-bottom: 1px solid black;
+
+        .row {
+            border: none;
+        }
+    }
+
+    .tbody {
+        height: 90%;
+        overflow-y: auto;
+        display: grid;
+        justify-items: center;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &:hover {
+            cursor: all-scroll;
+        }
+    }
+
+    .row {
+        width: 95%;
+        display: grid;
+        grid-template-columns: auto 175px 175px;
+        border-bottom: 1px solid black;
+
+        p {
+            &:first-child {
+                padding-left: 1rem;
+            }
+        }
+    }
+}

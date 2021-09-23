@@ -17,12 +17,17 @@ $accent-colors: (
     border-bottom: 1px solid white;
 }
 
+@mixin flexboxCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #page-container {
     min-height: 100vh;
     background-color: map-get($map: $background, $key: "white");
 }
 
 #content-wrapper {
-    padding-top: 5rem;
-    padding-bottom: 3rem;
+    height: calc(100vh - 70px - 1rem);
 }
