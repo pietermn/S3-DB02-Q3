@@ -1,0 +1,25 @@
+.MM-Page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: left;
+}
+
+.MM-Table {
+    width: 75%;
+    border-spacing: 0;
+    
+    thead th {
+        width: 10%;
+        border-bottom: 2px solid black;
+        font-size: x-large;
+
+        &:nth-child(3) {
+            width: 20%;
+        }
+
+        &:nth-child(4) {
+            width: 40%;
+        }
+    }
+}

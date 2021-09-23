@@ -1,0 +1,53 @@
+@import '../../variables';
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
+    background-color: map-get($map: $background, $key: 'blue');
+    margin-bottom: 1rem;
+
+    img {
+        height: 50px;
+        object-fit: cover;
+    }
+
+    section {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        color: rgba(255, 255, 255, 1);
+
+        p {
+            padding-inline: 1.5rem;
+            font-size: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .Name-Container > p {
+            font-size: 14px;
+            margin: 0;
+            text-align: end;
+            padding-inline: 0.5rem;
+
+            &:last-child {
+                font-size: 12px;
+            }
+        }
+
+        #Profile-Icon,
+        #Logout-Icon {
+            font-size: 36px;
+            padding-inline: 0.5rem;
+        }
+    }
+}
+
+.bold-text {
+    font-weight: bold;
+}
