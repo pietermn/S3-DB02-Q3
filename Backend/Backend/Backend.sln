@@ -6,14 +6,22 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{9F7FBFF9-ACEC-4F33-A894-5D1D3284C161}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_DAL", "Backend_DAL\Backend_DAL.csproj", "{8C084948-1A8B-4ED8-9B77-84CF28D26CF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CFF88EB3-6006-4EBF-ADC9-556E4836E427} = {CFF88EB3-6006-4EBF-ADC9-556E4836E427}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_Logic", "Backend_Logic\Backend_Logic.csproj", "{719B395F-5A2A-41E1-A39E-989085C4997D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B1F6330B-E31C-452A-8759-566B8D81CE36} = {B1F6330B-E31C-452A-8759-566B8D81CE36}
+		{CFF88EB3-6006-4EBF-ADC9-556E4836E427} = {CFF88EB3-6006-4EBF-ADC9-556E4836E427}
+		{501D8DBE-7C72-4C1D-95E2-60738A28106C} = {501D8DBE-7C72-4C1D-95E2-60738A28106C}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_Logic_Interface", "Backend_Logic_Interface\Backend_Logic_Interface.csproj", "{B1F6330B-E31C-452A-8759-566B8D81CE36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend_DAL_Interface", "Backend_DAL_Interface\Backend_DAL_Interface.csproj", "{CFF88EB3-6006-4EBF-ADC9-556E4836E427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_DAL_Interface", "Backend_DAL_Interface\Backend_DAL_Interface.csproj", "{CFF88EB3-6006-4EBF-ADC9-556E4836E427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend_DTO", "Backend_DTO\Backend_DTO.csproj", "{501D8DBE-7C72-4C1D-95E2-60738A28106C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_DTO", "Backend_DTO\Backend_DTO.csproj", "{501D8DBE-7C72-4C1D-95E2-60738A28106C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

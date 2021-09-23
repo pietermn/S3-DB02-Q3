@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Backend_Logic_Interface.Models;
+using System;
 
-namespace Backend_Logic
+namespace Backend_Logic.Models
 {
-    public class Component
+    public class Component: IComponent
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
