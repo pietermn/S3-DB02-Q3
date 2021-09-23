@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Backend_DAL\Backend_DAL.csproj" />
+    <None Remove="Controllers\" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
 </Project>
