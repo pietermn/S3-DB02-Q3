@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Backend_DAL\Backend_DAL.csproj" />
+    <ProjectReference Include="..\Backend_DAL_Interface\Backend_DAL_Interface.csproj" />
+    <ProjectReference Include="..\Backend_Logic\Backend_Logic.csproj" />
     <ProjectReference Include="..\Backend_Logic_Interface\Backend_Logic_Interface.csproj" />
   </ItemGroup>
 

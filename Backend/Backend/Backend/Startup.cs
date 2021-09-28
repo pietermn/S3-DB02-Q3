@@ -1,3 +1,7 @@
+using Backend_Logic.Containers;
+using Backend_Logic.Models;
+using Backend_Logic_Interface.Containers;
+using Backend_Logic_Interface.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +30,17 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IComponent, Component>();
+            services.AddScoped<IComponentContainer, ComponentContainer>();
+            services.AddScoped<IMachine, Machine>();
+            services.AddScoped<IMachineContainer, MachineContainer>();
+            services.AddScoped<IProductionLine, ProductionLine>();
+            services.AddScoped<IProductionLineContainer, ProductionLineContainer>();
+            services.AddScoped<IProductionLineHistory, ProductionLineHistory>();
+            services.AddScoped<IProductionLineHistoryContainer, ProductionLineHistoryContainer>();
+            services.AddScoped<IProductionSide, ProductionSide>();
+            services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
