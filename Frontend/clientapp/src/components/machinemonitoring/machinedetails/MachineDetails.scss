@@ -32,5 +32,13 @@
                 @include line-padding;
             }
         }
+
+        &.Good {
+            color: map-get($map: $accent-colors, $key: 'green');
+        }
+
+        &.Bad {
+            color: map-get($map: $accent-colors, $key: 'orange');
+        }
     }
 }
