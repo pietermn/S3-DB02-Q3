@@ -15,7 +15,7 @@ export default function MachineStatus(props: IMachineStatus) {
             .attr('width', '100%')
         ;
 
-        let bar = div.selectAll('div')
+        div.selectAll('div')
             .data(props.uptime)
             .enter()
             .append('div')
@@ -31,7 +31,7 @@ export default function MachineStatus(props: IMachineStatus) {
         //     .attr('width', 45)
         //     .attr('height', 20)
         // ;
-    }, []);
+    }, [props.name, props.uptime]);
 
     return (
         <div id={props.name} className='MM-Uptime'>
