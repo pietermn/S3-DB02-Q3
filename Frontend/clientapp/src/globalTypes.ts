@@ -1,11 +1,11 @@
 export type Component = {
-    Id: Number,
+    Id: number,
     Name: String,
     Type: ComponentType
     Description: String,
-    Port: Number,
-    Board: Number,
-    TotalActions: Number
+    Port: number,
+    Board: number,
+    TotalActions: number
     History: ProductLineHistory[]
 }
 
@@ -16,24 +16,24 @@ export type ProductLineHistory = {
 }
 
 export type ProductionLine = {
-    Id: Number,
+    Id: number,
     Name: String,
     Description: String,
     Active: Boolean,
-    Port: Number,
-    Board: Number,
-    Machines: Machine[],
-    Components: Component[]
+    Port: number,
+    Board: number,
+    Machines?: Machine[],
+    Components?: Component[]
 }
 
 export type ProductSide = {
-    Id: Number,
+    Id: number,
     Name: String,
     ProductionLines: ProductionLine[]
 }
 
 export type Machine = {
-    Id: Number,
+    Id: number,
     Name: String,
     Description: String
 }

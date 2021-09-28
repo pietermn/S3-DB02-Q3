@@ -15,12 +15,12 @@ export default function MachineStatus(props: IMachineStatus) {
             .attr('width', '100%')
         ;
 
-        let bar = div.selectAll('div')
+        div.selectAll('div')
             .data(props.uptime)
             .enter()
             .append('div')
-            .attr('class', (d) => {
-                return d ? 'Good' : 'Bad'
+            .attr('class', (data) => {
+                return data ? 'Good' : 'Bad'
             })
         ;
         

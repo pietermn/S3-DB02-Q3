@@ -1,8 +1,10 @@
+import { Component } from "../../../globalTypes";
 import "../HistoryTable/HistoryTable.scss";
 import "./ComponentsTable.scss";
 
 interface ITableProps {
-    components: any[]
+    components: Component[],
+    SetComponent: (component: Component) => void;
 }
 
 export default function ComponentsTable(props: ITableProps) {
@@ -15,170 +17,16 @@ export default function ComponentsTable(props: ITableProps) {
                 </div>
             </div>
             <div className="tbody">
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
-                <div className="row">
-                    <p>Matrijs</p>
-                    <p>100</p>
-                </div>
+                {
+                    props.components.map((component: Component, index: number) => {
+                        return (
+                            <div onClick={() => props.SetComponent(component)} className="row">
+                                <p>{component.Description}</p>
+                                <p>{component.TotalActions}</p>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </table>
     )

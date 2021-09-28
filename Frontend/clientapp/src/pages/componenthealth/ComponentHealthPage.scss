@@ -5,8 +5,11 @@
     width: 100%;
     display: grid;
     grid-template-areas:
-        "component-overview history-overview history-overview"
-        "component-overview component-graph component-graph";
+    "component-overview component-graph"
+    "component-overview history-overview";
+
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
 
     h1 {
         font-size: 28px;

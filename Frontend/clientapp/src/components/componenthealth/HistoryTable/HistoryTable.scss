@@ -2,11 +2,10 @@
 
 .History-Table, .Components-Table {
     width: 55%;
-    height: 300px;
-    scroll-padding: 1rem;
+    height: 200px;
 
     .thead {
-        height: 10%;
+        height: 50px;
         display: grid;
         align-items: center;
 
@@ -32,7 +31,7 @@
         }
 
         &:hover {
-            cursor: all-scroll;
+            cursor: ns-resize;
         }
     }
 
@@ -48,4 +47,8 @@
             }
         }
     }
+}
+
+.History-Table {
+    margin-top: 3rem;
 }
