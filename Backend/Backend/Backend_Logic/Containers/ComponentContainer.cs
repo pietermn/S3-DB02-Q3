@@ -19,12 +19,9 @@ namespace Backend_Logic.Containers
             return ConvertToIComponentList();
         }
 
-
-
-
         private IComponent ConvertToIComponent()
         {
-            return new Component(1, "", "", 1, 1, 1, 1);
+            return new Component(1, "", Enums.ComponentType.Coldhalf, "", 1, 1, 1, new List<IProductionLineHistory>());
         }
         private List<IComponent> ConvertToIComponentList()
         {

@@ -7,6 +7,7 @@ namespace Backend_Logic_Interface.Containers
 {
     public interface IComponentContainer
     {
+        public IComponent GetComponent();
         public List<IComponent> GetComponents();
     }
 }

@@ -8,12 +8,19 @@ namespace Backend_Logic.Models
     public class ProductionSide: IProductionSide
     {
         public int Id { get; private set; }
-        public string Description { get; private set; }
+        public string Name { get; private set; }
+        public List<IProductionLine> ProductionLines { get; set; }
 
         public ProductionSide(int id, string description)
         {
             Id = id;
-            Description = description;
+            Name = description;
+        }
+        public ProductionSide(int id, string description, List<IProductionLine> productionLines)
+        {
+            Id = id;
+            Name = description;
+            ProductionLines = productionLines;
         }
     }
 }

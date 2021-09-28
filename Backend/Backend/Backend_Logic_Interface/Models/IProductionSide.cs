@@ -7,6 +7,7 @@ namespace Backend_Logic_Interface.Models
     public interface IProductionSide
     {
         public int Id { get; }
-        public string Description { get; }
+        public string Name { get; }
+        public List<IProductionLine> ProductionLine { get; }
     }
 }
