@@ -8,12 +8,11 @@ export default function Routes() {
     return (
         <Suspense fallback={<PageLoader />}>
             <Switch>
-                <Route path='/home' component={() => <div>Home</div>} />
-                <Route exact path='/'>
-                    <Redirect to='/home' />
+                <Route exact path='/chealth' component={ComponentHealthPage} />
+                <Route exact path='/monitoring' component={MachineMonitoringPage} />
+                <Route path='/'>
+                    <Redirect to='/monitoring' />
                 </Route>
-                <Route path="/chealth" component={ComponentHealthPage} />
-                <Route path='/monitoring' component={MachineMonitoringPage} />
             </Switch>
         </Suspense>
     )

@@ -1,6 +1,7 @@
 import { useLocation, useHistory } from 'react-router';
 import { VscAccount } from 'react-icons/vsc';
 import { FiLogOut } from 'react-icons/fi';
+import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import "./NavbarStyles.scss";
 
 export default function Navbar() {
@@ -19,7 +20,7 @@ function NavbarRedirects() {
 
     return (
         <section>
-            <img alt="Q3" src={require("../../assets/LOGO_Q3_White.png").default} />
+            <img alt="Q3" src={Q3Logo} />
             <p className={pathname === "/monitoring" ? "bold-text" : ""} onClick={() => history.push("monitoring")}>Machine Monitoring</p>
             <p className={pathname === "/chealth" ? "bold-text" : ""} onClick={() => history.push("chealth")}>Component Health</p>
         </section>
