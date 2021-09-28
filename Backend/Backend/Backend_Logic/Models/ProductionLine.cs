@@ -16,7 +16,7 @@ namespace Backend_Logic.Models
         List<IMachine> Machines { get; set; }
         List<IComponent> Components { get; set; }
 
-        public ProductionLine(int id, string name, string description, int buildYear,bool active, int port, int board)
+        public ProductionLine(int id, string name, string description, bool active, int port, int board)
         {
             Id = id;
             Name = name;
@@ -25,7 +25,7 @@ namespace Backend_Logic.Models
             Port = port;
             Board = board;
         }
-        public ProductionLine(int id, string name, string description, int buildYear, bool active, int port, int board, List<IMachine> machines, List<IComponent> components)
+        public ProductionLine(int id, string name, string description, bool active, int port, int board, List<IMachine> machines, List<IComponent> components)
         {
             Id = id;
             Name = name;

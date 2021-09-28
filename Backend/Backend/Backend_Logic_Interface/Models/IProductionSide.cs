@@ -8,6 +8,5 @@ namespace Backend_Logic_Interface.Models
     {
         public int Id { get; }
         public string Name { get; }
-        public List<IProductionLine> ProductionLine { get; }
     }
 }
