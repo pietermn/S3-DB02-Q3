@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Backend_DAL.DataAccess.DataObjects;
 
 namespace Backend
 {
@@ -26,6 +28,7 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<q3_mms_dbContext>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=q3_mms_db"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
