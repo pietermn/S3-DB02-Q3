@@ -43,3 +43,8 @@ export enum ComponentType {
     Hothalf,
     Complete
 }
+
+export type MaintenanceNotification = {
+    component: string,
+    maintenance: string
+}
