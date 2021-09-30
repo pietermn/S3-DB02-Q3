@@ -6,7 +6,7 @@ export default function LifespanPage() {
         <section className="Component-Overview">
             <div className="center-table">
                 <h1>Components <i>Sort by total actions</i></h1>
-                <ComponentsTable components={[]} />
+                <ComponentsTable components={[]} SetComponent={() => {}}/>
             </div>
         </section>
     )
