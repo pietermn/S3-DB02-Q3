@@ -4,6 +4,8 @@ import { FiLogOut as LogOutIcon } from 'react-icons/fi';
 import { FaBell as BellIcon } from 'react-icons/fa'
 import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import "./NavbarStyles.scss";
+import { NotificationContext } from '../../context/NotificationContext';
+import { useContext } from 'react';
 
 export default function Navbar() {
 
@@ -30,6 +32,7 @@ function NavbarRedirects() {
 }
 
 function NavbarUserSection() {
+    const { notifications } = useContext(NotificationContext)
     return (
         <section>
             <div className="Name-Container">
@@ -40,8 +43,19 @@ function NavbarUserSection() {
             <div className='Notification-Dropdown'>
                 <BellIcon />
                 <div className='Notification-Dropdown-Content'>
-                    <b>Saladevork 4-tands</b><br />
-                    Vervang o-ringen
+                    <h3>Notifications</h3>
+                    {notifications.length ?
+                        notifications.map((n, i) => {
+                            return (
+                                <div key={i}>
+                                    <b>{n.component}</b><br />
+                                    {n.maintenance}
+                                </div>
+                            )
+                        })
+                        :
+                        <i>Everything looks good</i>
+                    }
                 </div>
             </div>
             <LogOutIcon />
