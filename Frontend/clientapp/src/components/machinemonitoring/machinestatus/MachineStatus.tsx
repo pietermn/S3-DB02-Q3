@@ -11,8 +11,6 @@ export default function MachineStatus(props: IMachineStatus) {
     useEffect(() => {
         let div = d3.select(`#${props.name}`)
             .append('div')
-            .attr('height', 20)
-            .attr('width', '100%')
         ;
 
         div.selectAll('div')

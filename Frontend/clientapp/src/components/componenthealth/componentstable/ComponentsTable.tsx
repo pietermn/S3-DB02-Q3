@@ -11,7 +11,7 @@ export default function ComponentsTable(props: ITableProps) {
             <div className="thead">
                 <div className="row">
                     <p>Name</p>
-                    <p>Total Operations</p>
+                    <p>Total Actions</p>
                 </div>
             </div>
             <div className="tbody">
