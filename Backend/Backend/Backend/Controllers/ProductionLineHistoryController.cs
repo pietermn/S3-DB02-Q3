@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("componenttype")]
-    public class ComponentTypeController : Controller
+    [Route("productionlinehistory")]
+    public class ProductionLineHistoryController : Controller
     {
         [Route("read"), HttpGet]
-        public IActionResult Read(ComponentType componentType)
+        public IActionResult Read(ProductionLineHistory productionLineHistory)
         {
             return StatusCode(501);
         }
