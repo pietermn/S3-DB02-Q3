@@ -22,5 +22,4 @@
     <ProjectReference Include="..\Backend_Logic\Backend_Logic.csproj" />
     <ProjectReference Include="..\Backend_Logic_Interface\Backend_Logic_Interface.csproj" />
   </ItemGroup>
-
 </Project>

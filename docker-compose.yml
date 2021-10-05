@@ -1,0 +1,101 @@
+version: '3.9'
+
+services:
+  Q3-Frontend:
+    container_name: Q3-Frontend
+    image: ${DOCKER_REGISTRY-}q3frontend
+    build:
+      context: Frontend/clientapp/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    volumes: 
+      - "/app/node_modules"
+      - "./:/app"
+
+    networks:
+      - custom-network
+
+  Q3-Backend:
+    container_name: Q3-Backend
+    image: ${DOCKER_REGISTRY-}q3backend
+    build:
+      context: Backend/Backend
+      dockerfile: Backend/Dockerfile
+
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+
+    networks:
+      - custom-network
+
+  Q3-Backend-Authentication:
+    container_name: Q3-Backend-Authentication
+    image: ${DOCKER_REGISTRY-}q3backendauthentication
+    build:
+      context: Backend/Authentication
+      dockerfile: Authentication/Dockerfile
+
+    environment:
+      - ASPNETCORE_URLS=http://+:5100
+
+    ports:
+      - "5100:5100"
+      - "5101:5101"
+
+    networks:
+      - custom-network
+
+  mysql-db-q3-data:
+    image: mysql:latest
+    container_name: Mysql-Database-Q3-Data
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes: 
+      - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: q3data
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+    networks:
+      - custom-network
+
+  mysql-db-q3-authentication:
+    image: mysql:latest
+    container_name: Mysql-Database-Authentication
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes: 
+      - ./Databases/Authentication/data:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: authentication
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3307"
+
+    networks:
+      - custom-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: Phpmyadmin
+    environment:
+      PMA_HOST: mysql-db-q3-data
+    restart: always
+    ports:
+      - 8080:80
+
+    networks: 
+      - custom-network
+
+networks: 
+  custom-network:
+    driver: bridge
