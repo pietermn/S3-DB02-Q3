@@ -1,3 +1,7 @@
+using Backend_Logic.Containers;
+using Backend_Logic.Models;
+using Backend_Logic_Interface.Containers;
+using Backend_Logic_Interface.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +33,17 @@ namespace Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<q3_mms_dbContext>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=q3_mms_db"));
+            services.AddScoped<IComponent, Component>();
+            services.AddScoped<IComponentContainer, ComponentContainer>();
+            services.AddScoped<IMachine, Machine>();
+            services.AddScoped<IMachineContainer, MachineContainer>();
+            services.AddScoped<IProductionLine, ProductionLine>();
+            services.AddScoped<IProductionLineContainer, ProductionLineContainer>();
+            services.AddScoped<IProductionLineHistory, ProductionLineHistory>();
+            services.AddScoped<IProductionLineHistoryContainer, ProductionLineHistoryContainer>();
+            services.AddScoped<IProductionSide, ProductionSide>();
+            services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
