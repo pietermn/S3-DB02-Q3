@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Backend_Logic_Interface.Containers
 {
-    public interface IProductionlineHistoryContainer
+    public interface IProductionLineHistoryContainer
     {
         public List<IProductionLineHistory> GetProductionLineHistorys();
     }
