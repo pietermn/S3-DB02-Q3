@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Backend_DAL.DataAccess.DataObjects;
 using Backend_DAL_Interface;
 using Backend_DTO;
 using MySql.Data.MySqlClient;
