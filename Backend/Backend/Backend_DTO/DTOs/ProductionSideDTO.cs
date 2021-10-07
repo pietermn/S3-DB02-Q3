@@ -13,6 +13,7 @@ namespace Backend_DTO.DTOs
         public int Id { get; set; }
         [MaxLength(15)]
         public string Name { get; set; }
+        [ForeignKey("ProductionSideId")]
         public List<ProductionLineDTO> ProductionLines { get; set; }
     }
 }

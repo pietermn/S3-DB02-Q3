@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Backend_DAL.DataAccess.DataObjects;
 using Backend_DAL;
 using Backend_DAL_Interface;
+using Backend_DAL.DALs;
 
 namespace Backend
 {
@@ -43,24 +43,23 @@ namespace Backend
             services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
 
             services.AddScoped<IConvertDbDAL, ConvertDatabase>();
+            services.AddScoped<IComponentDAL, ComponentDAL>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend", Version = "v1" });
             });
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(opt =>
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<Q3Context>();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

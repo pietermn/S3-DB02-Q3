@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GenerateDatabaseController : ControllerBase
-    {
-        readonly IConvertDbDAL _DAL;
-        public GenerateDatabaseController(IConvertDbDAL dal)
-        {
-            _DAL = dal;
-        }
+    //[Route("api/[controller]")]
+    //[ApiController]
+    //public class GenerateDatabaseController : ControllerBase
+    //{
+    //    readonly IConvertDbDAL _DAL;
+    //    public GenerateDatabaseController(IConvertDbDAL dal)
+    //    {
+    //        _DAL = dal;
+    //    }
 
-        [HttpGet]
-        public IActionResult GenerateDatabase()
-        {
-            _DAL.ConvertAll();
+    //    [HttpGet]
+    //    public IActionResult GenerateDatabase()
+    //    {
+    //        _DAL.ConvertAll();
 
-            return Ok();
-        }
-    }
+    //        return Ok();
+    //    }
+    //}
 }

@@ -17,7 +17,7 @@ namespace Backend_DTO.DTOs
         public ComponentType Type { get; set; }
         [MaxLength(100)]
         public string Description { get; set; }
-        [ForeignKey("ProductionLines")]
+        [ForeignKey("ComponentId")]
         public List<ProductionLineHistoryDTO> History { get; set; }
     }
 }

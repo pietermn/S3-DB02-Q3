@@ -226,6 +226,35 @@ namespace Backend_DAL
             return 0;
         }
 
+        private List<ProductionsDTO> GetProductionsFromProductionLine(int productionLineId)
+        {
+            using var command = _connection.CreateCommand();
+
+            command.CommandText = "SELECT t.id AS 'Id', md.timestamp AS 'Timestamp', md.shot_time AS 'ShotTime' FROM `monitoring_data_202009` md INNER JOIN `machine_monitoring_poorten` mm ON mm.port=md.port AND mm.board=md.board INNER JOIN `treeview` t ON t.naam=mm.name WHERE t.id=@ProductionLineId;";
+            command.Parameters.AddWithValue("@ProductionLineId", productionLineId);
+
+            _connection.Open();
+
+            command.ExecuteNonQuery();
+            DataSet ds = new DataSet();
+            MySqlDataAdapter da = new MySqlDataAdapter(command);
+            da.Fill(ds);
+            _connection.Close();
+
+            List<ProductionsDTO> Productions = new List<ProductionsDTO>();
+
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                int id = Convert.ToInt32(row["Id"]);
+                DateTime timestamp = Convert.ToDateTime(row["Timestamp"]);
+                double shottime = Convert.ToDouble(row["ShotTime"]);
+
+                Productions.Add(new ProductionsDTO() { Timestamp = timestamp, ShotTime = shottime });
+            }
+
+            return Productions;
+        }
+
         public void ConvertAll()
         {
             List<ProductionSideDTO> ProductionSides = GetProductionSides();
@@ -237,6 +266,7 @@ namespace Backend_DAL
                 foreach (ProductionLineDTO productionLineDTO in productionSideDTO.ProductionLines)
                 {
                     productionLineDTO.Machines = GetMachines(productionLineDTO.Id);
+                    productionLineDTO.Productions = GetProductionsFromProductionLine(productionLineDTO.Id);
                 }
             }
 
@@ -244,13 +274,32 @@ namespace Backend_DAL
 
             foreach (ComponentDTO componentDTO in Components)
             {
-                componentDTO.ProductionLineDTOId = GetProductionLineId(componentDTO.Id);
                 componentDTO.History = GetHistory(componentDTO.Id);
             }
 
             _Context.ProductionSides.AddRange(ProductionSides);
             _Context.Components.AddRange(Components);
             _Context.SaveChanges();
+
+            List<ProductionLineDTO> productionLineDTOs = _Context.ProductionLines.ToList();
+
+            foreach (ProductionLineDTO newProductionLineDTO in productionLineDTOs)
+            {
+                List<ProductionLineHistoryDTO> productionLineHistoryDTOs = _Context.ProductionLinesHistory
+                    .Where(plh => plh.EndDate == Convert.ToDateTime("0001-01-01 00:00:00") && plh.ProductionLineId == newProductionLineDTO.Id)
+                    .ToList();
+
+                List<ComponentDTO> componentDTOs = new List<ComponentDTO>();
+                foreach (ProductionLineHistoryDTO productionLineHistoryDTO in productionLineHistoryDTOs)
+                {
+                    componentDTOs.Add(productionLineHistoryDTO.Component);
+                }
+
+                newProductionLineDTO.Components = componentDTOs;
+            }
+
+            _Context.SaveChanges();
+
         }
 
     }

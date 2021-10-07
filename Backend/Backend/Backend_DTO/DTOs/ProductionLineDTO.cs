@@ -19,8 +19,11 @@ namespace Backend_DTO.DTOs
         public bool Active { get; set; }
         public int Port { get; set; }
         public int Board { get; set; }
+        [ForeignKey("ProductionLineId")]
         public List<ProductionsDTO> Productions {get; set;} 
+        [ForeignKey("ProductionLineId")]
         public List<MachineDTO> Machines { get; set; }
+        [ForeignKey("ProductionLineId")]
         public List<ComponentDTO> Components { get; set; }
     }
 }

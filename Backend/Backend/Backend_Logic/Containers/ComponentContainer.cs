@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Backend_DAL_Interface;
+using Backend_DTO.DTOs;
 using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
 using Backend_Logic_Interface.Models;
@@ -9,23 +11,20 @@ namespace Backend_Logic.Containers
 {
     public class ComponentContainer: IComponentContainer
     {
-        public IComponent GetComponent()
+        readonly IComponentDAL _componentDAL;
+        public ComponentContainer(IComponentDAL componentDAL)
         {
-            return ConvertToIComponent();
+            _componentDAL = componentDAL;
         }
 
-        public List<IComponent> GetComponents()
+        public ComponentDTO GetComponent()
         {
-            return ConvertToIComponentList();
+            return null;
         }
 
-        private IComponent ConvertToIComponent()
+        public List<ComponentDTO> GetComponents()
         {
-            return new Component(1, "", Enums.ComponentType.Coldhalf, "", 1, 1, 1, new List<IProductionLineHistory>());
-        }
-        private List<IComponent> ConvertToIComponentList()
-        {
-            return new List<IComponent>();
+            return _componentDAL.GetComponents();
         }
     }
 }

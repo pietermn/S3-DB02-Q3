@@ -14,6 +14,7 @@ namespace Backend_DTO.DTOs
         [ForeignKey("ProductionLine")]
         public int ProductionLineId { get; set; }
         public ProductionLineDTO ProductionLine { get; set; }
+        public ComponentDTO Component { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }
