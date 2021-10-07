@@ -9,10 +9,9 @@ namespace Backend_DAL
     public class MachineDAL : IMachineDAL
     {
 
-        readonly MySqlConnection connection;
-
         public MachineDAL()
         {
+
         }
     }
 }

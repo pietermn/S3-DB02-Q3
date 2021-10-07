@@ -9,8 +9,6 @@ namespace Backend_DAL
     public class ProductionLineHistoryDAL : IProductionLineHistoryDAL
     {
 
-        readonly MySqlConnection connection;
-
         public ProductionLineHistoryDAL()
         {
         }

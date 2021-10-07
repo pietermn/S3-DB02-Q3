@@ -6,10 +6,8 @@ using MySql.Data.MySqlClient;
 
 namespace Backend_DAL
 {
-    public class ProductonSideDAL : IProductonSideDAL
+    public class ProductonSideDAL : IProductionSideDAL
     {
-
-        readonly MySqlConnection connection;
 
         public ProductonSideDAL()
         {
