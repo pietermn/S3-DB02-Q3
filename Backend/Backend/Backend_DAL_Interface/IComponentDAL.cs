@@ -8,5 +8,6 @@ namespace Backend_DAL_Interface
     public interface IComponentDAL
     {
         public List<ComponentDTO> GetComponents();
+        public ComponentDTO GetComponent(int component_id);
     }
 }

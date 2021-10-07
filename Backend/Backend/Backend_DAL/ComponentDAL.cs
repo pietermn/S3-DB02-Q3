@@ -16,6 +16,16 @@ namespace Backend_DAL
             _Context = context;
         }
 
+        public ComponentDTO GetComponent(int component_id)
+        {
+            return _Context.Components
+                .Where(c => c.Id == component_id)
+                .Include(c => c.History)
+                    .ThenInclude(h => h.ProductionLine)
+                    .AsNoTracking()
+                .FirstOrDefault();
+        }
+
         public List<ComponentDTO> GetComponents()
         {
             return _Context.Components

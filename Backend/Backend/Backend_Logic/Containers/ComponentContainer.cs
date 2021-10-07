@@ -17,9 +17,9 @@ namespace Backend_Logic.Containers
             _componentDAL = componentDAL;
         }
 
-        public ComponentDTO GetComponent()
+        public ComponentDTO GetComponent(int component_id)
         {
-            return null;
+            return _componentDAL.GetComponent(component_id);
         }
 
         public List<ComponentDTO> GetComponents()

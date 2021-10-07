@@ -24,7 +24,9 @@ namespace Backend.Controllers
         [Route("read"), HttpGet]
         public IActionResult Read(int component_id)
         {
-            return StatusCode(501);
+            ComponentDTO component = _componentContainer.GetComponent(component_id);
+
+            return Ok(component);
         }
 
         [Route("readall"), HttpGet]
