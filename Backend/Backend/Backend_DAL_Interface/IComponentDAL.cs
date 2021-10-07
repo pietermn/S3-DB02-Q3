@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Backend_DTO.DTOs;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace Backend_DAL_Interface
 {
     public interface IComponentDAL
     {
-        public int getTotalActions(int port, int board, DateTime timestampMin, DateTime timestampMax);
-
-        public int getTotalActionsWithTime(int port, int board, DateTime timestampMin, DateTime timestampMax);
+        public List<ComponentDTO> GetComponents();
     }
 }
