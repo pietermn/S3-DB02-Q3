@@ -27,7 +27,5 @@ namespace Backend_Logic.Models
             TotalActions = totalActions;
             History = list;
         }
-
-
     }
 }
