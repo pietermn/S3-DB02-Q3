@@ -1,4 +1,6 @@
 ﻿using Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +16,7 @@ namespace Backend_DTO.DTOs
         [MaxLength(15)]
         [Required]
         public string Name { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ComponentType Type { get; set; }
         [MaxLength(100)]
         public string Description { get; set; }

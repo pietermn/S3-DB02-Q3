@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Backend_DAL;
 using Backend_DAL_Interface;
-using Backend_DAL.DALs;
 
 namespace Backend
 {
