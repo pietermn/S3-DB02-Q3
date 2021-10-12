@@ -43,7 +43,10 @@ namespace Backend
 
             services.AddScoped<IConvertDbDAL, ConvertDatabase>();
             services.AddScoped<IComponentDAL, ComponentDAL>();
+            services.AddScoped<IMachineDAL, MachineDAL>();
             services.AddScoped<IProductionLineDAL, ProductionLineDAL>();
+            services.AddScoped<IProductionLineHistoryDAL, ProductionLineHistoryDAL>();
+            services.AddScoped<IProductionSideDAL, ProductionSideDAL>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
