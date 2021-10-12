@@ -21,8 +21,8 @@ export default function ComponentsTable(props: ITableProps) {
                     props.components.map((component: Component, index: number) => {
                         return (
                             <div onClick={() => props.SetComponent(component)} className="row">
-                                <p>{component.Description}</p>
-                                <p>{component.TotalActions}</p>
+                                <p>{component.description}</p>
+                                <p>{component.totalActions}</p>
                             </div>
                         )
                     })

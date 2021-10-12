@@ -1,47 +1,47 @@
 export type Component = {
-    Id: number,
-    Name: String,
-    Type: ComponentType
-    Description: String,
-    Port: number,
-    Board: number,
-    TotalActions: number
-    History: ProductLineHistory[]
+    id: number,
+    name: string,
+    type: ComponentType
+    description: string,
+    port: number,
+    board: number,
+    totalActions: number
+    history: ProductLineHistory[]
 }
 
 export type ProductLineHistory = {
-    ProductionLine: ProductionLine,
-    StartDate: Date,
-    EndDate: Date
+    productionLine: ProductionLine,
+    startDate: Date,
+    endDate: Date
 }
 
 export type ProductionLine = {
-    Id: number,
-    Name: String,
-    Description: String,
-    Active: Boolean,
-    Port: number,
-    Board: number,
-    Machines?: Machine[],
-    Components?: Component[]
+    id: number,
+    name: string,
+    description: string,
+    active: Boolean,
+    port: number,
+    board: number,
+    machines?: Machine[],
+    components?: Component[]
 }
 
 export type ProductSide = {
-    Id: number,
-    Name: String,
-    ProductionLines: ProductionLine[]
+    id: number,
+    name: string,
+    productionLines: ProductionLine[]
 }
 
 export type Machine = {
-    Id: number,
-    Name: String,
-    Description: String
+    id: number,
+    name: string,
+    description: string
 }
 
 export enum ComponentType {
-    Coldhalf,
-    Hothalf,
-    Complete
+    coldhalf,
+    hothalf,
+    complete
 }
 
 export type MaintenanceNotification = {
