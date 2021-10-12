@@ -257,45 +257,61 @@ namespace Backend_DAL
 
         public void ConvertAll()
         {
-            List<ProductionSideDTO> ProductionSides = GetProductionSides();
+            //List<ProductionSideDTO> ProductionSides = GetProductionSides();
 
-            foreach (ProductionSideDTO productionSideDTO in ProductionSides)
+            //foreach (ProductionSideDTO productionSideDTO in ProductionSides)
+            //{
+            //    productionSideDTO.ProductionLines = GetProductionLines(productionSideDTO.Id);
+
+            //    foreach (ProductionLineDTO productionLineDTO in productionSideDTO.ProductionLines)
+            //    {
+            //        productionLineDTO.Machines = GetMachines(productionLineDTO.Id);
+            //        productionLineDTO.Productions = GetProductionsFromProductionLine(productionLineDTO.Id);
+            //    }
+            //}
+
+            //List<ComponentDTO> Components = GetComponents();
+
+            //foreach (ComponentDTO componentDTO in Components)
+            //{
+            //    componentDTO.History = GetHistory(componentDTO.Id);
+            //}
+
+            //_Context.ProductionSides.AddRange(ProductionSides);
+            //_Context.Components.AddRange(Components);
+            //_Context.SaveChanges();
+
+            //List<ProductionLineDTO> productionLineDTOs = _Context.ProductionLines.ToList();
+
+            //foreach (ProductionLineDTO newProductionLineDTO in productionLineDTOs)
+            //{
+            //    List<ProductionLineHistoryDTO> productionLineHistoryDTOs = _Context.ProductionLinesHistory
+            //        .Where(plh => plh.EndDate == Convert.ToDateTime("0001-01-01 00:00:00") && plh.ProductionLineId == newProductionLineDTO.Id)
+            //        .ToList();
+
+            //    List<ComponentDTO> componentDTOs = new List<ComponentDTO>();
+            //    foreach (ProductionLineHistoryDTO productionLineHistoryDTO in productionLineHistoryDTOs)
+            //    {
+            //        componentDTOs.Add(productionLineHistoryDTO.Component);
+            //    }
+
+            //    newProductionLineDTO.Components = componentDTOs;
+            //}
+
+            //_Context.SaveChanges();
+
+            List<ComponentDTO> Components = _Context.Components
+                .Include(c => c.History)
+                .ToList();
+
+            foreach (ComponentDTO component in Components)
             {
-                productionSideDTO.ProductionLines = GetProductionLines(productionSideDTO.Id);
-
-                foreach (ProductionLineDTO productionLineDTO in productionSideDTO.ProductionLines)
+                int totalActions = 0;
+                foreach (ProductionLineHistoryDTO history in component.History)
                 {
-                    productionLineDTO.Machines = GetMachines(productionLineDTO.Id);
-                    productionLineDTO.Productions = GetProductionsFromProductionLine(productionLineDTO.Id);
+                    totalActions += _Context.Productions.Where(p => p.ProductionLineId == history.ProductionLineId && history.StartDate <= p.Timestamp && history.EndDate >= p.Timestamp).Count();
                 }
-            }
-
-            List<ComponentDTO> Components = GetComponents();
-
-            foreach (ComponentDTO componentDTO in Components)
-            {
-                componentDTO.History = GetHistory(componentDTO.Id);
-            }
-
-            _Context.ProductionSides.AddRange(ProductionSides);
-            _Context.Components.AddRange(Components);
-            _Context.SaveChanges();
-
-            List<ProductionLineDTO> productionLineDTOs = _Context.ProductionLines.ToList();
-
-            foreach (ProductionLineDTO newProductionLineDTO in productionLineDTOs)
-            {
-                List<ProductionLineHistoryDTO> productionLineHistoryDTOs = _Context.ProductionLinesHistory
-                    .Where(plh => plh.EndDate == Convert.ToDateTime("0001-01-01 00:00:00") && plh.ProductionLineId == newProductionLineDTO.Id)
-                    .ToList();
-
-                List<ComponentDTO> componentDTOs = new List<ComponentDTO>();
-                foreach (ProductionLineHistoryDTO productionLineHistoryDTO in productionLineHistoryDTOs)
-                {
-                    componentDTOs.Add(productionLineHistoryDTO.Component);
-                }
-
-                newProductionLineDTO.Components = componentDTOs;
+                component.TotalActions = totalActions;
             }
 
             _Context.SaveChanges();
