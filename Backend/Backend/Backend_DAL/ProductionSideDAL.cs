@@ -20,6 +20,7 @@ namespace Backend_DAL
             return _Context.ProductionSides
                 .Where(ps => ps.Id == ProductionSide_id)
                 .Include(ps => ps.ProductionLines)
+                    .ThenInclude(pl => pl.Components)
                     .AsNoTracking()
                 .FirstOrDefault();
         }
@@ -28,6 +29,7 @@ namespace Backend_DAL
         {
             return _Context.ProductionSides
                 .Include(ps => ps.ProductionLines)
+                    .ThenInclude(pl => pl.Components)
                     .AsNoTracking()
                 .ToList();
         }
