@@ -12,5 +12,8 @@
         "@types/mysql": "^2.15.19",
         "nodemon": "^2.0.13",
         "ts-node": "^10.3.0"
+    },
+    "scripts": {
+        "start": "nodemon index.ts"
     }
 }
