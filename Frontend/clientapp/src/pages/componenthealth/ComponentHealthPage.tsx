@@ -5,20 +5,40 @@ import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryT
 import { Component, ComponentType } from "../../globalTypes";
 import {GetComponents} from '../../Api/requests/components';
 import "./ComponentHealthPage.scss";
+import { useLocation } from "react-router-dom";
 
 export default function ComponentHealthPage() {
 
     const [components, setComponents] = useState<Component[]>([])
+    const location = useLocation();
+    const [selectedComponent, setSelectedComponent] = useState<Component>();
 
     async function AsyncGetComponents() {
         setComponents(await GetComponents());
     }
 
+    function FindSelectedComponent(id: number) {
+        if (components && !selectedComponent) {
+            for(let i = 0; i < components.length; i++) {
+                if (components[i].id === id) {
+                    setSelectedComponent(components[i]);
+                }
+            }
+        }
+    }
+
+
     useEffect(() => {
         AsyncGetComponents();
     }, [])
 
-    const [selectedComponent, setSelectedComponent] = useState<Component>();
+    type IComponentId = {
+        componentId: number
+    }
+
+    const state = location.state as IComponentId
+    FindSelectedComponent(state.componentId);
+    
 
     return (
         <div className="Components-Full-Page">

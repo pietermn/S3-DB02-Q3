@@ -4,6 +4,7 @@ import MachineStatus from '../machinestatus/MachineStatus';
 import Modal from 'react-modal';
 import './MachineDetails.scss';
 import { Component } from '../../../globalTypes';
+import { useHistory } from 'react-router-dom';
 
 interface IMachineDetails {
     status: boolean,
@@ -15,6 +16,11 @@ interface IMachineDetails {
 
 export default function MachineDetails(props: IMachineDetails) {
     const [show, setShow] = useState(false);
+    const history = useHistory();
+
+    function ToComponents(componentId: number) {
+        
+    }
 
     return (
         <>
@@ -30,7 +36,9 @@ export default function MachineDetails(props: IMachineDetails) {
                     props.components && props.components.length ? 
                     props.components.map((component, index) => {
                         return (
-                            <h2>{component.description}</h2>
+                            <h2 className="redirect-component" onClick={() => history.push({
+                                pathname: "/chealth", 
+                                state: {componentId: component.id}})}>{component.description}</h2>
                         )
                     })
                     : <h2>No components found</h2>
