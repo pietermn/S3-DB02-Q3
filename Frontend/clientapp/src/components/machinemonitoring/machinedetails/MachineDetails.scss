@@ -2,12 +2,20 @@
 
 .MM-Data {
     font-size: large;
+    height: 3.5rem;
 
     &:last-child td {
         border-bottom: none;
     }
 
+    &:hover {
+        cursor: pointer;
+        transition: ease .2s;
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
     td {
+        height: 100%;
         $padding: 1.5rem;
         border-bottom: 1px solid rgb(0, 0, 0);
         padding: 0.5rem 0;
@@ -49,7 +57,24 @@
     height: 100%;
 }
 
+@keyframes SlideModalIn {
+    from {
+        position: absolute;
+        top: -30%;
+    }
+
+    to {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
 .MM-Modal {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    animation-name: SlideModalIn;
+    animation-duration: 0.325s;
     display: flex;
     flex-direction: column;
     background: rgb(255, 255, 255);

@@ -20,9 +20,9 @@ export default function HistoryTable(props: IHistoryTableProps) {
                     props.HistoryMachines.map((historyMachine: ProductLineHistory, index: number) => {
                         return (
                             <div key={index} className="row">
-                                <p>{historyMachine.ProductionLine.Name}</p>
-                                <p>{historyMachine.StartDate.toLocaleString()}</p>
-                                <p>{historyMachine.EndDate.toLocaleString()}</p>
+                                <p>{historyMachine.productionLine.name}</p>
+                                <p>{historyMachine.startDate.toLocaleString()}</p>
+                                <p>{historyMachine.endDate.toLocaleString()}</p>
                             </div>
                         )
                     })
