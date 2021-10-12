@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Backend_DTO.DTOs;
-using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
 

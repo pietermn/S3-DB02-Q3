@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Backend_Logic.Models;
-using Enums;
+﻿using System.Collections.Generic;
+using Backend_DTO.DTOs;
+using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,16 +11,26 @@ namespace Backend.Controllers
     [Route("productionlinehistory")]
     public class ProductionLineHistoryController : Controller
     {
-        [Route("read"), HttpGet]
-        public IActionResult Read(ProductionLineHistory productionLineHistory)
+        readonly IProductionLineHistoryContainer _productionLineHistoryContainer;
+        public ProductionLineHistoryController(IProductionLineHistoryContainer productionLineHistoryContainer)
         {
-            return StatusCode(501);
+            _productionLineHistoryContainer = productionLineHistoryContainer;
+        }
+
+        [Route("read"), HttpGet]
+        public IActionResult Read(int productionLineHistory_id)
+        {
+            ProductionLineHistoryDTO plh = _productionLineHistoryContainer.GetProductionLineHistory(productionLineHistory_id);
+
+            return Ok(plh);
         }
 
         [Route("readall"), HttpGet]
         public IActionResult ReadAll()
         {
-            return StatusCode(501);
+            List<ProductionLineHistoryDTO> plh = _productionLineHistoryContainer.GetProductionLinesHistory();
+
+            return Ok(plh);
         }
     }
 }

@@ -1,22 +1,26 @@
-﻿using Backend_Logic.Models;
+﻿using System.Collections.Generic;
+using Backend_DAL_Interface;
+using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
-using Backend_Logic_Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Backend_Logic.Containers
 {
     public class ProductionSideContainer: IProductionSideContainer
     {
-        public IProductionSide GetProductionSide()
+        readonly IProductionSideDAL _productionSideDAL;
+        public ProductionSideContainer(IProductionSideDAL productionSideDAL)
         {
-            return ConvertToIProdcutionSide();
+            _productionSideDAL = productionSideDAL;
         }
 
-        private IProductionSide ConvertToIProdcutionSide()
+        public ProductionSideDTO GetProductionSide(int productionSide_id)
         {
-            return new ProductionSide(1, "");
+            return _productionSideDAL.GetProductionSide(productionSide_id);
+        }
+
+        public List<ProductionSideDTO> GetProductionSides()
+        {
+            return _productionSideDAL.GetProductionSides();
         }
     }
 }
