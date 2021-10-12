@@ -12,7 +12,6 @@ export default function ComponentHealthPage() {
 
     async function AsyncGetComponents() {
         setComponents(await GetComponents());
-
     }
 
     useEffect(() => {
