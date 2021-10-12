@@ -99,7 +99,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (input.value && input01.value && input02.value) {
-                socket.emit('Add Notification', {id: input.value, componentId: input01.value, message: input02.value});
+                socket.emit('Add Notification', {componentId: input01.value, message: input02.value});
                 input.value = '';
                 input01.value = '';
                 input02.value = '';
@@ -116,10 +116,11 @@
 
         socket.on('Add Notification List', (l) => {
             messages.innerHTML = '';
+            console.log(l)
             l.forEach(n => {
                 var item = document.createElement('li');
                 item.id = n.id;
-                item.textContent = `ID=${n.id} CID=${n.componentId} | ${n.message}`;
+                item.textContent = `ID=${n.Id} CID=${n.ComponentId} | ${n.Message}`;
                 messages.appendChild(item);
             });
             window.scrollTo(0, document.body.scrollHeight);

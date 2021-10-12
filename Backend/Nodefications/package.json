@@ -3,7 +3,9 @@
     "version": "0.0.1",
     "description": "Notifications service for Q3 school project",
     "dependencies": {
+        "bluebird": "^3.7.2",
         "express": "^4.17.1",
+        "mysql": "^2.18.1",
         "socket.io": "^4.2.0"
     },
     "devDependencies": {
