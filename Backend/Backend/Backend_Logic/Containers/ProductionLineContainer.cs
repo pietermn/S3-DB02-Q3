@@ -1,4 +1,6 @@
-﻿using Backend_Logic.Models;
+﻿using Backend_DAL_Interface;
+using Backend_DTO.DTOs;
+using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
 using Backend_Logic_Interface.Models;
 using System;
@@ -9,14 +11,20 @@ namespace Backend_Logic.Containers
 {
     public class ProductionLineContainer: IProductionLineContainer
     {
-        public IProductionLine GetProductionLine()
+        readonly IProductionLineDAL _productionLineDAL;
+        public ProductionLineContainer(IProductionLineDAL productionLineDAL)
         {
-            return ConvertToIProductionLine();
+            _productionLineDAL = productionLineDAL;
         }
 
-        private IProductionLine ConvertToIProductionLine()
+        public ProductionLineDTO GetProductionLine(int productLine_id)
         {
-            return new ProductionLine(1, "", "", true, 1, 1);
+            return _productionLineDAL.GetProductionLine(productLine_id);
+        }
+
+        public List<ProductionLineDTO> GetProductionLines()
+        {
+            return _productionLineDAL.GetProductionLines();
         }
     }
 }

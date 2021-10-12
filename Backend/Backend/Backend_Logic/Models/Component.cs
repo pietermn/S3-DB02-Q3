@@ -27,10 +27,5 @@ namespace Backend_Logic.Models
             TotalActions = totalActions;
             History = list;
         }
-
-        public void getTotalActions(DateTime timestampMin, DateTime timestampMax)
-        {
-            TotalActions = ComponentDAL.getTotalActions(timestampMin, timestampMax);
-        }
     }
 }

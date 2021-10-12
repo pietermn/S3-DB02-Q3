@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Backend_DTO.DTOs;
+using System.Collections.Generic;
+
 namespace Backend_DAL_Interface
 {
-    public class IMachineDAL
+    public interface IMachineDAL
     {
-        public IMachineDAL()
-        {
-        }
+        public MachineDTO GetMachine(int machine_id);
+        public List<MachineDTO> GetMachines();
     }
 }
