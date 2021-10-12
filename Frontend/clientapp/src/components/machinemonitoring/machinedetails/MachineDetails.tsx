@@ -36,7 +36,7 @@ export default function MachineDetails(props: IMachineDetails) {
                     props.components && props.components.length ? 
                     props.components.map((component, index) => {
                         return (
-                            <h2 className="redirect-component" onClick={() => history.push({
+                            <h2 className="redirect-component" key={index} onClick={() => history.push({
                                 pathname: "/chealth", 
                                 state: {componentId: component.id}})}>{component.description}</h2>
                         )

@@ -22,17 +22,19 @@ export default function MachineMonitoringPage() {
         <div className='MM-Page'>
             <table className='MM-Table'>
                 <thead>
+                    <tr>
                     <th>Status</th>
                     <th>Machine</th>
                     <th>Product</th>
                     <th>Uptime</th>
                     <th>Components</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {
                         productionLines && productionLines.map((productionLine, index) => {
                             return (
-                                <MachineDetails uptime={[true, false, true, true, false, true, false, true, true, true]} components={productionLine.components} status={true} productionLine={productionLine.name} product=''/>
+                                <MachineDetails key={index} uptime={[true, false, true, true, false, true, false, true, true, true]} components={productionLine.components} status={true} productionLine={productionLine.name} product=''/>
                             )
                         })
                     }

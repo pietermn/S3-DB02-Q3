@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { Component } from '../../globalTypes';
 import Api from '../Instance';
 

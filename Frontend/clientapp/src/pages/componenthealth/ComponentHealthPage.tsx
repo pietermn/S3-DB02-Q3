@@ -3,7 +3,7 @@ import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsG
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
 import { Component, ComponentType } from "../../globalTypes";
-import {GetComponents} from '../../Api/requests/components';
+import { GetComponents } from '../../Api/requests/components';
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
 
@@ -17,12 +17,16 @@ export default function ComponentHealthPage() {
         setComponents(await GetComponents());
     }
 
-    function FindSelectedComponent(id: number) {
-        if (components && !selectedComponent) {
-            for(let i = 0; i < components.length; i++) {
-                if (components[i].id === id) {
-                    setSelectedComponent(components[i]);
+    function FindSelectedComponent(state: IComponentId) {
+        if (!selectedComponent) {
+            if (state) {
+                for (let i = 0; i < components.length; i++) {
+                    if (components[i].id === state.componentId) {
+                        setSelectedComponent(components[i]);
+                    }
                 }
+            } else {
+                setSelectedComponent(components[0])
             }
         }
     }
@@ -30,15 +34,16 @@ export default function ComponentHealthPage() {
 
     useEffect(() => {
         AsyncGetComponents();
-    }, [])
+        if (components) {
+            const state = location.state as IComponentId
+            FindSelectedComponent(state);
+        }
+    }, [components.length, FindSelectedComponent])
 
     type IComponentId = {
         componentId: number
     }
 
-    const state = location.state as IComponentId
-    FindSelectedComponent(state.componentId);
-    
 
     return (
         <div className="Components-Full-Page">

@@ -9,7 +9,7 @@ interface ITableProps {
 
 export default function ComponentsTable(props: ITableProps) {
     return (
-        <table className="Components-Table">
+        <div className="Components-Table">
             <div className="thead">
                 <div className="row">
                     <p>Name</p>
@@ -20,7 +20,7 @@ export default function ComponentsTable(props: ITableProps) {
                 {
                     props.components.map((component: Component, index: number) => {
                         return (
-                            <div onClick={() => props.SetComponent(component)} className="row">
+                            <div key={index} onClick={() => props.SetComponent(component)} className="row">
                                 <p>{component.description}</p>
                                 <p>{component.totalActions}</p>
                             </div>
@@ -28,6 +28,6 @@ export default function ComponentsTable(props: ITableProps) {
                     })
                 }
             </div>
-        </table>
+        </div>
     )
 }
