@@ -15,7 +15,7 @@
 - Shot Time = Duur van handeling
 
 ## Production data
-Tijden afgehrond op 5 minuten
+Tijden afgerond op 5 minuten
 - Board + Port
 - Amount (in de periode/per uur/per 5 min) :question:
 - Name + Description --> Treeview :question:
