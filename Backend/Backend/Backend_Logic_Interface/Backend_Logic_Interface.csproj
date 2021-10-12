@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Backend_DTO\Backend_DTO.csproj" />
     <ProjectReference Include="..\Enums\Enums.csproj" />
   </ItemGroup>
 

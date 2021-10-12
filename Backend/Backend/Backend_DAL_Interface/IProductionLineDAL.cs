@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Backend_DTO.DTOs;
+using System.Collections.Generic;
+
 namespace Backend_DAL_Interface
 {
-    public class IProductionLineDAL
+    public interface IProductionLineDAL
     {
-        public IProductionLineDAL()
-        {
-        }
+        public ProductionLineDTO GetProductionLine(int productLine_id);
+        public List<ProductionLineDTO> GetProductionLines();
     }
 }
