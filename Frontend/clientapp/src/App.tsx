@@ -1,20 +1,17 @@
-import { ConnectedRouter } from "connected-react-router";
-import { Provider } from "react-redux";
-import configureStore, { history } from "./redux/store";
+import { BrowserRouter as Router } from "react-router-dom";
 import AppWrapper from "./layout/AppWrapper";
 import Routes from "./routes/Routes";
-
-const store = configureStore();
+import { NotificationProvider } from "./context/NotificationContext";
 
 function App() {
   return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
+    <Router>
+      <NotificationProvider>
         <AppWrapper>
           <Routes />
         </AppWrapper>
-      </ConnectedRouter>
-    </Provider>
+      </NotificationProvider>
+    </Router>
   );
 }
 

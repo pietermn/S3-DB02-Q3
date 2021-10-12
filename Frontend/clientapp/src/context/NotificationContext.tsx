@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { MaintenanceNotification } from "../../globalTypes";
+import { MaintenanceNotification } from "../globalTypes";
 
 interface INotificationContext {
     addNotification: (component: string, maintenance: string) => void,
