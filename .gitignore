@@ -290,3 +290,4 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,react
 
 *.sql
+Databases/Q3_Data/data/q3_mms_db.sql.old
