@@ -1,3 +1,7 @@
+using Backend_Logic.Containers;
+using Backend_Logic.Models;
+using Backend_Logic_Interface.Containers;
+using Backend_Logic_Interface.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Backend_DAL;
+using Backend_DAL_Interface;
 
 namespace Backend
 {
@@ -26,12 +33,28 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db"));
+
+            services.AddScoped<IComponentContainer, ComponentContainer>();
+            services.AddScoped<IMachineContainer, MachineContainer>();
+            services.AddScoped<IProductionLineContainer, ProductionLineContainer>();
+            services.AddScoped<IProductionLineHistoryContainer, ProductionLineHistoryContainer>();
+            services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
+
+            services.AddScoped<IConvertDbDAL, ConvertDatabase>();
+            services.AddScoped<IComponentDAL, ComponentDAL>();
+            services.AddScoped<IProductionLineDAL, ProductionLineDAL>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend", Version = "v1" });
             });
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(opt =>
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

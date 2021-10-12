@@ -7,8 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Backend_DAL\Backend_DAL.csproj" />
+    <ProjectReference Include="..\Backend_DAL_Interface\Backend_DAL_Interface.csproj" />
+    <ProjectReference Include="..\Backend_Logic\Backend_Logic.csproj" />
+    <ProjectReference Include="..\Backend_Logic_Interface\Backend_Logic_Interface.csproj" />
+  </ItemGroup>
 </Project>

@@ -4,7 +4,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Backend_DTO\Backend_DTO.csproj" />
-  </ItemGroup>
 </Project>
