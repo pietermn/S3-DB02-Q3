@@ -1,22 +1,13 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const mysql = require('mysql');
-
-const sqlConnection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'db',
-    port: 3307
-});
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const port = 5300;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const sql = require('./sql');
+import sql from './sql';
 
 app.get('/', (_req, res) => {
     res.sendFile(__dirname + '/index.html')

@@ -1,4 +1,5 @@
-const mysql = require('mysql');
+import mysql from 'mysql';
+import { Notification } from './types';
 
 const sqlConnection = mysql.createConnection({
     host: 'localhost',
@@ -8,30 +9,28 @@ const sqlConnection = mysql.createConnection({
     port: 3307
 });
 
-class SQL {
+export default class SQL {
     static getNotifications = async () => {
-        let notifications = [];
-        const p = new Promise((resolve, reject) => {
+        let notifications: Notification[] = [];
+        const p = new Promise<Notification[]>((resolve, reject) => {
             sqlConnection.query('SELECT * FROM `Notifications`', (err, res) => {
                 if (err) reject(err);
                 resolve(res);
             });
         });
 
-        await p.then((result) => {
+        await p.then((result: Notification[]) => {
             notifications = result;
         })
 
         return notifications;
     }
 
-    static addNotification = (componentId, message) => {
+    static addNotification = (componentId: number, message: string) => {
         sqlConnection.query('INSERT INTO `Notifications` (`Id`, `ComponentId`, `Message`) VALUES (NULL, ' + componentId + ', "' + message + '")');
     }
 
-    static removeNotification = (notificationId) => {
+    static removeNotification = (notificationId: number) => {
         sqlConnection.query('DELETE FROM `Notifications` WHERE Id = ' + notificationId);
     }
 }
-
-module.exports = SQL;
