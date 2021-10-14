@@ -1,21 +1,26 @@
-﻿using Backend_Logic_Interface.Containers;
-using Backend_Logic_Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Backend_DAL_Interface;
+using Backend_DTO.DTOs;
+using Backend_Logic_Interface.Containers;
 
 namespace Backend_Logic.Containers
 {
     public class ProductionLineHistoryContainer : IProductionLineHistoryContainer
     {
-        public List<IProductionLineHistory> GetProductionLineHistorys()
+        readonly IProductionLineHistoryDAL _productionLineHistoryDAL;
+        public ProductionLineHistoryContainer(IProductionLineHistoryDAL productionLineHistoryDAL)
         {
-            return ConvertToIProductionLineHistory();
+            _productionLineHistoryDAL = productionLineHistoryDAL;
         }
 
-        private List<IProductionLineHistory> ConvertToIProductionLineHistory()
+        public ProductionLineHistoryDTO GetProductionLineHistory(int productionLineHistory_id)
         {
-            return new List<IProductionLineHistory>();
+            return _productionLineHistoryDAL.GetProductionLineHistory(productionLineHistory_id);
+        }
+
+        public List<ProductionLineHistoryDTO> GetProductionLinesHistory()
+        {
+            return _productionLineHistoryDAL.GetProductionLinesHistory();
         }
     }
 }

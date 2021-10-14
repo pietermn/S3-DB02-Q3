@@ -1,12 +1,11 @@
-﻿using Backend_Logic_Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Backend_DTO.DTOs;
 
 namespace Backend_Logic_Interface.Containers
 {
     public interface IProductionSideContainer
     {
-        public IProductionSide GetProductionSide();
+        public ProductionSideDTO GetProductionSide(int productionSide_id);
+        public List<ProductionSideDTO> GetProductionSides();
     }
 }
