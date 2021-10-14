@@ -13,5 +13,6 @@ namespace Backend_DTO.DTOs
         public int Id { get; set; }
         public DateTime Timestamp { get; set; }
         public double ShotTime { get; set; }
+        public int ProductionLineId { get; set; }
     }
 }
