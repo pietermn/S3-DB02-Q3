@@ -25,6 +25,7 @@
         overflow-y: auto;
         display: grid;
         justify-items: center;
+        grid-template-rows: repeat(3, 1fr);
 
         &::-webkit-scrollbar {
             display: none;
@@ -37,6 +38,7 @@
 
     .row {
         width: 95%;
+        height: 60px;
         display: grid;
         grid-template-columns: auto 175px 175px;
         border-bottom: 1px solid black;

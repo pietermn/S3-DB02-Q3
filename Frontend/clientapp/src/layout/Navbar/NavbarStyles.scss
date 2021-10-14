@@ -25,6 +25,11 @@ nav {
         p {
             padding-inline: 1.5rem;
             font-size: 20px;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
 
         .Name-Container > p {
