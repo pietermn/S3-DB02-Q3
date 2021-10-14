@@ -2,20 +2,23 @@ import * as d3 from "d3";
 import { useEffect, useState } from "react";
 import "./ActionsGraph.scss"
 
-export default function ActionsGraph() {
+interface IActionsGraph {
+    actions: number[]
+}
+
+export default function ActionsGraph(props: IActionsGraph) {
     type Week = {
         week: string,
         actions: number
     }
 
-    const actionsWeeks = [500, 100, 24204, 1010, 4040, 113, 2422, 353, 1214, 53636]
     const weeks: Week[] = []
 
-    for (var i: number = 0; i < actionsWeeks.length; i++) {
+    for (var i: number = 0; i < props.actions.length; i++) {
         weeks.push(
             {
                 week: `Week ${i + 1}`,
-                actions: actionsWeeks[i]
+                actions: props.actions[i]
             })
     }
 
@@ -53,10 +56,11 @@ export default function ActionsGraph() {
 
         // Add Y axis
         const y = d3.scaleLinear()
-            .domain([0, maxValue])
+            .domain(maxValue ? [0, maxValue] : [0, 1, 0])
             .range([myHeight, 0]);
         svg.append("g")
             .call(d3.axisLeft(y));
+
 
         // Bars
         svg.selectAll("mybar")
@@ -77,7 +81,6 @@ export default function ActionsGraph() {
             .attr("y", d => y(d.actions) || 0)
             .attr("height", d => myHeight - y(d.actions))
             .delay((d, i) => { return i * 100 })
-
     }
 
     return (

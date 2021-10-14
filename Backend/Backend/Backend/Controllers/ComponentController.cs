@@ -36,5 +36,13 @@ namespace Backend.Controllers
 
             return Ok(Components);
         }
+
+        [Route("previousactions/{component_id}/{amountofweeks}"), HttpGet]
+        public IActionResult GetPreviousActions(int component_id, int amountofweeks)
+        {
+            List<int> Actions = _componentContainer.GetPreviousActions(component_id, amountofweeks);
+
+            return Ok(Actions);
+        }
     }
 }

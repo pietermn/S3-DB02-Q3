@@ -10,5 +10,6 @@ namespace Backend_Logic_Interface.Containers
     {
         public ComponentDTO GetComponent(int component_id);
         public List<ComponentDTO> GetComponents();
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks);
     }
 }

@@ -10,3 +10,13 @@ export const GetComponents = async () => {
     
     return components;
 }
+
+export const GetPreviousActions = async (component_id: number) => {
+    let actions: number[] = [];
+    await Api.get<number[]>(`component/previousactions/${component_id}/${4}`)
+    .then((res) => {
+        actions = res.data;
+    })
+
+    return actions;
+}

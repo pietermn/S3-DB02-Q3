@@ -1,6 +1,7 @@
 ﻿using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,6 +33,46 @@ namespace Backend_DAL
                     .ThenInclude(h => h.ProductionLine)
                     .AsNoTracking()
                 .ToList();
+        }
+
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        {
+            ComponentDTO component = _Context.Components.Where(c => c.Id == component_id)
+                .Include(c => c.History)
+                .FirstOrDefault();
+
+            List<ProductionsDTO> productions = new List<ProductionsDTO>();
+            foreach (ProductionLineHistoryDTO historyDTO in component.History)
+            {
+                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(p => p.ProductionLineId == historyDTO.ProductionLineId && historyDTO.StartDate <= p.Timestamp && historyDTO.EndDate >= p.Timestamp).ToList();
+                foreach (ProductionsDTO productionsDTO in productionsDTOs)
+                {
+                    productions.Add(productionsDTO);
+                }
+            }
+
+            List<int> actions = new List<int>();
+            for (int i = 0; i < amountOfWeeks; i++)
+            {
+                int actionsThisWeek = 0;
+                //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
+                //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
+                DateTime MockNowDate = new DateTime(2020, 9, 30);
+                DateTime firstDatetime = MockNowDate.AddDays(i * -7);
+                DateTime secondDatetime = firstDatetime.AddDays(-7);
+
+
+                foreach (ProductionsDTO production in productions)
+                {
+                    if (production.Timestamp < firstDatetime && production.Timestamp > secondDatetime)
+                    {
+                        actionsThisWeek++;
+                    }
+                }
+                actions.Add(actionsThisWeek);
+            }
+
+            return actions;
         }
     }
 }

@@ -26,5 +26,10 @@ namespace Backend_Logic.Containers
         {
             return _componentDAL.GetComponents();
         }
+
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        {
+            return _componentDAL.GetPreviousActions(component_id, amountOfWeeks);
+        }
     }
 }
