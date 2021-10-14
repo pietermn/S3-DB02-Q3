@@ -24,12 +24,12 @@ namespace Backend.Controllers
             return Ok(Uptimes);
         }
 
-        [Route("readall"), HttpGet]
-        public IActionResult ReadAll()
-        {
-            List<IUptime> Uptimes = _uptimeContainer.GetUptimeFromLastDay();
+        //[Route("readall"), HttpGet]
+        //public IActionResult ReadAll()
+        //{
+        //    List<IUptime> Uptimes = _uptimeContainer.GetUptimeFromLastDay();
 
-            return Ok(Uptimes);
-        }
+        //    return Ok(Uptimes);
+        //}
     }
 }

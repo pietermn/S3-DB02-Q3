@@ -5,17 +5,19 @@ namespace Backend_Logic.Models
 {
     public class Uptime : IUptime
     {
-        public int id { get; }
-        public int ProductionLineId { get; }
-        public DateTime Timestamp { get; }
-        public bool active { get; }
+        public int Id { get; set; }
+        public int ProductionLineId { get; set; }
+        public DateTime Begin { get; set; }
+        public DateTime End { get; set; }
+        public bool Active { get; set; }
 
-        public Uptime(int ID, int productionLineId, DateTime timestamp, bool Active)
+        public Uptime(int id, int productionLineId, DateTime begin, DateTime end, bool active)
         {
-            id = ID;
+            Id = id;
             ProductionLineId = productionLineId;
-            Timestamp = timestamp;
-            active = Active;
+            Begin = begin;
+            End = end;
+            Active = active;
         }
     }
 }

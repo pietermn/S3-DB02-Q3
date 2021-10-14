@@ -48,3 +48,11 @@ export type MaintenanceNotification = {
     component: string,
     maintenance: string
 }
+
+export type Uptime = {
+    id: number,
+    productionLineId: number,
+    begin: Date,
+    end: Date,
+    active: boolean
+}

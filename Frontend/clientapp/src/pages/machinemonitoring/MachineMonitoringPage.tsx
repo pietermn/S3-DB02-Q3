@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
 import MachineDetails from '../../components/machinemonitoring/machinedetails/MachineDetails'
-import {ProductionLine} from '../../globalTypes';
-import {GetProductionLines} from '../../Api/requests/productionlines';
+import { ProductionLine } from '../../globalTypes';
+import { GetProductionLines } from '../../Api/requests/productionlines';
 import './MachineMonitoringPage.scss'
 
 export default function MachineMonitoringPage() {
-
-    
     const [productionLines, setProductionLines] = useState<ProductionLine[]>([])
 
     async function AsyncGetProductionLines() {
         setProductionLines(await GetProductionLines());
-
     }
 
     useEffect(() => {
@@ -23,21 +20,24 @@ export default function MachineMonitoringPage() {
             <table className='MM-Table'>
                 <thead>
                     <tr>
-                    <th>Status</th>
-                    <th>Machine</th>
-                    <th>Product</th>
-                    <th>Uptime</th>
-                    <th>Components</th>
+                        <th>Status</th>
+                        <th>Machine</th>
+                        <th>Product</th>
+                        <th>Uptime</th>
+                        <th>Components</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         productionLines && productionLines.map((productionLine, index) => {
                             return (
-                                <MachineDetails key={index} uptime={[true, false, true, true, false, true, false, true, true, true]} components={productionLine.components} status={true} productionLine={productionLine.name} product=''/>
+                                <MachineDetails key={index} id={productionLine.id} components={productionLine.components} status={true} productionLine={productionLine.name} product='' />
                             )
                         })
                     }
+                    {/* {productionLines &&
+                        <MachineDetails key={1} id={381} components={[]} status={true} productionLine='test' product='' />
+                    } */}
                 </tbody>
             </table>
         </div>

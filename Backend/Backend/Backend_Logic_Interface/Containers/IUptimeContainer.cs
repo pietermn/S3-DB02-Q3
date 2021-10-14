@@ -6,7 +6,7 @@ namespace Backend_Logic_Interface.Containers
 {
     public interface IUptimeContainer
     {
-        public List<IUptime> GetUptimeFromLastDay();
+        //public List<IUptime> GetUptimeFromLastDay();
         public List<IUptime> GetUptimeByIdFromLastDay(int productionLine_id);
     }
 }

@@ -4,6 +4,7 @@ using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
 using Backend_Logic_Interface.Models;
 using Backend_Logic.Models;
+using System.Linq;
 
 namespace Backend_Logic.Containers
 {
@@ -18,51 +19,64 @@ namespace Backend_Logic.Containers
         public List<IUptime> GetUptimeByIdFromLastDay(int productionLine_id)
         {
             List<ProductionsDTO> productions = _productionsDAL.GetProductionsByIdFromLastDay(productionLine_id);
+            List<IUptime> uptimes = new();
+            int count = 0;
 
-            List<IUptime> Uptimes = new();
-
-            foreach (ProductionsDTO p in productions)
+            if (productions.Count == 0)
             {
-                double diff = p.ShotTime * 3;
-                bool act = true;
-
-                if (Uptimes.Count != 0)
-                {
-                    if (Uptimes[^1].Timestamp.AddSeconds(diff) < p.Timestamp)
-                    {
-                        act = false;
-                    }
-                }
-
-                Uptimes.Add(new Uptime(Uptimes.Count + 1, p.ProductionLineId, p.Timestamp, act));
+                return new() { new Uptime(0, productionLine_id, System.DateTime.Now, System.DateTime.Now.AddDays(-1), false) };
             }
 
-            return Uptimes;
-        }
+            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp, true);
 
-        public List<IUptime> GetUptimeFromLastDay()
-        {
-            List<ProductionsDTO> productions = _productionsDAL.GetProductionsFromLastDay();
-
-            List<IUptime> Uptimes = new();
-
-            foreach (ProductionsDTO p in productions)
+            foreach (ProductionsDTO p in productions.Skip(1))
             {
-                double diff = p.ShotTime * 3;
-                bool act = true;
+                double diff = p.ShotTime * 6;
 
-                if (Uptimes.Count != 0)
+                if (p.Timestamp >= current.End.AddSeconds(diff)) // Down
                 {
-                    if (Uptimes[^1].Timestamp.AddSeconds(diff) < p.Timestamp)
-                    {
-                        act = false;
-                    }
-                }
+                    uptimes.Add(current);
+                    count++;
 
-                Uptimes.Add(new Uptime(Uptimes.Count + 1, p.ProductionLineId, p.Timestamp, act));
+                    uptimes.Add(new Uptime(count, p.ProductionLineId, current.End, p.Timestamp, false));
+                    count++;
+
+                    current = new Uptime(count, p.ProductionLineId, p.Timestamp, p.Timestamp, true);
+                }
+                else // Up
+                {
+                    current.End = p.Timestamp;
+                }
             }
 
-            return Uptimes;
+            uptimes.Add(current);
+
+            return uptimes;
         }
+
+        //public List<IUptime> GetUptimeFromLastDay()
+        //{
+        //    List<ProductionsDTO> productions = _productionsDAL.GetProductionsFromLastDay();
+
+        //    List<IUptime> Uptimes = new();
+
+        //    foreach (ProductionsDTO p in productions)
+        //    {
+        //        double diff = p.ShotTime * 3;
+        //        bool act = true;
+
+        //        if (Uptimes.Count != 0)
+        //        {
+        //            if (Uptimes[^1].Timestamp.AddSeconds(diff) < p.Timestamp)
+        //            {
+        //                act = false;
+        //            }
+        //        }
+
+        //        Uptimes.Add(new Uptime(Uptimes.Count + 1, p.ProductionLineId, p.Timestamp, act));
+        //    }
+
+        //    return Uptimes;
+        //}
     }
 }

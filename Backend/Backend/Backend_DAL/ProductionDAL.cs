@@ -30,6 +30,7 @@ namespace Backend_DAL
             return _Context.Productions
                 .Where(p => p.ProductionLineId == productionLine_id
                 && p.Timestamp > new DateTime(2020, 9, 30).AddDays(-1))
+                .OrderBy(p => p.Timestamp)
                 .AsNoTracking()
             .ToList();
         }

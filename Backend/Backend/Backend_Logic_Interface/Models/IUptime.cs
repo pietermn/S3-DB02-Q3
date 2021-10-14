@@ -3,9 +3,10 @@ namespace Backend_Logic_Interface.Models
 {
     public interface IUptime
     {
-        public int id { get; }
+        public int Id { get; }
         public int ProductionLineId { get; }
-        public DateTime Timestamp { get; }
-        public bool active { get; }
+        public DateTime Begin { get; }
+        public DateTime End { get; }
+        public bool Active { get; }
     }
 }
