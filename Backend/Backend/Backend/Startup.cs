@@ -40,6 +40,7 @@ namespace Backend
             services.AddScoped<IProductionLineContainer, ProductionLineContainer>();
             services.AddScoped<IProductionLineHistoryContainer, ProductionLineHistoryContainer>();
             services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
+            services.AddScoped<IUptimeContainer, UptimeContainer>();
 
             services.AddScoped<IConvertDbDAL, ConvertDatabase>();
             services.AddScoped<IComponentDAL, ComponentDAL>();
@@ -47,6 +48,7 @@ namespace Backend
             services.AddScoped<IProductionLineDAL, ProductionLineDAL>();
             services.AddScoped<IProductionLineHistoryDAL, ProductionLineHistoryDAL>();
             services.AddScoped<IProductionSideDAL, ProductionSideDAL>();
+            services.AddScoped<IProductionDAL, ProductionDAL>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -73,6 +75,13 @@ namespace Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials()
+             );
 
             app.UseAuthorization();
 

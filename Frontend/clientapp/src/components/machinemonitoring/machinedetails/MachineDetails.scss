@@ -1,16 +1,24 @@
-@import '../../../variables';
+@import "../../../variables";
 
 .MM-Data {
     font-size: large;
-    
+    height: 3.5rem;
+
     &:last-child td {
         border-bottom: none;
     }
 
+    &:hover {
+        cursor: pointer;
+        transition: ease .2s;
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
     td {
+        height: 100%;
         $padding: 1.5rem;
         border-bottom: 1px solid rgb(0, 0, 0);
-        padding: .5rem 0;
+        padding: 0.5rem 0;
 
         &:first-child {
             padding-left: $padding;
@@ -21,7 +29,7 @@
                 @include line-padding;
             }
         }
-        
+
         &:last-child {
             padding-right: $padding;
             text-align: right;
@@ -31,6 +39,82 @@
                 right: 0;
                 @include line-padding;
             }
+        }
+
+        &.Good {
+            color: map-get($map: $accent-colors, $key: "green");
+        }
+
+        &.Bad {
+            color: map-get($map: $accent-colors, $key: "orange");
+        }
+    }
+}
+
+.ReactModal__Overlay {
+    @include flexboxCenter;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes SlideModalIn {
+    from {
+        position: absolute;
+        top: -30%;
+    }
+
+    to {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.MM-Modal {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    animation-name: SlideModalIn;
+    animation-duration: 0.325s;
+    display: flex;
+    flex-direction: column;
+    background: rgb(255, 255, 255);
+    width: 500px;
+    height: 30%;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    border: none;
+    outline: none;
+
+    & h1 {
+        background: map-get($map: $background, $key: "blue");
+        color: rgb(255, 255, 255);
+        margin: 0;
+        padding: 0.5rem 1rem;
+    }
+
+    & h2 {
+        margin: 0.25rem 1rem;
+    }
+
+    & .redirect-component {
+        cursor: pointer;
+    }
+
+    & button {
+        width: fit-content;
+        align-self: flex-end;
+        margin: auto 1rem 1rem 0;
+        padding: 0.25rem 0.5rem;
+        background: map-get($map: $background, $key: "blue");
+        border: 1px solid map-get($map: $background, $key: "blue");
+        border-radius: 5px;
+        font-size: 1.5rem;
+        color: white;
+
+        &:hover {
+            cursor: pointer;
+            background: rgba(map-get($map: $background, $key: "blue"), 0.8);
         }
     }
 }

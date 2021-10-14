@@ -1,7 +1,23 @@
+import { useEffect, useState } from 'react';
 import MachineDetails from '../../components/machinemonitoring/machinedetails/MachineDetails'
+import {ProductionLine} from '../../globalTypes';
+import {GetProductionLines} from '../../Api/requests/productionlines';
 import './MachineMonitoringPage.scss'
 
 export default function MachineMonitoringPage() {
+
+    
+    const [productionLines, setProductionLines] = useState<ProductionLine[]>([])
+
+    async function AsyncGetProductionLines() {
+        setProductionLines(await GetProductionLines());
+
+    }
+
+    useEffect(() => {
+        AsyncGetProductionLines();
+    }, [])
+
     return (
         <div className='MM-Page'>
             <table className='MM-Table'>
@@ -13,10 +29,13 @@ export default function MachineMonitoringPage() {
                     <th>Components</th>
                 </thead>
                 <tbody>
-                    {/* incommingData.map() */}
-                    <MachineDetails uptime={[true, false, true, true, false, true, false, true, true, true]} amount={5} status={true} machine='A1' product='Mes'/>
-                    <MachineDetails uptime={[true, true, true, true, false, true, false, true, true, false]} amount={3} status={false} machine='B1' product='Vork'/>
-                    <MachineDetails uptime={[true, false, false, false, false, true, false, true, true, true]} amount={2} status={true} machine='A2' product='Lepel'/>
+                    {
+                        productionLines && productionLines.map((productionLine, index) => {
+                            return (
+                                <MachineDetails uptime={[true, false, true, true, false, true, false, true, true, true]} components={productionLine.components} status={true} productionLine={productionLine.name} product=''/>
+                            )
+                        })
+                    }
                 </tbody>
             </table>
         </div>

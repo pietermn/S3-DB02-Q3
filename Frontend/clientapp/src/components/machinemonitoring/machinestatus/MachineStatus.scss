@@ -1,23 +1,28 @@
-@import '../../../variables';
+@import "../../../variables";
 
 .MM-Uptime {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     height: 100%;
     width: 100%;
-    
-    div {
-        height: 1em;
-        width: 10%;
+    border: 1px solid black;
 
-        &.good {
-            background-color: map-get($map: $accent-colors, $key: 'green');
+    div {
+        height: 1.75rem;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        &.Good {
+            background-color: map-get($map: $accent-colors, $key: "green");
         }
 
-        &.bad {
-            background-color: map-get($map: $accent-colors, $key: 'orange');
+        &.Bad {
+            background-color: map-get($map: $accent-colors, $key: "orange");
         }
     }
 }
