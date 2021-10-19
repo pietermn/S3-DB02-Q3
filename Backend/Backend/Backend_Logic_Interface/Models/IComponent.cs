@@ -14,6 +14,8 @@ namespace Backend_Logic_Interface.Models
         public int Port { get; }
         public int Board { get; }
         public int TotalActions { get; }
+        public int MaxActions { get;  }
+        public int CurrentActions {get;}
         public List<IProductionLineHistory> History { get; }
     }
 }

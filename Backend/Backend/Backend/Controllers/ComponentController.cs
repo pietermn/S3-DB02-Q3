@@ -29,7 +29,11 @@ namespace Backend.Controllers
         public IActionResult ReadAll()
         {
             List<ComponentDTO> Components = _componentContainer.GetComponents();
-
+            foreach (ComponentDTO c in Components)
+            {
+                c.CurrentActions = c.TotalActions;
+                c.PercentageMaintenance = c.CurrentActions / (c.MaxActions) * 100; 
+            }
             return Ok(Components);
         }
 

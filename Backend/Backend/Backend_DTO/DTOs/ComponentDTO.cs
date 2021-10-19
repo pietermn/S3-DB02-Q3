@@ -23,5 +23,9 @@ namespace Backend_DTO.DTOs
         [ForeignKey("ComponentId")]
         public List<ProductionLineHistoryDTO> History { get; set; }
         public int TotalActions { get; set; }
+        public int MaxActions { get; set; }
+        public int CurrentActions { get; set; }
+        [NotMapped]
+        public int PercentageMaintenance { get; set; }
     }
 }
