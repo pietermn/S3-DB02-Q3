@@ -1,130 +1,131 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Nodefications</title>
     <style>
-        body {
-            margin: 0;
-            padding-bottom: 3rem;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
 
-        #form,
-        #form1 {
-            background: rgba(0, 0, 0, 0.15);
-            padding: 0.25rem;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            height: 3rem;
-            box-sizing: border-box;
-            backdrop-filter: blur(10px);
-        }
+      #form,
+      #form1 {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
 
-        #form {
-            bottom: 3rem;
-        }
+      #form {
+        bottom: 3rem;
+      }
 
-        input
-        {
-            border: none;
-            padding: 0 1rem;
-            flex-grow: 1;
-            border-radius: 2rem;
-            margin: 0.25rem;
-        }
+      input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
 
-        input:focus
-        {
-            outline: none;
-        }
+      input:nth-child(2) {
+        min-width: 75%;
+      }
 
-        #form>button,
-        #form1>button {
-            background: #333;
-            border: none;
-            padding: 0 1rem;
-            margin: 0.25rem;
-            border-radius: 3px;
-            outline: none;
-            color: #fff;
-            width: 15ch;
-        }
+      input:focus {
+        outline: none;
+      }
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
+      #form > button,
+      #form1 > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+        width: 15ch;
+      }
 
-        #messages>li {
-            padding: 0.5rem 1rem;
-        }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
 
-        #messages>li:nth-child(odd) {
-            background: #efefef;
-        }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-        <input id="input" autocomplete="off" placeholder="id"/>
-        <input id="input01" autocomplete="off" placeholder="componentId"/>
-        <input id="input02" autocomplete="off" placeholder="message"/>
-        <button>Add</button>
+      <input id="input01" autocomplete="off" placeholder="componentId" />
+      <input id="input02" autocomplete="off" placeholder="message" />
+      <button>Add</button>
     </form>
     <form id="form1" action="">
-        <input id="input1" autocomplete="off" placeholder="id"/>
-        <button>Remove</button>
+      <input id="input1" autocomplete="off" placeholder="id" />
+      <button>Remove</button>
     </form>
-
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
+      var socket = io();
 
-        var messages = document.getElementById('messages');
-        var form = document.getElementById('form');
-        var form1 = document.getElementById('form1');
-        var input = document.getElementById('input');
-        var input01 = document.getElementById('input01');
-        var input02 = document.getElementById('input02');
-        var input1 = document.getElementById('input1');
+      var messages = document.getElementById("messages");
+      var form = document.getElementById("form");
+      var form1 = document.getElementById("form1");
+      var input01 = document.getElementById("input01");
+      var input02 = document.getElementById("input02");
+      var input1 = document.getElementById("input1");
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (input.value && input01.value && input02.value) {
-                socket.emit('Add Notification', {id: input.value, componentId: input01.value, message: input02.value});
-                input.value = '';
-                input01.value = '';
-                input02.value = '';
-            }
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input01.value && input02.value) {
+          socket.emit("Add Notification", {
+            componentId: input01.value,
+            message: input02.value,
+          });
+          input01.value = "";
+          input02.value = "";
+        }
+      });
+
+      form1.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input1.value) {
+          socket.emit("Remove Notification", { id: input1.value });
+          input1.value = "";
+        }
+      });
+
+      socket.on("Add Notification List", (l) => {
+        messages.innerHTML = "";
+        console.log(l);
+        l.forEach((n) => {
+          var item = document.createElement("li");
+          item.id = n.id;
+          item.textContent = `ID=${n.Id} CID=${n.ComponentId} | ${n.Message}`;
+          messages.appendChild(item);
         });
-
-        form1.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (input1.value) {
-                socket.emit('Remove Notification', {id: input1.value})
-                input1.value = '';
-            }
-        })
-
-        socket.on('Add Notification List', (l) => {
-            messages.innerHTML = '';
-            l.forEach(n => {
-                var item = document.createElement('li');
-                item.id = n.id;
-                item.textContent = `ID=${n.id} CID=${n.componentId} | ${n.message}`;
-                messages.appendChild(item);
-            });
-            window.scrollTo(0, document.body.scrollHeight);
-        })
+        window.scrollTo(0, document.body.scrollHeight);
+      });
     </script>
-</body>
-
+  </body>
 </html>

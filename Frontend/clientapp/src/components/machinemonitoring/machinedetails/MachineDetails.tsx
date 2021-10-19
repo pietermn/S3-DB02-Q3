@@ -1,27 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GrStatusGoodSmall as StatusDot } from 'react-icons/gr';
 import MachineStatus from '../machinestatus/MachineStatus';
 import Modal from 'react-modal';
 import './MachineDetails.scss';
-import { Component } from '../../../globalTypes';
+import { Component, Uptime } from '../../../globalTypes';
 import { useHistory } from 'react-router-dom';
+import { getUptimesFromLastDayById } from '../../../Api/requests/uptime'
 
 interface IMachineDetails {
+    id: number,
     status: boolean,
     productionLine: string,
     product: string,
-    uptime: boolean[],
     components?: Component[]
 }
 
 export default function MachineDetails(props: IMachineDetails) {
     const [show, setShow] = useState(false);
+    const [uptime, setUptime] = useState<Uptime[]>([])
     const history = useHistory();
 
-    function ToComponents(componentId: number) {
-        
+    async function getUptime() {
+        setUptime(await getUptimesFromLastDayById(props.id))
     }
 
+    useEffect(() => {
+        async function getData() {
+            await getUptime()
+        }
+
+        getData()
+    }, [props.id])
+
+    // function ToComponents(componentId: number) {
+
+    // }
     return (
         <>
             <Modal
@@ -30,27 +43,29 @@ export default function MachineDetails(props: IMachineDetails) {
                 onRequestClose={() => setShow(false)}
                 contentLabel={props.productionLine}
                 shouldCloseOnOverlayClick={true}
+                ariaHideApp={false}
             >
                 <h1>Production line {props.productionLine}</h1>
                 {
-                    props.components && props.components.length ? 
-                    props.components.map((component, index) => {
-                        return (
-                            <h2 className="redirect-component" key={index} onClick={() => history.push({
-                                pathname: "/chealth", 
-                                state: {componentId: component.id}})}>{component.description}</h2>
-                        )
-                    })
-                    : <h2>No components found</h2>
+                    props.components && props.components.length ?
+                        props.components.map((component, index) => {
+                            return (
+                                <h2 className="redirect-component" key={index} onClick={() => history.push({
+                                    pathname: "/chealth",
+                                    state: { componentId: component.id }
+                                })}>{component.description}</h2>
+                            )
+                        })
+                        : <h2>No components found</h2>
                 }
                 <button onClick={() => setShow(false)}>Close</button>
             </Modal>
             <tr className='MM-Data' onClick={() => setShow(true)}>
 
-                <td className={props.status ? 'Good' : 'Bad'}><StatusDot /></td>
+                <td className={uptime && uptime.length ? uptime[uptime.length - 1].active ? 'Good' : 'Bad' : 'Bad'}><StatusDot /></td>
                 <td>{props.productionLine}</td>
                 <td>{props.product}</td>
-                <td><MachineStatus name={props.productionLine} uptime={props.uptime} /></td>
+                <td><MachineStatus name={props.productionLine} uptime={uptime} /></td>
                 <td>{props.components?.length || 0}</td>
             </tr>
         </>
