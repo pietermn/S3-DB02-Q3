@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("component")]
+    [Route("maintenance")]
     public class MaintenanceController : Controller
     {
         readonly IMaintenanceContainer _maintenanceContainer;
