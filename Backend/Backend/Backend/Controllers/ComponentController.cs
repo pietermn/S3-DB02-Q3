@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Backend_DTO.DTOs;
-using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +31,14 @@ namespace Backend.Controllers
             List<ComponentDTO> Components = _componentContainer.GetComponents();
 
             return Ok(Components);
+        }
+
+        [Route("previousactions/{component_id}/{amountofweeks}"), HttpGet]
+        public IActionResult GetPreviousActions(int component_id, int amountofweeks)
+        {
+            List<int> Actions = _componentContainer.GetPreviousActions(component_id, amountofweeks);
+
+            return Ok(Actions);
         }
     }
 }

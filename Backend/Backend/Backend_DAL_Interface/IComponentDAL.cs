@@ -1,7 +1,5 @@
 ﻿using Backend_DTO.DTOs;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Backend_DAL_Interface
 {
@@ -9,5 +7,6 @@ namespace Backend_DAL_Interface
     {
         public List<ComponentDTO> GetComponents();
         public ComponentDTO GetComponent(int component_id);
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks);
     }
 }

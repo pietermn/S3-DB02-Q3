@@ -1,0 +1,19 @@
+{
+    "name": "nodefications",
+    "version": "0.0.1",
+    "description": "Notifications service for Q3 school project",
+    "dependencies": {
+        "express": "^4.17.1",
+        "mysql": "^2.18.1",
+        "socket.io": "^4.2.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.13",
+        "@types/mysql": "^2.15.19",
+        "nodemon": "^2.0.13",
+        "ts-node": "^10.3.0"
+    },
+    "scripts": {
+        "start": "nodemon index.ts"
+    }
+}

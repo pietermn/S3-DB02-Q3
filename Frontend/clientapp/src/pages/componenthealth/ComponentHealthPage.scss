@@ -1,11 +1,36 @@
+@import "../../variables";
+
 .Components-Full-Page {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-areas:
+    "component-overview component-graph"
+    "component-overview history-overview";
 
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+
+    h1 {
+        font-size: 28px;
+        color: map-get($map: $background, $key: "blue");
+    }
 }
 
-.component-overview {
+.Component-Overview {
+    grid-area: component-overview;
+    display: flex;
+    justify-content: center;
 
+    .center-table {
+        width: 80%;
+    }
 }
 
-.component-history-overview {
-    
+.Component-History-Overview {
+    grid-area: history-overview;
+}
+
+.Component-Graph {
+    grid-area: component-graph;
 }

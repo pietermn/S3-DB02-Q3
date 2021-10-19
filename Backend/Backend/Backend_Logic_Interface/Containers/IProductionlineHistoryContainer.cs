@@ -1,12 +1,11 @@
-﻿using Backend_Logic_Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Backend_DTO.DTOs;
 
 namespace Backend_Logic_Interface.Containers
 {
     public interface IProductionLineHistoryContainer
     {
-        public List<IProductionLineHistory> GetProductionLineHistorys();
+        public ProductionLineHistoryDTO GetProductionLineHistory(int productionLineHistory_id);
+        public List<ProductionLineHistoryDTO> GetProductionLinesHistory();
     }
 }

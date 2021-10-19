@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
-using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
-using Backend_Logic_Interface.Models;
 
 namespace Backend_Logic.Containers
 {
@@ -25,6 +21,11 @@ namespace Backend_Logic.Containers
         public List<ComponentDTO> GetComponents()
         {
             return _componentDAL.GetComponents();
+        }
+
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        {
+            return _componentDAL.GetPreviousActions(component_id, amountOfWeeks);
         }
     }
 }
