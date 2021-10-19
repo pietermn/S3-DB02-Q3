@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import MachineDetails from '../../components/machinemonitoring/machinedetails/MachineDetails'
 import {ProductionLine} from '../../globalTypes';
-import {GetProductionLines} from '../../Api/requests/productionlines';
+import {GetProductionLines} from '../../api/requests/productionlines';
 import './MachineMonitoringPage.scss'
 
 export default function MachineMonitoringPage() {

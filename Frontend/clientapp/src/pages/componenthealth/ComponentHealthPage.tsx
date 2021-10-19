@@ -3,7 +3,7 @@ import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsG
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
 import { Component } from "../../globalTypes";
-import { GetComponents, GetPreviousActions } from '../../Api/requests/components';
+import { GetComponents, GetPreviousActions } from '../../api/requests/components';
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
 
