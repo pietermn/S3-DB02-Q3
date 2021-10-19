@@ -1,22 +1,26 @@
-﻿using Backend_Logic.Models;
+﻿using System.Collections.Generic;
+using Backend_DAL_Interface;
+using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
-using Backend_Logic_Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Backend_Logic.Containers
 {
     public class MachineContainer: IMachineContainer
     {
-        public List<IMachine> GetMachines()
+        readonly IMachineDAL _machineDAL;
+        public MachineContainer(IMachineDAL machineDAL)
         {
-            return ConvertToIMachine();
+            _machineDAL = machineDAL;
         }
 
-        private List<IMachine> ConvertToIMachine()
+        public MachineDTO GetMachine(int machine_id)
         {
-            return new List<IMachine>();
+            return _machineDAL.GetMachine(machine_id);
+        }
+
+        public List<MachineDTO> GetMachines()
+        {
+            return _machineDAL.GetMachines();
         }
     }
 }
