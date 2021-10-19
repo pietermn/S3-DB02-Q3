@@ -1,91 +1,139 @@
 import * as d3 from "d3";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { NodeGroup } from "react-move";
+import { GetPreviousActions } from '../../../api/requests/components';
 import "./ActionsGraph.scss"
 
 interface IActionsGraph {
-    actions: number[]
+    component_id: number
+}
+
+class Actions {
+    id: number;
+    value: number;
+    name: string;
+
+    constructor(id: number, value: number) {
+        this.id = id;
+        this.value = value;
+        this.name = `week ${id + 1}`
+    }
+}
+
+let barHeight = 25;
+let barPadding = 2;
+let barColour = "#348AA7";
+let widthScale = (d: number) => d * 5;
+
+interface IBarGroup {
+    state: {
+        value: number,
+        y: number,
+        opacity: number
+    },
+    data: Actions,
+    maxValue: number
+}
+
+function TransformActions(actions: number[]): Actions[] {
+    let newActions: Actions[] = [];
+    console.log(actions);
+    for (var i = 0; i < actions.length; i++) {
+        newActions.push(new Actions(i, actions[i]));
+    }
+
+    return newActions;
+}
+
+function BarGroup(props: IBarGroup) {
+    console.log(props.maxValue);
+    let screenwidth = ((window.innerWidth / 3) * 2) * .75;
+    let percentage = screenwidth / props.maxValue;
+    let barWidth = (d: number) => d * percentage;
+    let width = barWidth(props.state.value);
+    let yMid = barHeight * 0.5;
+
+    return (
+        <g className="bar-group" transform={`translate(0, ${props.state.y})`}>
+            <rect
+                y={barPadding * 0.5}
+                width={width >= props.maxValue ? props.maxValue : width}
+                height={barHeight - barPadding}
+                style={{ fill: barColour, opacity: props.state.opacity }}
+            />
+            <text
+                className="value-label"
+                x={width - 6}
+                y={yMid}
+                alignmentBaseline="middle"
+            >
+                {props.state.value.toFixed(0)}
+            </text>
+            <text
+                className="name-label"
+                x="-6"
+                y={yMid}
+                alignmentBaseline="middle"
+                style={{ opacity: props.state.opacity }}
+            >
+                {props.data.name}
+            </text>
+        </g>
+    );
 }
 
 export default function ActionsGraph(props: IActionsGraph) {
-    type Week = {
-        week: string,
-        actions: number
-    }
 
-    const weeks: Week[] = []
-
-    for (var i: number = 0; i < props.actions.length; i++) {
-        weeks.push(
-            {
-                week: `Week ${i + 1}`,
-                actions: props.actions[i]
-            })
-    }
-
-    let maxValue = Math.max(...weeks.map((w) => (w as Week).actions), 0);
-    const [myWidth, setMyWidth] = useState(((window.innerWidth / 3) * 2) * .75);
-    const [myHeight, setMyHeight] = useState(((window.innerHeight / 2)) * .60);
+    const [actions, setActions] = useState<Actions[]>([])
+    const [maxValue, setMaxValue] = useState(0)
 
     useEffect(() => {
-        DrawGraph();
-    }, [])
+        async function AsyncGetPreviousActions() {
+            let oldActions: number[] = await GetPreviousActions(props.component_id);
+            setMaxValue(Math.max(...oldActions));
+            setActions(TransformActions(oldActions));
+        }
+        AsyncGetPreviousActions();
+    }, [props.component_id])
 
-    // set the dimensions and margins of the graph
-    function DrawGraph() {
-        const margin = { top: 10, right: 30, bottom: 90, left: 40 }
+    function startTransition(d: Actions, i: number) {
+        return { value: 0, y: i * barHeight, opacity: 0 };
+    }
 
-        // append the svg object to the body of the page
-        const svg = d3.select("#Actions-Graph")
-            .append("svg")
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+    function enterTransition({ value }: Actions) {
+        return { value: [value], opacity: [1], timing: { duration: 2000 } };
+    }
 
-        // Parse the Data
+    function updateTransition({ value }: Actions, i: number) {
+        return { value: [value], y: [i * barHeight], timing: { duration: 2000 } };
+    }
 
-        // X axis
-        const x = d3.scaleBand()
-            .range([0, myWidth])
-            .domain(weeks.map(d => d.week))
-            .padding(0.2);
-        svg.append("g")
-            .attr("transform", `translate(0,${myHeight})`)
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
-
-        // Add Y axis
-        const y = d3.scaleLinear()
-            .domain(maxValue ? [0, maxValue] : [0, 1, 0])
-            .range([myHeight, 0]);
-        svg.append("g")
-            .call(d3.axisLeft(y));
-
-
-        // Bars
-        svg.selectAll("mybar")
-            .data(weeks)
-            .join("rect")
-            .attr("x", d => x(d.week) || 0)
-            .attr("width", x.bandwidth())
-            .attr("fill", "#69b3a2")
-            // no bar at the beginning thus:
-            .attr("height", d => myHeight - y(0)) // always equal to 0
-            .attr("y", d => y(0))
-
-        // Animation
-        svg.selectAll("rect")
-            .data(weeks)
-            .transition()
-            .duration(800)
-            .attr("y", d => y(d.actions) || 0)
-            .attr("height", d => myHeight - y(d.actions))
-            .delay((d, i) => { return i * 100 })
+    function leaveTransition(d: Actions) {
+        return { y: [-barHeight], opacity: [0], timing: { duration: 2000 } };
     }
 
     return (
-        <div id="Actions-Graph">
-
-        </div>
+        <svg className="chart-svg">
+            <g className="chart">
+                {useMemo(() => <NodeGroup
+                    data={actions}
+                    keyAccessor={(d: Actions) => d.name}
+                    start={startTransition}
+                    enter={enterTransition}
+                    update={updateTransition}
+                    leave={leaveTransition}
+                >
+                    {
+                        nodes => (
+                            <g>
+                                {nodes.map(({ key, data, state }) => (
+                                    <BarGroup maxValue={maxValue} key={key} data={data} state={state} />
+                                ))}
+                            </g>
+                        )
+                    }
+                </NodeGroup>, [JSON.stringify(actions)])}
+            </g>
+        </svg>
     )
 }

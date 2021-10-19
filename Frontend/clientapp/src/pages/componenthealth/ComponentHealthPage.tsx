@@ -22,7 +22,6 @@ export default function ComponentHealthPage() {
     function HandleSelectedComponent(component: Component) {
         if (component) {
             setSelectedComponent(component);
-            AsyncGetPreviousActions(component.id);
         }
     }
 
@@ -38,11 +37,6 @@ export default function ComponentHealthPage() {
                 HandleSelectedComponent(components[0])
             }
         }
-    }
-
-    async function AsyncGetPreviousActions(id: number) {
-        setActions(await GetPreviousActions(id));
-        setKey(id);
     }
 
     useEffect(() => {
@@ -68,9 +62,9 @@ export default function ComponentHealthPage() {
                 </div>
             </section>
 
-            {selectedComponent && actions && <section className="Component-Graph">
+            {selectedComponent && <section className="Component-Graph">
                 <h1>History {selectedComponent.description}</h1>
-                <ActionsGraph key={key} actions={actions} />
+                <ActionsGraph component_id={selectedComponent.id} />
             </section>}
 
             {
