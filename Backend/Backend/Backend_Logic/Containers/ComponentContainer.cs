@@ -21,11 +21,6 @@ namespace Backend_Logic.Containers
         public List<ComponentDTO> GetComponents()
         {
             List<ComponentDTO> Components = _componentDAL.GetComponents();
-            foreach (ComponentDTO c in Components)
-            {
-                //c.CurrentActions = c.TotalActions;
-                c.PercentageMaintenance = c.CurrentActions / (c.MaxActions) * 100;
-            }
             return Components;
 
         }

@@ -21,11 +21,13 @@ namespace Backend_DTO.DTOs
         [MaxLength(100)]
         public string Description { get; set; }
         [ForeignKey("ComponentId")]
-        public List<ProductionLineHistoryDTO> History { get; set; }
+        public List<ProductionLineHistoryDTO> History { get; set; }        
+        [ForeignKey("ComponentId")]
+        public List<ProductionLineHistoryDTO> MaintenanceHistory { get; set; }
         public int TotalActions { get; set; }
         public int MaxActions { get; set; }
         public int CurrentActions { get; set; }
         [NotMapped]
-        public int PercentageMaintenance { get; set; }
+        public int PercentageMaintenance => CurrentActions / MaxActions * 100;
     }
 }

@@ -17,5 +17,7 @@ namespace Backend_Logic_Interface.Models
         public int MaxActions { get;  }
         public int CurrentActions {get;}
         public List<IProductionLineHistory> History { get; }
+        public List<IMaintenance> MaintenanceHistory { get; }
+
     }
 }

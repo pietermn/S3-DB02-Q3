@@ -23,6 +23,7 @@ namespace Backend_DAL
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
                     .AsNoTracking()
+                .Include(c => c.MaintenanceHistory)
                 .FirstOrDefault();
         }
 
@@ -31,6 +32,7 @@ namespace Backend_DAL
             return _Context.Components
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
+                .Include(c => c.MaintenanceHistory)
                     .AsNoTracking()
                 .ToList();
         }
