@@ -17,12 +17,12 @@ export default function HistoryTable(props: IHistoryTableProps) {
             </div>
             <div className="tbody">
                 {
-                    props.HistoryMachines.map((historyMachine: ProductLineHistory, index: number) => {
+                    props.HistoryMachines.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map((historyMachine: ProductLineHistory, index: number) => {
                         return (
                             <div key={index} className="row">
                                 <p>{historyMachine.productionLine.name}</p>
                                 <p>{historyMachine.startDate.toLocaleString()}</p>
-                                <p>{historyMachine.endDate.toLocaleString()}</p>
+                                {historyMachine.endDate.toLocaleString() !== "0001-01-01 00:00:00" ? <p>{historyMachine.endDate.toLocaleString()}</p> : <p>Currently attached!</p>}
                             </div>
                         )
                     })

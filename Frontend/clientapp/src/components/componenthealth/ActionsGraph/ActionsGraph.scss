@@ -7,4 +7,19 @@
         height: 100%;
         width: 100%;
     }
+
+    #amount-timespan {
+        width: 50px;
+        padding: 0;
+    }
+
+    #timespan-select {
+        margin-right: 10px;
+    }
+
+    #amount-timespan, #timespan-select {
+        height: 30px;
+        border: none;
+        outline: 1px solid black
+    }
 }

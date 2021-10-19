@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import "./ActionsGraph.scss"
 
 interface IActionsGraph {
-    actions: number[]
+    actions: number[],
+    setTimespan: (timespan: string) => void,
+    timespan: string,
+    setTimespanAmount: (amount: string) => void,
+    timespanAmount: string
 }
 
 export default function ActionsGraph(props: IActionsGraph) {
@@ -83,9 +87,28 @@ export default function ActionsGraph(props: IActionsGraph) {
             .delay((d, i) => { return i * 100 })
     }
 
+    useEffect(() => {
+        
+    }, [])
+
+    const [timespan, setTimespan] = useState("weeks")
+    const [amountTimespan, setAmountTimespan] = useState("4");
+
     return (
         <div id="Actions-Graph">
-
+            <select id="timespan-select" value={props.timespan} onChange={({target}) => props.setTimespan(target.value)}>
+                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
+            </select>
+            <select value={props.timespanAmount} id="timespan-select" onChange={({target}) => props.setTimespanAmount(target.value)}>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
         </div>
     )
 }

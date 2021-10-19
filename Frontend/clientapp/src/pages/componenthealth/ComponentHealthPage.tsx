@@ -14,6 +14,8 @@ export default function ComponentHealthPage() {
     const [selectedComponent, setSelectedComponent] = useState<Component>();
     const [actions, setActions] = useState<number[]>();
     const [key, setKey] = useState<number>(0);
+    const [timespan, setTimespan] = useState("weeks")
+    const [amountTimespan, setAmountTimespan] = useState("4");
 
     async function AsyncGetComponents() {
         setComponents(await GetComponents());
@@ -41,7 +43,7 @@ export default function ComponentHealthPage() {
     }
 
     async function AsyncGetPreviousActions(id: number) {
-        setActions(await GetPreviousActions(id));
+        setActions(await GetPreviousActions(id, timespan, amountTimespan));
         setKey(id);
     }
 
@@ -70,7 +72,7 @@ export default function ComponentHealthPage() {
 
             {selectedComponent && actions && <section className="Component-Graph">
                 <h1>History {selectedComponent.description}</h1>
-                <ActionsGraph key={key} actions={actions} />
+                <ActionsGraph timespan={timespan} setTimespan={setTimespan} timespanAmount={amountTimespan} setTimespanAmount={setAmountTimespan} key={key} actions={actions} />
             </section>}
 
             {
