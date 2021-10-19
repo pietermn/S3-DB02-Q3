@@ -13,7 +13,7 @@ export default class SQL {
     static getNotifications = async () => {
         let notifications: Notification[] = [];
         const p = new Promise<Notification[]>((resolve, reject) => {
-            sqlConnection.query('SELECT * FROM `Notifications`', (err, res) => {
+            sqlConnection.query('SELECT Notifications.Id, ComponentId, Components.Description AS "Component", Message FROM `Notifications` INNER JOIN `Components` ON Notifications.ComponentId = Components.Id;', (err, res) => {
                 if (err) reject(err);
                 resolve(res);
             });

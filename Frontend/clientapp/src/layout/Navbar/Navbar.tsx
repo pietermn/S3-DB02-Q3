@@ -33,6 +33,7 @@ function NavbarRedirects() {
 
 function NavbarUserSection() {
     const { notifications } = useContext(NotificationContext)
+
     return (
         <section>
             <div className="Name-Container">
@@ -47,10 +48,7 @@ function NavbarUserSection() {
                     {notifications.length ?
                         notifications.map((n, i) => {
                             return (
-                                <div key={i}>
-                                    <b>{n.component}</b><br />
-                                    {n.maintenance}
-                                </div>
+                                    <div>{n.Component}<br/></div>
                             )
                         })
                         :

@@ -1,40 +1,41 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { MaintenanceNotification } from "../globalTypes";
+import { io } from "socket.io-client";
 
 interface INotificationContext {
-    addNotification: (component: string, maintenance: string) => void,
-    removeNotification: (component: string) => void,
-    notifications: MaintenanceNotification[]
+  notifications: MaintenanceNotification[];
 }
 
 const defaultState: INotificationContext = {
-    addNotification: () => { },
-    removeNotification: () => { },
-    notifications: []
-}
+  notifications: [],
+};
 
-export const NotificationContext = createContext(defaultState)
+export const NotificationContext = createContext(defaultState);
 
 interface INotificationProvider {
-    children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export function NotificationProvider(props: INotificationProvider) {
-    const [notifications, setNotifications] = useState(defaultState.notifications)
+  const [notifications, setNotifications] = useState(
+    defaultState.notifications
+  );
 
-    function addNotification(component: string, maintenance: string) {
-        setNotifications([...notifications, { component, maintenance }])
-    }
+  useEffect(() => {
+    const socket = io("http://localhost:5300");
 
-    function removeNotification(component: string) {
-        let notis = [...notifications]
-        notis.splice(notis.findIndex(n => n.component === component) - 1)
-        setNotifications(notis)
-    }
+    socket.on("Add Notification List", (data: MaintenanceNotification[]) => {
+        setNotifications(data)
+        console.log(data)
+    });
 
-    return (
-        <NotificationContext.Provider value={{notifications, addNotification, removeNotification}}>
-            {props.children}
-        </NotificationContext.Provider>
-    )
+  }, []);
+
+  return (
+    <NotificationContext.Provider
+      value={{ notifications }}
+    >
+      {props.children}
+    </NotificationContext.Provider>
+  );
 }
