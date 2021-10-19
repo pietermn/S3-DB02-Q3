@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import './MachineDetails.scss';
 import { Component, Uptime } from '../../../globalTypes';
 import { useHistory } from 'react-router-dom';
-import { getUptimesFromLastDayById } from '../../../Api/requests/uptime'
+import { getUptimesFromLastDayById } from '../../../api/requests/uptime'
 
 interface IMachineDetails {
     id: number,
