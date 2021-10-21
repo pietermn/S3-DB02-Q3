@@ -2,15 +2,18 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AppWrapper from "./layout/AppWrapper";
 import Routes from "./routes/Routes";
 import { NotificationProvider } from "./context/NotificationContext";
+import { UpdaterProvider } from "./context/UpdaterContext";
 
 function App() {
   return (
     <Router>
-      <NotificationProvider>
-        <AppWrapper>
-          <Routes />
-        </AppWrapper>
-      </NotificationProvider>
+      <UpdaterProvider>
+        <NotificationProvider>
+          <AppWrapper>
+            <Routes />
+          </AppWrapper>
+        </NotificationProvider>
+      </UpdaterProvider>
     </Router>
   );
 }
