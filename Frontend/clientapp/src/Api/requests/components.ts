@@ -13,7 +13,7 @@ export const GetComponents = async () => {
 
 export const GetPreviousActions = async (component_id: number, timespan: string, timespanAmount: string) => {
     let actions: number[] = [];
-    await Api.get<number[]>(`component/previousactions/${component_id}/${timespanAmount}`)
+    await Api.get<number[]>(`component/previousactions/${component_id}/${timespanAmount}/${timespan}`)
     .then((res) => {
         actions = res.data;
     })

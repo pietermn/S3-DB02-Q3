@@ -12,10 +12,7 @@ export default function ComponentHealthPage() {
     const [components, setComponents] = useState<Component[]>([])
     const location = useLocation();
     const [selectedComponent, setSelectedComponent] = useState<Component>();
-    const [actions, setActions] = useState<number[]>();
     const [key, setKey] = useState<number>(0);
-    const [timespan, setTimespan] = useState("weeks")
-    const [amountTimespan, setAmountTimespan] = useState("4");
 
     async function AsyncGetComponents() {
         setComponents(await GetComponents());
@@ -24,7 +21,7 @@ export default function ComponentHealthPage() {
     function HandleSelectedComponent(component: Component) {
         if (component) {
             setSelectedComponent(component);
-            AsyncGetPreviousActions(component.id);
+            setKey(component.id);
         }
     }
 
@@ -40,11 +37,6 @@ export default function ComponentHealthPage() {
                 HandleSelectedComponent(components[0])
             }
         }
-    }
-
-    async function AsyncGetPreviousActions(id: number) {
-        setActions(await GetPreviousActions(id, timespan, amountTimespan));
-        setKey(id);
     }
 
     useEffect(() => {
@@ -70,9 +62,9 @@ export default function ComponentHealthPage() {
                 </div>
             </section>
 
-            {selectedComponent && actions && <section className="Component-Graph">
-                <h1>History {selectedComponent.description}</h1>
-                <ActionsGraph timespan={timespan} setTimespan={setTimespan} timespanAmount={amountTimespan} setTimespanAmount={setAmountTimespan} key={key} actions={actions} />
+            {selectedComponent && <section className="Component-Graph">
+                <h1>History {selectedComponent.description} </h1>
+                <ActionsGraph component_id={selectedComponent.id} />
             </section>}
 
             {

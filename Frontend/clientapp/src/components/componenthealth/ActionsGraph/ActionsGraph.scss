@@ -1,7 +1,24 @@
-#Actions-Graph {
+.actionsgraph-container {
     height: 80%;
-    width: 100%;
+    width: 70%;
     margin-top: 4rem;
+    position: relative;
+
+    .loading {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+#Actions-Graph {
+    height: 100%;
+    width: 100%;
+
+    &.invisible {
+        opacity: 0;
+    }
 
     svg {
         height: 100%;
@@ -20,6 +37,11 @@
     #amount-timespan, #timespan-select {
         height: 30px;
         border: none;
-        outline: 1px solid black
+        outline: 1px solid black;
+        margin-bottom: 1rem;
     }
+}
+
+.invisible {
+    opacity: 0;
 }
