@@ -16,6 +16,7 @@ namespace Backend_DAL
         public DbSet<ProductionLineHistoryDTO> ProductionLinesHistory { get; set; }
         public DbSet<ProductionSideDTO> ProductionSides { get; set; }
         public DbSet<ProductionsDTO> Productions { get; set; }
+        public DbSet<MaintenanceDTO> Maintenance { get; set; }
 
         
     }

@@ -20,7 +20,9 @@ namespace Backend_Logic.Containers
 
         public List<ComponentDTO> GetComponents()
         {
-            return _componentDAL.GetComponents();
+            List<ComponentDTO> Components = _componentDAL.GetComponents();
+            return Components;
+
         }
 
         public List<int> GetPreviousActions(int component_id, int amount, string type)

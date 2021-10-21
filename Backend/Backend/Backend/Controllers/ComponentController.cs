@@ -29,7 +29,7 @@ namespace Backend.Controllers
         public IActionResult ReadAll()
         {
             List<ComponentDTO> Components = _componentContainer.GetComponents();
-
+            
             return Ok(Components);
         }
 
