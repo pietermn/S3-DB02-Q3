@@ -12,8 +12,7 @@ namespace Backend_DTO.DTOs
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Component")]
-        public int ComponentId { get; set; }
+        public ComponentDTO Component { get; set; }
         [MaxLength(50)]
         public string Description { get; set; }
         [JsonConverter(typeof(DateConverter))]

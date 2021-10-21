@@ -23,7 +23,7 @@ namespace Backend_DTO.DTOs
         [ForeignKey("ComponentId")]
         public List<ProductionLineHistoryDTO> History { get; set; }        
         [ForeignKey("ComponentId")]
-        public List<ProductionLineHistoryDTO> MaintenanceHistory { get; set; }
+        public List<MaintenanceDTO> MaintenanceHistory { get; set; }
         public int TotalActions { get; set; }
         public int MaxActions { get; set; }
         public int CurrentActions { get; set; }

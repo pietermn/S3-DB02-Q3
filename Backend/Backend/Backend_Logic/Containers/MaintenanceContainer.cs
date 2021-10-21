@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Backend_Logic.Containers
 {
-    public class MaintenanceContainer: IMaintenanceContainer
+    public class MaintenanceContainer : IMaintenanceContainer
     {
         readonly IMaintenanceDAL _maintenanceDAL;
         public MaintenanceContainer(IMaintenanceDAL componentDAL)
@@ -19,6 +19,11 @@ namespace Backend_Logic.Containers
         public MaintenanceDTO GetMaintenance(int component_id)
         {
             return _maintenanceDAL.GetMaintenance(component_id);
+        }
+        
+        public List<MaintenanceDTO> GetAllMaintenance()
+        {
+            return _maintenanceDAL.GetAllMaintenance();
         }
 
     }

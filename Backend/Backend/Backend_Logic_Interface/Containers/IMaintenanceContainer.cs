@@ -8,5 +8,6 @@ namespace Backend_Logic_Interface.Containers
     public interface IMaintenanceContainer
     {
         public MaintenanceDTO GetMaintenance(int component_id);
+        public List<MaintenanceDTO> GetAllMaintenance();
     }
 }

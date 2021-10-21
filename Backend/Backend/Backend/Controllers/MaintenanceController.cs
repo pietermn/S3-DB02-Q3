@@ -25,6 +25,16 @@ namespace Backend.Controllers
 
             return Ok(component);
         }
+        
+        [Route("readall"), HttpGet]
+        public IActionResult ReadAll()
+        {
+            List<MaintenanceDTO> component = _maintenanceContainer.GetAllMaintenance();
+
+            return Ok(component);
+        }
+
+
 
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Backend_DAL
 {
-    public class MaintenanceDAL: IMaintenanceDAL
+    public class MaintenanceDAL : IMaintenanceDAL
     {
         readonly Q3Context _Context;
 
@@ -20,14 +20,16 @@ namespace Backend_DAL
         public MaintenanceDTO GetMaintenance(int componentId)
         {
             return _Context.Maintenance
-                .Where(m => m.ComponentId == componentId)
+                .Include(m => m.Component)
+                .Where(m => m.Component.Id == componentId)
                     .AsNoTracking()
                 .FirstOrDefault();
         }
 
-        public List<MaintenanceDTO> GetAllMaintenance() //Nog toevoegen
+        public List<MaintenanceDTO> GetAllMaintenance()
         {
             return _Context.Maintenance
+                .Include(m => m.Component)
                     .AsNoTracking()
                 .ToList();
         }
