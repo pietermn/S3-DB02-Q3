@@ -43,18 +43,20 @@ io.on("connection", async (socket) => {
     socket.on(
         "Set Max Actions",
         async (data: { componentId: number; maxActions: number }) => {
-            await axios.put(
-                "http://localhost:5000/component/maxactions?component_id=" +
-                    data.componentId +
-                    "&max_actions=" +
-                    data.maxActions
-            );
-            if (
-                await ActionsChecker.componentNeedsNotification(
-                    data.componentId
-                )
-            ) {
-                sql.addNotification(data.componentId, "");
+            if (data.maxActions <= 2147483647) {
+                await axios.put(
+                    "http://localhost:5000/component/maxactions?component_id=" +
+                        data.componentId +
+                        "&max_actions=" +
+                        data.maxActions
+                );
+                if (
+                    await ActionsChecker.componentNeedsNotification(
+                        data.componentId
+                    )
+                ) {
+                    sql.addNotification(data.componentId, "");
+                }
             }
 
             io.emit("Add Notification List", await sql.getNotifications());
