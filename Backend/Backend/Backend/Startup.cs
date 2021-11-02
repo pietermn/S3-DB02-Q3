@@ -40,6 +40,7 @@ namespace Backend
             services.AddScoped<IProductionLineContainer, ProductionLineContainer>();
             services.AddScoped<IProductionLineHistoryContainer, ProductionLineHistoryContainer>();
             services.AddScoped<IProductionSideContainer, ProductionSideContainer>();
+            services.AddScoped<IMaintenanceContainer, MaintenanceContainer>();
             services.AddScoped<IUptimeContainer, UptimeContainer>();
 
             services.AddScoped<IConvertDbDAL, ConvertDatabase>();
@@ -49,6 +50,8 @@ namespace Backend
             services.AddScoped<IProductionLineHistoryDAL, ProductionLineHistoryDAL>();
             services.AddScoped<IProductionSideDAL, ProductionSideDAL>();
             services.AddScoped<IProductionDAL, ProductionDAL>();
+            services.AddScoped<IMaintenanceDAL, MaintenanceDAL>();
+           
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -20,12 +20,14 @@ namespace Backend_Logic.Containers
 
         public List<ComponentDTO> GetComponents()
         {
-            return _componentDAL.GetComponents();
+            List<ComponentDTO> Components = _componentDAL.GetComponents();
+            return Components;
+
         }
 
-        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        public List<int> GetPreviousActions(int component_id, int amount, string type)
         {
-            return _componentDAL.GetPreviousActions(component_id, amountOfWeeks);
+            return _componentDAL.GetPreviousActions(component_id, amount, type);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Backend_DAL
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
                     .AsNoTracking()
+                .Include(c => c.MaintenanceHistory)
                 .FirstOrDefault();
         }
 
@@ -31,11 +32,12 @@ namespace Backend_DAL
             return _Context.Components
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
+                .Include(c => c.MaintenanceHistory)
                     .AsNoTracking()
                 .ToList();
         }
 
-        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        public List<int> GetPreviousActions(int component_id, int amount, string type)
         {
             ComponentDTO component = _Context.Components.Where(c => c.Id == component_id)
                 .Include(c => c.History)
@@ -52,14 +54,22 @@ namespace Backend_DAL
             }
 
             List<int> actions = new List<int>();
-            for (int i = 0; i < amountOfWeeks; i++)
+            for (int i = 0; i < amount; i++)
             {
                 int actionsThisWeek = 0;
                 //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
                 //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
                 DateTime MockNowDate = new DateTime(2020, 9, 30);
+
+                // Default sorting is by weeks
                 DateTime firstDatetime = MockNowDate.AddDays(i * -7);
-                DateTime secondDatetime = firstDatetime.AddDays(-7);
+                DateTime secondDatetime = firstDatetime.AddDays(-7); 
+
+                if (type == "months")
+                {
+                    firstDatetime = MockNowDate.AddMonths(-i);
+                    secondDatetime = firstDatetime.AddMonths(-1);
+                }
 
 
                 foreach (ProductionsDTO production in productions)
