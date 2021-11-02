@@ -1,7 +1,12 @@
+using Authentication_DAL;
+using Authentication_DAL_Interface;
+using Authentication_Logic.Containers;
+using Authentication_Logic_Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +31,12 @@ namespace Authentication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DBContext>(options => options.UseMySQL("server=localhost;port=3308;user=user;password=root;database=q3_auth"));
+
+            services.AddScoped<ISmsRecieverContainer, SmsRecieverContainer>();
+
+            services.AddScoped<ISmsRecieverDAL, SmsRecieverDAL>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -11,4 +11,24 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Authentication_DAL\Authentication_DAL.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Authentication_Logic_Interface\Authentication_Logic_Interface.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Authentication_DTO\Authentication_DTO.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Authentication_Logic\Authentication_Logic.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
 </Project>

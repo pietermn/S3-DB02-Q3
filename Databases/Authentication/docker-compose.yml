@@ -22,4 +22,4 @@ services:
       PMA_HOST: db
     restart: always
     ports:
-      - 8080:80
+      - 8081:80
