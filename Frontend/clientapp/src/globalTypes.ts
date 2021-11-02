@@ -48,8 +48,10 @@ export enum ComponentType {
 }
 
 export type MaintenanceNotification = {
-    component: string,
-    maintenance: string
+    Id: number,
+    ComponentId: number
+    Component: string,
+    Message: string
 }
 
 export type Uptime = {

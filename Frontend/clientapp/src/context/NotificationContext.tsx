@@ -1,40 +1,65 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { MaintenanceNotification } from "../globalTypes";
+import { io, Socket } from "socket.io-client";
 
 interface INotificationContext {
-    addNotification: (component: string, maintenance: string) => void,
-    removeNotification: (component: string) => void,
-    notifications: MaintenanceNotification[]
+    notifications: MaintenanceNotification[];
+    getComponentNotifications: (
+        componentId: number
+    ) => MaintenanceNotification[];
+    removeNotification: (notificationId: number) => void;
 }
 
 const defaultState: INotificationContext = {
-    addNotification: () => { },
-    removeNotification: () => { },
-    notifications: []
-}
+    notifications: [],
+    getComponentNotifications: (componentId: number) => [],
+    removeNotification: (notificationId: number) => {},
+};
 
-export const NotificationContext = createContext(defaultState)
+export const NotificationContext = createContext(defaultState);
 
 interface INotificationProvider {
-    children?: React.ReactNode
+    children?: React.ReactNode;
 }
 
 export function NotificationProvider(props: INotificationProvider) {
-    const [notifications, setNotifications] = useState(defaultState.notifications)
+    const [notifications, setNotifications] = useState(
+        defaultState.notifications
+    );
 
-    function addNotification(component: string, maintenance: string) {
-        setNotifications([...notifications, { component, maintenance }])
+    let socket: Socket;
+
+    useEffect(() => {
+        socket = io("http://localhost:5300");
+
+        socket.on(
+            "Add Notification List",
+            (data: MaintenanceNotification[]) => {
+                setNotifications(data);
+                console.log(data);
+            }
+        );
+    }, []);
+
+    function getComponentNotifications(componentId: number) {
+        return notifications.filter((n) => n.ComponentId === componentId);
     }
 
-    function removeNotification(component: string) {
-        let notis = [...notifications]
-        notis.splice(notis.findIndex(n => n.component === component) - 1)
-        setNotifications(notis)
+    function removeNotification(notificationId: number) {
+        socket.emit("Add Notification", {
+            id: notificationId,
+        });
     }
 
     return (
-        <NotificationContext.Provider value={{notifications, addNotification, removeNotification}}>
+        <NotificationContext.Provider
+            value={{
+                notifications,
+                getComponentNotifications,
+                removeNotification,
+            }}
+        >
             {props.children}
         </NotificationContext.Provider>
-    )
+    );
 }
