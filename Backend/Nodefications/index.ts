@@ -2,6 +2,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import sql from "./sql";
+import axios from "axios";
+import ActionsChecker from "./actionsChecker";
 
 const port = 5300;
 const app = express();
@@ -35,6 +37,16 @@ io.on("connection", async (socket) => {
 	socket.on("disconnect", () => {
 		console.log("a user disconnected");
 	});
+
+	socket.on("Set Max Actions", async (data: {componentId: number, maxActions: number, message: string}) => {
+		await axios.put("https://localhost:5001/component/maxactions?component_id=" + data.componentId + "&max_actions=" + data.maxActions)
+		
+		if (ActionsChecker.componentNeedsNotification(data.componentId)) {
+			sql.addNotification(data.componentId, "")
+		}
+
+		io.emit("Add Notification List", await sql.getNotifications());
+	})
 
 	socket.on("Add Notification", async (notification) => {
 		sql.addNotification(notification.componentId, notification.message);

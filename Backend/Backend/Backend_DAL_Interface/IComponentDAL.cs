@@ -7,6 +7,7 @@ namespace Backend_DAL_Interface
     {
         public List<ComponentDTO> GetComponents();
         public ComponentDTO GetComponent(int component_id);
-        public List<int> GetPreviousActions(int component_id, int amount, string type);
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks, string type);
+        public void SetMaxAction(int component_id, int max_actions);
     }
 }
