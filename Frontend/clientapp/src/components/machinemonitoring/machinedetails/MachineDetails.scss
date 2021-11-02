@@ -46,7 +46,7 @@
         }
 
         &.Bad {
-            color: map-get($map: $accent-colors, $key: "orange");
+            color: map-get($map: $accent-colors, $key: "red");
         }
     }
 }

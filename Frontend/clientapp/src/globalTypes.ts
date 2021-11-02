@@ -7,6 +7,9 @@ export type Component = {
     board: number,
     totalActions: number
     history: ProductLineHistory[]
+    maxActions: number,
+    currentActions: number,
+    percentageMaintenance: number
 }
 
 export type ProductLineHistory = {
