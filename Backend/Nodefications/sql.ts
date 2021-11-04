@@ -35,9 +35,7 @@ export default class SQL {
     };
 
     static removeNotification = (notificationId: number) => {
-        sqlConnection.query(
-            "DELETE FROM `Notifications` WHERE Id = " + notificationId
-        );
+        sqlConnection.query("DELETE FROM `Notifications` WHERE Id = " + notificationId);
     };
 
     static updaterTimespan = async () => {
@@ -54,13 +52,10 @@ export default class SQL {
         return await p;
     };
 
-    static addMaintenance = async (
-        componentId: number,
-        description: string
-    ) => {
-        sqlConnection.query(
-            "INSERT INTO `Maintenance` (`ComponentId`, `Description`) VALUES (?, ?)",
-            [componentId, description]
-        );
+    static addMaintenance = async (componentId: number, description: string) => {
+        sqlConnection.query("INSERT INTO `Maintenance` (`ComponentId`, `Description`) VALUES (?, ?)", [
+            componentId,
+            description,
+        ]);
     };
 }

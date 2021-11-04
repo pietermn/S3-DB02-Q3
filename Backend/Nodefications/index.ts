@@ -32,6 +32,7 @@ app.get("/updater", (_req, res) => {
 });
 
 io.on("connection", async (socket) => {
+    socket.emit("Add Maintenance List", (await axios.get("http://localhost:5000/maintenance/readall")).data);
     socket.emit("Add Notification List", await sql.getNotifications());
     socket.emit("Updater", await sql.updaterTimespan());
 
@@ -40,28 +41,31 @@ io.on("connection", async (socket) => {
         console.log("a user disconnected");
     });
 
-    socket.on(
-        "Set Max Actions",
-        async (data: { componentId: number; maxActions: number }) => {
-            if (data.maxActions <= 2147483647) {
-                await axios.put(
-                    "http://localhost:5000/component/maxactions?component_id=" +
-                        data.componentId +
-                        "&max_actions=" +
-                        data.maxActions
-                );
-                if (
-                    await ActionsChecker.componentNeedsNotification(
-                        data.componentId
-                    )
-                ) {
-                    sql.addNotification(data.componentId, "");
-                }
+    socket.on("Set Max Actions", async (data: { componentId: number; maxActions: number }) => {
+        if (data.maxActions <= 2147483647) {
+            await axios.put(
+                "http://localhost:5000/component/maxactions?component_id=" +
+                    data.componentId +
+                    "&max_actions=" +
+                    data.maxActions
+            );
+            if (await ActionsChecker.componentNeedsNotification(data.componentId)) {
+                sql.addNotification(data.componentId, "");
             }
-
-            io.emit("Add Notification List", await sql.getNotifications());
         }
-    );
+
+        io.emit("Add Notification List", await sql.getNotifications());
+    });
+
+    socket.on("Add Maintenance", async (data: { componentId: number; description: string }) => {
+        await axios.post("http://localhost:5000/maintenance", data);
+        io.emit("Add Maintenance List", (await axios.get("http://localhost:5000/maintenance/readall")).data);
+    });
+
+    socket.on("Finish Maintenance", async (data: { maintenanceId: number }) => {
+        await axios.put("http://localhost:5000/maintenance", data);
+        io.emit("Add Maintenance List", (await axios.get("http://localhost:5000/maintenance/readall")).data);
+    });
 
     socket.on("Add Notification", async (notification) => {
         sql.addNotification(notification.componentId, notification.message);
@@ -74,16 +78,11 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("Set Timer", (data: { interval: number; startDate: Date }) => {
-        if (
-            !timerActive &&
-            (data.startDate !== null || data.startDate !== undefined)
-        ) {
+        if (!timerActive && (data.startDate !== null || data.startDate !== undefined)) {
             startDate = new Date(data.startDate);
             timer = setInterval(() => {
                 jump = Number(jump) + Number(data.interval);
-                let newDate = new Date(
-                    new Date(startDate).getTime() + jump * 1000
-                );
+                let newDate = new Date(new Date(startDate).getTime() + jump * 1000);
                 io.emit("New Current Date", newDate);
             }, 5000);
             timerActive = true;
