@@ -1,6 +1,7 @@
 ﻿using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,6 +32,9 @@ namespace Backend_DAL
                 .Include(pl => pl.Machines)
                 .Include(pl => pl.Components)
                 .AsNoTracking()
+                .ToList()
+                .OrderBy(pl => pl.Name[0])
+                .ThenBy(pl => Convert.ToInt32(pl.Name.Substring(1)))
                 .ToList();
         }
     }

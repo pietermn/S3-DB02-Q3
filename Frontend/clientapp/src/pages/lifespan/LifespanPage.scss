@@ -78,7 +78,7 @@
 
   .Notification-Container {
     overflow-y: auto;
-    height: 80%;
+    max-height: 8rem;
     cursor: ns-resize;
 
     &::-webkit-scrollbar {
