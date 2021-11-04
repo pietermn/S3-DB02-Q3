@@ -9,5 +9,7 @@ namespace Backend_DAL_Interface
     {
         public MaintenanceDTO GetMaintenance(int componentId);
         public List<MaintenanceDTO> GetAllMaintenance();
+        public void AddMaintenance(MaintenanceDTO maintenance);
+        public void FinishMaintance(int MaintenancId);
     }
 }

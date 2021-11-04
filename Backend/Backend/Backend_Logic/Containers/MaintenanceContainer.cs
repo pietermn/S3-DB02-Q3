@@ -26,5 +26,14 @@ namespace Backend_Logic.Containers
             return _maintenanceDAL.GetAllMaintenance();
         }
 
+        public void AddMaintenance(MaintenanceDTO maintenance)
+        {
+            _maintenanceDAL.AddMaintenance(maintenance);
+        }
+
+        public void FinishMaintance(int MaintenancId)
+        {
+            _maintenanceDAL.FinishMaintance(MaintenancId);
+        }
     }
 }
