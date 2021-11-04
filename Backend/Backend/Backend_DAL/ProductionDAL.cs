@@ -27,9 +27,14 @@ namespace Backend_DAL
 
         public List<ProductionsDTO> GetProductionsByIdFromLastDay(int productionLine_id)
         {
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            DateTime fakeNow = new(2020, 9, 30, hour, minute, second);
+
             return _Context.Productions
                 .Where(p => p.ProductionLineId == productionLine_id
-                && p.Timestamp > new DateTime(2020, 9, 30).AddDays(-1))
+                && p.Timestamp > fakeNow.AddDays(-1))
                 .OrderBy(p => p.Timestamp)
                 .AsNoTracking()
             .ToList();

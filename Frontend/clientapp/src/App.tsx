@@ -5,6 +5,7 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { UpdaterProvider } from "./context/UpdaterContext";
 import { MaintenanceProvider } from "./context/MaintenanceContext";
 import { SocketProvider } from "./context/SocketContext";
+import "./i18n";
 
 function App() {
   return (

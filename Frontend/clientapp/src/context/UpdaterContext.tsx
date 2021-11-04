@@ -1,13 +1,15 @@
-import { createContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { createContext, useContext, useEffect, useState } from "react";
+import { GetProductionLines } from "../api/requests/productionlines";
+import { ProductionLine } from "../globalTypes";
+import { SocketContext } from "./SocketContext";
 
 interface IUpdaterContext {
-    date: Date;
+    bool: Boolean;
 }
 
 const defaultState: IUpdaterContext = {
-    date: new Date()
-}
+    bool: false,
+};
 
 export const UpdaterContext = createContext(defaultState);
 
@@ -16,20 +18,15 @@ interface IUpdaterProvider {
 }
 
 export function UpdaterProvider(props: IUpdaterProvider) {
-    const [date, setDate] = useState(defaultState.date)
+    const { socket } = useContext(SocketContext);
+    const [bool, setBool] = useState(defaultState.bool);
 
     useEffect(() => {
-        const socket = io("http://localhost:5300")
+        socket.on("Update Components", () => {
+            setBool(true);
+            setBool(false);
+        });
+    }, []);
 
-        socket.on("New Current Date", (data: Date) => {
-            setDate(data)
-        })
-    }, [])
-
-    return (
-        <UpdaterContext.Provider
-            value={{ date }}>
-            {props.children}
-        </UpdaterContext.Provider>
-    )
+    return <UpdaterContext.Provider value={{ bool }}>{props.children}</UpdaterContext.Provider>;
 }
