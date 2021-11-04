@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsGraph";
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
 import { Component } from "../../globalTypes";
-import { GetComponents, GetPreviousActions } from '../../api/requests/components';
+import { GetComponents, GetPreviousActions } from "../../api/requests/components";
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
+import { UpdaterContext } from "../../context/UpdaterContext";
 
 export default function ComponentHealthPage() {
+    const { bool } = useContext(UpdaterContext);
 
-    const [components, setComponents] = useState<Component[]>([])
+    const [components, setComponents] = useState<Component[]>([]);
     const location = useLocation();
     const [selectedComponent, setSelectedComponent] = useState<Component>();
     const [key, setKey] = useState<number>(0);
@@ -25,16 +27,20 @@ export default function ComponentHealthPage() {
         }
     }
 
+    if (bool) {
+        AsyncGetComponents();
+    }
+
     function FindSelectedComponent(state: IComponentId) {
         if (!selectedComponent) {
             if (state) {
                 for (let i = 0; i < components.length; i++) {
                     if (components[i].id === state.componentId) {
-                        HandleSelectedComponent(components[i])
+                        HandleSelectedComponent(components[i]);
                     }
                 }
             } else {
-                HandleSelectedComponent(components[0])
+                HandleSelectedComponent(components[0]);
             }
         }
     }
@@ -44,14 +50,14 @@ export default function ComponentHealthPage() {
             AsyncGetComponents();
         }
         if (components) {
-            const state = location.state as IComponentId
+            const state = location.state as IComponentId;
             FindSelectedComponent(state);
         }
-    }, [components.length, FindSelectedComponent])
+    }, [components.length, FindSelectedComponent]);
 
     type IComponentId = {
-        componentId: number
-    }
+        componentId: number;
+    };
 
     return (
         <div className="Components-Full-Page">
@@ -62,16 +68,18 @@ export default function ComponentHealthPage() {
                 </div>
             </section>
 
-            {selectedComponent && <section className="Component-Graph">
-                <h1>History {selectedComponent.description} </h1>
-                <ActionsGraph component_id={selectedComponent.id} />
-            </section>}
+            {selectedComponent && (
+                <section className="Component-Graph">
+                    <h1>History {selectedComponent.description} </h1>
+                    <ActionsGraph component_id={selectedComponent.id} />
+                </section>
+            )}
 
-            {
-                selectedComponent && <section className="Component-History-Overview">
+            {selectedComponent && (
+                <section className="Component-History-Overview">
                     <HistoryTable HistoryMachines={selectedComponent.history} />
                 </section>
-            }
-        </div >
-    )
+            )}
+        </div>
+    );
 }

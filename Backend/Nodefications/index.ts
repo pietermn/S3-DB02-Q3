@@ -13,8 +13,8 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 let timer: NodeJS.Timer;
 let timerActive = false;
-let jump = 0;
-let startDate: Date;
+let timerComponent: NodeJS.Timer;
+let timerActiveComponent = false;
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -36,7 +36,6 @@ io.on("connection", async (socket) => {
     await ActionsChecker.allComponentsNeedNotification();
     socket.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     socket.emit("Add Notification List", await sql.getNotifications());
-    socket.emit("Updater", await sql.updaterTimespan());
 
     console.log("a user connected");
     socket.on("disconnect", () => {
@@ -81,16 +80,12 @@ io.on("connection", async (socket) => {
         io.emit("Add Notification List", await sql.getNotifications());
     });
 
-    socket.on("Set Timer", (data: { interval: number; startDate: Date }) => {
-        if (!timerActive && (data.startDate !== null || data.startDate !== undefined)) {
-            // startDate = new Date(data.startDate);
+    socket.on("Start Timer", () => {
+        if (!timerActive) {
             timer = setInterval(async () => {
-                // jump = Number(jump) + Number(data.interval);
-                // let newDate = new Date(new Date(startDate).getTime() + jump * 1000);
                 await ActionsChecker.allComponentsNeedNotification();
                 io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
                 io.emit("Add Notification List", await sql.getNotifications());
-                // io.emit("New Current Date", newDate);
             }, 5000);
             timerActive = true;
             io.emit("Timer Started");
@@ -100,8 +95,23 @@ io.on("connection", async (socket) => {
     socket.on("Stop Timer", () => {
         clearInterval(timer);
         timerActive = false;
-        jump = Number(0);
         io.emit("Timer Stopped");
+    });
+
+    socket.on("Start Timer Component", () => {
+        if (!timerActiveComponent) {
+            timerComponent = setInterval(async () => {
+                io.emit("Update Components");
+            }, 30000);
+            timerActiveComponent = true;
+            io.emit("Timer Started Component");
+        }
+    });
+
+    socket.on("Stop Timer Component", () => {
+        clearInterval(timerComponent);
+        timerActiveComponent = false;
+        io.emit("Timer Stopped Component");
     });
 });
 

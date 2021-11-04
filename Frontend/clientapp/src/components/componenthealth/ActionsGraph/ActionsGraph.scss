@@ -1,7 +1,7 @@
 .actionsgraph-container {
     height: 80%;
     width: 75%;
-    margin-top: 4rem;
+    margin-top: 3rem;
     position: relative;
 
     .loading {
@@ -13,6 +13,8 @@
 }
 
 #Actions-Graph {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
 
@@ -21,20 +23,24 @@
     }
 
     svg {
+        margin-bottom: -1.5rem;
         height: 100%;
         width: 100%;
     }
 
     #amount-timespan {
+        height: 1.5rem;
         width: 50px;
         padding: 0;
     }
 
     #timespan-select {
+        height: 1.5rem;
         margin-right: 10px;
     }
 
-    #amount-timespan, #timespan-select {
+    #amount-timespan,
+    #timespan-select {
         height: 30px;
         border: none;
         outline: 1px solid black;

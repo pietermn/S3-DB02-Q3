@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Component, Notification as NotificationType } from "./types";
+import { Component } from "./types";
 import sql from "./sql";
 
 export default class ActionsChecker {
