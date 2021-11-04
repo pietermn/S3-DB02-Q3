@@ -92,11 +92,11 @@ function NavbarUserSection() {
   const { t } = useTranslation();
   const [openFlags, setOpenFlags] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
-  const [playing, setPlaying] = useState(false);
+  const [germanCounter, setGermanCounter] = useState(0);
+  console.log(germanCounter);
 
   useEffect(() => {
     i18n.changeLanguage(currentLang);
-    setPlaying(true);
   }, [currentLang]);
 
   return (
@@ -112,11 +112,18 @@ function NavbarUserSection() {
         </p>
       </div>
       <AccountIcon />
-      <ReactPlayer url="https://youtu.be/D-cZVjSLhSE?t=10" playing={playing} onStart={() => console.log("test")} />
+      <ReactPlayer url="https://youtu.be/D-cZVjSLhSE?t=10" playing={germanCounter >= 10} style={{ display: "none" }} />
       <NotificationDropdown title={t("notifications.label")} icon={<BellIcon />} notifications={notifications} />
       <NotificationDropdown title={t("maintenance.label")} icon={<WrenchIcon />} notifications={maintenance} />
       <div className="Flags" onClick={() => setOpenFlags(!openFlags)}>
-        <ReactCountryFlag countryCode={currentLang == "en" ? "GB" : currentLang.toUpperCase()} svg id="Flag__Icon" />
+        <ReactCountryFlag
+          onClick={() => {
+            if (currentLang == "de") setGermanCounter(germanCounter + 1);
+          }}
+          countryCode={currentLang == "en" ? "GB" : currentLang.toUpperCase()}
+          svg
+          id="Flag__Icon"
+        />
         {openFlags && (
           <div className="Flags__Dropdown">
             <ReactCountryFlag countryCode="NL" svg id="Flag__Icon" onClick={() => setCurrentLang("nl")} />
