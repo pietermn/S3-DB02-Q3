@@ -123,19 +123,21 @@ export default function ActionsGraph(props: IActionsGraph) {
     return (
         <div className="actionsgraph-container">
             <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>
-                <select id="timespan-select" name="timespan" value={timespan} onChange={handleInput}>
-                    <option value="weeks">{t("weeks.label")}</option>
-                    <option value="months">{t("months.label")}</option>
-                </select>
-                <select value={amountTimespan} name="timespan-amount" id="timespan-select" onChange={handleInput}>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
+                <div>
+                    <select id="timespan-select" name="timespan" value={timespan} onChange={handleInput}>
+                        <option value="weeks">{t("weeks.label")}</option>
+                        <option value="months">{t("months.label")}</option>
+                    </select>
+                    <select value={amountTimespan} name="timespan-amount" id="timespan-select" onChange={handleInput}>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
             </div>
             <CircularProgress className={isLoading ? "loading" : "loading invisible"} />
         </div>
