@@ -33,5 +33,21 @@ namespace Backend_DAL
                     .AsNoTracking()
                 .ToList();
         }
+
+        public void AddMaintenance(MaintenanceDTO maintenance)
+        {
+            _Context.Maintenance.Add(maintenance);
+            _Context.SaveChanges();
+        }
+
+        public void FinishMaintance(int MaintenancId)
+        {
+            MaintenanceDTO maintenanceDTO = _Context.Maintenance.Where(m => m.Id == MaintenancId).FirstOrDefault();
+            maintenanceDTO.TimeDone = DateTime.Now;
+            maintenanceDTO.Done = true;
+            _Context.SaveChanges();
+        }
+
+
     }
 }

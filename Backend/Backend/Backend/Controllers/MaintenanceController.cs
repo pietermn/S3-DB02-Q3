@@ -1,4 +1,5 @@
-﻿using Backend_DTO.DTOs;
+﻿using Backend.ViewModels;
+using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,7 +35,23 @@ namespace Backend.Controllers
             return Ok(component);
         }
 
+        [HttpPost]
+        public IActionResult Add(AddMaintenance maintenance)
+        {
+            MaintenanceDTO maintenanceDTO = new MaintenanceDTO() { ComponentId = maintenance.ComponentId, Description = maintenance.Description };
 
+            _maintenanceContainer.AddMaintenance(maintenanceDTO);
+
+            return Ok(maintenanceDTO);
+        }
+
+        [HttpPut]
+        public IActionResult Finish(int maintenanceId)
+        {
+            _maintenanceContainer.FinishMaintance(maintenanceId);
+
+            return Ok();
+        }
 
     }
 }
