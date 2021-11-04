@@ -80,7 +80,6 @@ export default function MachineDetails(props: IMachineDetails) {
                     <StatusDot />
                 </td>
                 <td>{props.productionLine}</td>
-                <td>{props.product}</td>
                 <td>
                     <MachineStatus name={props.productionLine} uptime={uptime} />
                 </td>

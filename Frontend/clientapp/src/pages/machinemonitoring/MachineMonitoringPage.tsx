@@ -24,7 +24,6 @@ export default function MachineMonitoringPage() {
                     <tr>
                         <th>{t("status.label")}</th>
                         <th>{t("machine.label")}</th>
-                        <th>Product</th>
                         <th>{t("uptime.label")}</th>
                         <th>{t("components.label")}</th>
                     </tr>
