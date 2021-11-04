@@ -2,45 +2,72 @@ import ComponentsTable from "../../components/lifespan/componentstable/Component
 import Modal from "react-modal";
 import "./LifespanPage.scss";
 import { Component } from "../../globalTypes";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents } from "../../api/requests/components";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
+import { useHistory, useLocation } from "react-router";
+
+type IComponentId = {
+  componentId: number;
+};
 
 export default function LifespanPage() {
-  const [show, setShow] = useState(false);
   const [components, setComponents] = useState<Component[]>([]);
   const [selectedComponent, setSelectedComponent] = useState<Component>();
-  const [maxActionsInput, setMaxActionsInput] = useState(0);
+  const [maxActionsInput, setMaxActionsInput] = useState(selectedComponent?.maxActions || 0);
   const [description, setDescription] = useState("");
-
+  const location = useLocation();
   const { setMaxActions } = useContext(NotificationContext);
+  const { addMaintenance, finishMaintenance, getComponentMaintenance } = useContext(MaintenanceContext);
+  const state = location.state as IComponentId;
+  console.log(state);
+  const history = useHistory();
 
-  const { addMaintenance, finishMaintenance, getComponentMaintenance } =
-    useContext(MaintenanceContext);
+  function findSelectedComponent(components: Component[]) {
+    if (state && state.componentId && components) {
+      setSelectedComponent(components.filter((c) => c.id == state.componentId)[0]);
+    }
+  }
 
   function handleSelectedComponent(component: Component) {
     setSelectedComponent(component);
-    setShow(true);
+    setMaxActionsInput(component.maxActions);
   }
 
   useEffect(() => {
     async function GetComponentsAsync() {
-      setComponents(await GetComponents());
+      let components: Component[] = await GetComponents();
+
+      setComponents(components);
+      findSelectedComponent(components);
     }
 
     GetComponentsAsync();
-  }, []);
+
+    return () => {
+      console.log("test");
+      history.replace({ state: undefined });
+    };
+  }, [components.length, state && state.componentId]);
+
+  function ClearData() {
+    setMaxActionsInput(0);
+    setDescription("");
+  }
 
   return (
     <div className="Lifespan-page">
       {selectedComponent && (
         <Modal
           className="MM-Modal Lifespan-Modal"
-          isOpen={show}
+          isOpen={selectedComponent ? true : false}
           ariaHideApp={false}
-          onRequestClose={() => setShow(false)}
+          onRequestClose={() => {
+            setSelectedComponent(undefined);
+            ClearData();
+          }}
           contentLabel={selectedComponent?.description}
           shouldCloseOnOverlayClick={true}
         >
@@ -55,20 +82,15 @@ export default function LifespanPage() {
                   setComponents(await GetComponents());
                   clearTimeout(timeout);
                 }, 500);
-                setShow(false);
+                setSelectedComponent(undefined);
+                ClearData();
               }}
             >
               <input
                 placeholder="Max actions..."
                 type="number"
-                value={
-                  !maxActionsInput
-                    ? selectedComponent.maxActions
-                    : maxActionsInput
-                }
-                onChange={({ target }) =>
-                  setMaxActionsInput(parseInt(target.value))
-                }
+                value={maxActionsInput}
+                onChange={({ target }) => setMaxActionsInput(parseInt(target.value))}
               />
               <button type="submit">
                 <ImCheckmark />
@@ -76,7 +98,7 @@ export default function LifespanPage() {
             </form>
           </div>
           <div className="Planner">
-            <h3>Plan onderhoud in</h3>
+            <h3>Plan maintenance</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -84,7 +106,7 @@ export default function LifespanPage() {
               }}
             >
               <textarea
-                placeholder="Onderhoud uitleg..."
+                placeholder="Maintenance description..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -97,37 +119,31 @@ export default function LifespanPage() {
             <h3>Maintenance</h3>
             <div className="Notification-Container">
               {selectedComponent &&
-                getComponentMaintenance(selectedComponent.id).map(
-                  (maintenance) => {
-                    console.log(selectedComponent.id);
-
-                    console.log(maintenance);
-
-                    return (
-                      <div key={maintenance.id}>
-                        <p>{maintenance.description}</p>
-                        <ImCheckmark
-                          onClick={() => finishMaintenance(maintenance.id)}
-                        />
-                      </div>
-                    );
-                  }
-                )}
+                getComponentMaintenance(selectedComponent.id).map((maintenance) => {
+                  return (
+                    <div key={maintenance.id}>
+                      <p>{maintenance.description}</p>
+                      <ImCheckmark onClick={() => finishMaintenance(maintenance.id)} />
+                    </div>
+                  );
+                })}
             </div>
           </div>
-          <button onClick={() => setShow(false)}>Close</button>
+          <button
+            onClick={() => {
+              setSelectedComponent(undefined);
+              ClearData();
+            }}
+          >
+            Close
+          </button>
         </Modal>
       )}
       <h1>
         Components <i>Sort by total actions</i>
       </h1>
       <div className="center-table">
-        {components && (
-          <ComponentsTable
-            components={components}
-            setSelectedComponet={handleSelectedComponent}
-          />
-        )}
+        {components && <ComponentsTable components={components} setSelectedComponet={handleSelectedComponent} />}
       </div>
     </div>
   );

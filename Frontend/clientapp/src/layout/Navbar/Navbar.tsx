@@ -25,22 +25,13 @@ function NavbarRedirects() {
   return (
     <section>
       <img alt="Q3" src={Q3Logo} />
-      <p
-        className={pathname === "/monitoring" ? "bold-text" : ""}
-        onClick={() => history.push("monitoring")}
-      >
+      <p className={pathname === "/monitoring" ? "bold-text" : ""} onClick={() => history.push("monitoring")}>
         Machine Monitoring
       </p>
-      <p
-        className={pathname === "/chealth" ? "bold-text" : ""}
-        onClick={() => history.push("chealth")}
-      >
+      <p className={pathname === "/chealth" ? "bold-text" : ""} onClick={() => history.push("chealth")}>
         Component Health
       </p>
-      <p
-        className={pathname === "/lifespan" ? "bold-text" : ""}
-        onClick={() => history.push("lifespan")}
-      >
+      <p className={pathname === "/lifespan" ? "bold-text" : ""} onClick={() => history.push("lifespan")}>
         Lifespan
       </p>
     </section>
@@ -53,11 +44,9 @@ interface INotifictionDropdown {
   notifications: MaintenanceNotification[];
 }
 
-function NotificationDropdown({
-  title,
-  icon,
-  notifications,
-}: INotifictionDropdown) {
+function NotificationDropdown({ title, icon, notifications }: INotifictionDropdown) {
+  const history = useHistory();
+
   return (
     <div className="Notification-Dropdown">
       {icon}
@@ -66,7 +55,14 @@ function NotificationDropdown({
         {notifications.length ? (
           notifications.map((n, i) => {
             return (
-              <div>
+              <div
+                onClick={() => {
+                  history.push({
+                    pathname: "/lifespan",
+                  });
+                  history.replace({ state: { componentId: n.componentId } });
+                }}
+              >
                 {n.component}
                 <br />
               </div>
@@ -84,8 +80,6 @@ function NavbarUserSection() {
   const { notifications } = useContext(NotificationContext);
   const { maintenance } = useContext(MaintenanceContext);
 
-  console.log(notifications);
-
   return (
     <section>
       <div className="Name-Container">
@@ -93,16 +87,8 @@ function NavbarUserSection() {
         <p>Last name</p>
       </div>
       <AccountIcon />
-      <NotificationDropdown
-        title="Notifications"
-        icon={<BellIcon />}
-        notifications={notifications}
-      />
-      <NotificationDropdown
-        title="Maintenance"
-        icon={<WrenchIcon />}
-        notifications={maintenance}
-      />
+      <NotificationDropdown title="Notifications" icon={<BellIcon />} notifications={notifications} />
+      <NotificationDropdown title="Maintenance" icon={<WrenchIcon />} notifications={maintenance} />
       <LogOutIcon />
     </section>
   );
