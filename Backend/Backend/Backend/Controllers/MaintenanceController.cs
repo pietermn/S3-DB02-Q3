@@ -28,9 +28,9 @@ namespace Backend.Controllers
         }
         
         [Route("readall"), HttpGet]
-        public IActionResult ReadAll()
+        public IActionResult ReadAllDone(bool done)
         {
-            List<MaintenanceDTO> component = _maintenanceContainer.GetAllMaintenance();
+            List<MaintenanceDTO> component = _maintenanceContainer.GetAllMaintenance(done);
 
             return Ok(component);
         }

@@ -21,9 +21,9 @@ namespace Backend_Logic.Containers
             return _maintenanceDAL.GetMaintenance(component_id);
         }
         
-        public List<MaintenanceDTO> GetAllMaintenance()
+        public List<MaintenanceDTO> GetAllMaintenance(bool done)
         {
-            return _maintenanceDAL.GetAllMaintenance();
+            return _maintenanceDAL.GetAllMaintenance(done);
         }
 
         public void AddMaintenance(MaintenanceDTO maintenance)

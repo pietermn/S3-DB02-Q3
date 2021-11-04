@@ -1,75 +1,71 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { MaintenanceNotification } from "../globalTypes";
-import { io, Socket } from "socket.io-client";
-const socket = io("http://localhost:5300");
+import { SocketContext } from "./SocketContext";
 
 interface INotificationContext {
-    notifications: MaintenanceNotification[];
-    getComponentNotifications: (
-        componentId: number
-    ) => MaintenanceNotification[];
-    removeNotification: (notificationId: number) => void;
-    setMaxActions: (componentId: number, maxActions: number) => void;
+  notifications: MaintenanceNotification[];
+  getComponentNotifications: (componentId: number) => MaintenanceNotification[];
+  removeNotification: (notificationId: number) => void;
+  setMaxActions: (componentId: number, maxActions: number) => void;
 }
 
 const defaultState: INotificationContext = {
-    notifications: [],
-    getComponentNotifications: (componentId: number) => [],
-    removeNotification: (notificationId: number) => {},
-    setMaxActions: (componentId: number, maxActions: number) => {},
+  notifications: [],
+  getComponentNotifications: (componentId: number) => [],
+  removeNotification: (notificationId: number) => {},
+  setMaxActions: (componentId: number, maxActions: number) => {},
 };
 
 export const NotificationContext = createContext(defaultState);
 
 interface INotificationProvider {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function NotificationProvider(props: INotificationProvider) {
-    const [notifications, setNotifications] = useState(
-        defaultState.notifications
-    );
+  const [notifications, setNotifications] = useState(
+    defaultState.notifications
+  );
 
-    useEffect(() => {
-        socket.on(
-            "Add Notification List",
-            (data: MaintenanceNotification[]) => {
-                setNotifications(data);
-            }
-        );
+  const { socket } = useContext(SocketContext);
 
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
+  useEffect(() => {
+    socket.on("Add Notification List", (data: MaintenanceNotification[]) => {
+      setNotifications(data);
+    });
 
-    function getComponentNotifications(componentId: number) {
-        return notifications.filter((n) => n.ComponentId === componentId);
-    }
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
-    function removeNotification(notificationId: number) {
-        socket.emit("Remove Notification", {
-            id: notificationId,
-        });
-    }
+  function getComponentNotifications(componentId: number) {
+    return notifications.filter((n) => n.componentId === componentId);
+  }
 
-    function setMaxActions(componentId: number, maxActions: number) {
-        socket.emit("Set Max Actions", {
-            componentId,
-            maxActions,
-        });
-    }
+  function removeNotification(notificationId: number) {
+    socket.emit("Remove Notification", {
+      id: notificationId,
+    });
+  }
 
-    return (
-        <NotificationContext.Provider
-            value={{
-                notifications,
-                getComponentNotifications,
-                removeNotification,
-                setMaxActions,
-            }}
-        >
-            {props.children}
-        </NotificationContext.Provider>
-    );
+  function setMaxActions(componentId: number, maxActions: number) {
+    socket.emit("Set Max Actions", {
+      componentId,
+      maxActions,
+    });
+  }
+
+  return (
+    <NotificationContext.Provider
+      value={{
+        notifications,
+        getComponentNotifications,
+        removeNotification,
+        setMaxActions,
+      }}
+    >
+      {props.children}
+    </NotificationContext.Provider>
+  );
 }

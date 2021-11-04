@@ -26,9 +26,10 @@ namespace Backend_DAL
                 .FirstOrDefault();
         }
 
-        public List<MaintenanceDTO> GetAllMaintenance()
+        public List<MaintenanceDTO> GetAllMaintenance(bool done)
         {
             return _Context.Maintenance
+                .Where(m => m.Done == done)
                 .Include(m => m.Component)
                     .AsNoTracking()
                 .ToList();

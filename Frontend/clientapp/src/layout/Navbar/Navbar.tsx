@@ -5,7 +5,9 @@ import { FaBell as BellIcon, FaWrench as WrenchIcon } from "react-icons/fa";
 import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import "./NavbarStyles.scss";
 import { NotificationContext } from "../../context/NotificationContext";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
+import { MaintenanceContext } from "../../context/MaintenanceContext";
+import { MaintenanceNotification } from "../../globalTypes";
 
 export default function Navbar() {
   return (
@@ -45,8 +47,44 @@ function NavbarRedirects() {
   );
 }
 
+interface INotifictionDropdown {
+  title: string;
+  icon: ReactNode;
+  notifications: MaintenanceNotification[];
+}
+
+function NotificationDropdown({
+  title,
+  icon,
+  notifications,
+}: INotifictionDropdown) {
+  return (
+    <div className="Notification-Dropdown">
+      {icon}
+      <div className="Notification-Dropdown-Content">
+        <h3>{title}</h3>
+        {notifications.length ? (
+          notifications.map((n, i) => {
+            return (
+              <div>
+                {n.component}
+                <br />
+              </div>
+            );
+          })
+        ) : (
+          <i>Everything looks good</i>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function NavbarUserSection() {
   const { notifications } = useContext(NotificationContext);
+  const { maintenance } = useContext(MaintenanceContext);
+
+  console.log(notifications);
 
   return (
     <section>
@@ -55,42 +93,16 @@ function NavbarUserSection() {
         <p>Last name</p>
       </div>
       <AccountIcon />
-      <div className="Notification-Dropdown">
-        <BellIcon />
-        <div className="Notification-Dropdown-Content">
-          <h3>Notifications</h3>
-          {notifications.length ? (
-            notifications.map((n, i) => {
-              return (
-                <div>
-                  {n.Component}
-                  <br />
-                </div>
-              );
-            })
-          ) : (
-            <i>Everything looks good</i>
-          )}
-        </div>
-      </div>
-      <div className="Notification-Dropdown">
-        <WrenchIcon />
-        <div className="Notification-Dropdown-Content">
-          <h3>Maintenance</h3>
-          {notifications.length ? (
-            notifications.map((n, i) => {
-              return (
-                <div>
-                  {n.Component}
-                  <br />
-                </div>
-              );
-            })
-          ) : (
-            <i>Everything looks good</i>
-          )}
-        </div>
-      </div>
+      <NotificationDropdown
+        title="Notifications"
+        icon={<BellIcon />}
+        notifications={notifications}
+      />
+      <NotificationDropdown
+        title="Maintenance"
+        icon={<WrenchIcon />}
+        notifications={maintenance}
+      />
       <LogOutIcon />
     </section>
   );

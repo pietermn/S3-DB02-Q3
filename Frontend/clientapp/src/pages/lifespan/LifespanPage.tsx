@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents } from "../../api/requests/components";
+import { MaintenanceContext } from "../../context/MaintenanceContext";
 
 export default function LifespanPage() {
   const [show, setShow] = useState(false);
@@ -14,8 +15,10 @@ export default function LifespanPage() {
   const [maxActionsInput, setMaxActionsInput] = useState(0);
   const [description, setDescription] = useState("");
 
-  const { getComponentNotifications, removeNotification, setMaxActions } =
-    useContext(NotificationContext);
+  const { setMaxActions } = useContext(NotificationContext);
+
+  const { addMaintenance, finishMaintenance, getComponentMaintenance } =
+    useContext(MaintenanceContext);
 
   function handleSelectedComponent(component: Component) {
     setSelectedComponent(component);
@@ -74,8 +77,17 @@ export default function LifespanPage() {
           </div>
           <div className="Planner">
             <h3>Plan onderhoud in</h3>
-            <form>
-              <textarea placeholder="Onderbeschrijving..." />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                addMaintenance(selectedComponent.id, description);
+              }}
+            >
+              <textarea
+                placeholder="Onderhoud uitleg..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
               <button type="submit">
                 <ImCheckmark />
               </button>
@@ -85,13 +97,17 @@ export default function LifespanPage() {
             <h3>Maintenance</h3>
             <div className="Notification-Container">
               {selectedComponent &&
-                getComponentNotifications(selectedComponent.id).map(
-                  (notification) => {
+                getComponentMaintenance(selectedComponent.id).map(
+                  (maintenance) => {
+                    console.log(selectedComponent.id);
+
+                    console.log(maintenance);
+
                     return (
-                      <div key={notification.Id}>
-                        <p>{notification.Message}</p>
+                      <div key={maintenance.id}>
+                        <p>{maintenance.description}</p>
                         <ImCheckmark
-                          onClick={() => removeNotification(notification.Id)}
+                          onClick={() => finishMaintenance(maintenance.id)}
                         />
                       </div>
                     );
