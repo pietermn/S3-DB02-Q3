@@ -1,35 +1,32 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MachineDetails from "../../components/machinemonitoring/machinedetails/MachineDetails";
-import "./MachineMonitoringPage.scss";
-import { UpdaterContext } from "../../context/UpdaterContext";
-import { GetProductionLines } from "../../api/requests/productionlines";
 import { ProductionLine } from "../../globalTypes";
+import { GetProductionLines } from "../../api/requests/productionlines";
+import "./MachineMonitoringPage.scss";
+import { useTranslation } from "react-i18next";
 
 export default function MachineMonitoringPage() {
-    const { bool } = useContext(UpdaterContext);
-    const [productionLines, setProductionLines] = useState<ProductionLine[]>();
+    const [productionLines, setProductionLines] = useState<ProductionLine[]>([]);
+    const { t } = useTranslation();
 
-    if (bool) {
-        AsyncGetProductionLines();
+    async function AsyncGetProductionLines() {
+        setProductionLines(await GetProductionLines());
     }
 
     useEffect(() => {
         AsyncGetProductionLines();
     }, []);
 
-    async function AsyncGetProductionLines() {
-        setProductionLines(await GetProductionLines());
-    }
-
     return (
         <div className="MM-Page">
             <table className="MM-Table">
                 <thead>
                     <tr>
-                        <th>Status</th>
-                        <th>Machine</th>
-                        <th>Uptime</th>
-                        <th>Components</th>
+                        <th>{t("status.label")}</th>
+                        <th>{t("machine.label")}</th>
+                        <th>Product</th>
+                        <th>{t("uptime.label")}</th>
+                        <th>{t("components.label")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +43,9 @@ export default function MachineMonitoringPage() {
                                 />
                             );
                         })}
+                    {/* {productionLines &&
+                        <MachineDetails key={1} id={381} components={[]} status={true} productionLine='test' product='' />
+                    } */}
                 </tbody>
             </table>
         </div>

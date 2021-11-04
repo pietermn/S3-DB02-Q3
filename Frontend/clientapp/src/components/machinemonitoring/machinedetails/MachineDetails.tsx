@@ -7,6 +7,7 @@ import { Component, Uptime } from "../../../globalTypes";
 import { useHistory } from "react-router-dom";
 import { getUptimesFromLastDayById } from "../../../api/requests/uptime";
 import { UpdaterContext } from "../../../context/UpdaterContext";
+import { useTranslation } from "react-i18next";
 
 interface IMachineDetails {
     id: number;
@@ -21,6 +22,7 @@ export default function MachineDetails(props: IMachineDetails) {
     const [show, setShow] = useState(false);
     const [uptime, setUptime] = useState<Uptime[]>([]);
     const history = useHistory();
+    const { t } = useTranslation();
 
     if (bool) {
         getUptime();
@@ -38,9 +40,6 @@ export default function MachineDetails(props: IMachineDetails) {
         getData();
     }, [props.id]);
 
-    // function ToComponents(componentId: number) {
-
-    // }
     return (
         <>
             <Modal
@@ -51,7 +50,9 @@ export default function MachineDetails(props: IMachineDetails) {
                 shouldCloseOnOverlayClick={true}
                 ariaHideApp={false}
             >
-                <h1>Production line {props.productionLine}</h1>
+                <h1>
+                    {t("productionline.label")} {props.productionLine}
+                </h1>
                 {props.components && props.components.length ? (
                     props.components.map((component, index) => {
                         return (
@@ -70,15 +71,16 @@ export default function MachineDetails(props: IMachineDetails) {
                         );
                     })
                 ) : (
-                    <h2>No components found</h2>
+                    <h2>{t("nocomponentsfound.label")}</h2>
                 )}
-                <button onClick={() => setShow(false)}>Close</button>
+                <button onClick={() => setShow(false)}>{t("close.label")}</button>
             </Modal>
             <tr className="MM-Data" onClick={() => setShow(true)}>
                 <td className={uptime && uptime.length ? (uptime[uptime.length - 1].active ? "Good" : "Bad") : "Bad"}>
                     <StatusDot />
                 </td>
                 <td>{props.productionLine}</td>
+                <td>{props.product}</td>
                 <td>
                     <MachineStatus name={props.productionLine} uptime={uptime} />
                 </td>

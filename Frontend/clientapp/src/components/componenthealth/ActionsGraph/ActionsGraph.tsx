@@ -1,6 +1,7 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { GetPreviousActions } from "../../../api/requests/components";
 import "./ActionsGraph.scss";
 
@@ -14,6 +15,8 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [myWidth] = useState((window.innerWidth / 3) * 2 * 0.75);
     const [myHeight] = useState((window.innerHeight / 2) * 0.6);
     const [isLoading, setIsLoading] = useState(false);
+    const [timespan, setTimespan] = useState("weeks");
+    const [amountTimespan, setAmountTimespan] = useState("4");
 
     // set the dimensions and margins of the graph
     function DrawGraph() {
@@ -37,8 +40,11 @@ export default function ActionsGraph(props: IActionsGraph) {
                 actions
                     .slice(0)
                     .reverse()
-                    .map((d, i) => `${timespan.slice(0, -1)} ${i + 1}`)
+                    .map((d, i) =>
+                        timespan == "months" ? t("month.label") + " " + (i + 1) : t("week.label") + " " + (i + 1)
+                    )
             )
+
             .padding(0.2);
 
         svg.append("g")
@@ -59,7 +65,11 @@ export default function ActionsGraph(props: IActionsGraph) {
         svg.selectAll("mybar")
             .data(actions)
             .join("rect")
-            .attr("x", (d, i) => x(`${timespan.slice(0, -1)} ${i + 1}`) || 0)
+            .attr(
+                "x",
+                (d, i) =>
+                    x(timespan == "months" ? t("month.label") + " " + (i + 1) : t("week.label") + " " + (i + 1)) || 0
+            )
             .attr("width", x.bandwidth())
             .attr("fill", "#69b3a2")
             // no bar at the beginning thus:
@@ -78,8 +88,7 @@ export default function ActionsGraph(props: IActionsGraph) {
             });
     }
 
-    const [timespan, setTimespan] = useState("weeks");
-    const [amountTimespan, setAmountTimespan] = useState("4");
+    const { t } = useTranslation();
 
     useEffect(() => {
         async function AsyncGetActions() {
@@ -94,7 +103,7 @@ export default function ActionsGraph(props: IActionsGraph) {
         if (actions.length) {
             DrawGraph();
         }
-    }, [JSON.stringify(actions)]);
+    }, [JSON.stringify(actions), timespan]);
 
     async function handleInput(e: React.ChangeEvent<HTMLSelectElement>) {
         setIsLoading(true);
@@ -114,21 +123,19 @@ export default function ActionsGraph(props: IActionsGraph) {
     return (
         <div className="actionsgraph-container">
             <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>
-                <div>
-                    <select id="timespan-select" name="timespan" value={timespan} onChange={handleInput}>
-                        <option value="weeks">Weeks</option>
-                        <option value="months">Months</option>
-                    </select>
-                    <select value={amountTimespan} name="timespan-amount" id="timespan-select" onChange={handleInput}>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </select>
-                </div>
+                <select id="timespan-select" name="timespan" value={timespan} onChange={handleInput}>
+                    <option value="weeks">{t("weeks.label")}</option>
+                    <option value="months">{t("months.label")}</option>
+                </select>
+                <select value={amountTimespan} name="timespan-amount" id="timespan-select" onChange={handleInput}>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
             </div>
             <CircularProgress className={isLoading ? "loading" : "loading invisible"} />
         </div>

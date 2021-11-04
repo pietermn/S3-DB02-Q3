@@ -9,6 +9,7 @@ import { GetComponents } from "../../api/requests/components";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
+import { useTranslation } from "react-i18next";
 
 type IComponentId = {
     componentId: number;
@@ -22,10 +23,10 @@ export default function LifespanPage() {
     const location = useLocation();
     const { setMaxActions } = useContext(NotificationContext);
     const { addMaintenance, finishMaintenance, getComponentMaintenance } = useContext(MaintenanceContext);
-    const { bool } = useContext(UpdaterContext);
     const state = location.state as IComponentId;
-    console.log(state);
     const history = useHistory();
+    const { t } = useTranslation();
+    const { bool } = useContext(UpdaterContext);
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {

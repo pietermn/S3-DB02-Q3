@@ -7,14 +7,15 @@ import { GetComponents, GetPreviousActions } from "../../api/requests/components
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
 import { UpdaterContext } from "../../context/UpdaterContext";
+import { useTranslation } from "react-i18next";
 
 export default function ComponentHealthPage() {
     const { bool } = useContext(UpdaterContext);
-
     const [components, setComponents] = useState<Component[]>([]);
     const location = useLocation();
     const [selectedComponent, setSelectedComponent] = useState<Component>();
     const [key, setKey] = useState<number>(0);
+    const { t } = useTranslation();
 
     async function AsyncGetComponents() {
         setComponents(await GetComponents());
@@ -25,10 +26,6 @@ export default function ComponentHealthPage() {
             setSelectedComponent(component);
             setKey(component.id);
         }
-    }
-
-    if (bool) {
-        AsyncGetComponents();
     }
 
     function FindSelectedComponent(state: IComponentId) {
@@ -63,14 +60,16 @@ export default function ComponentHealthPage() {
         <div className="Components-Full-Page">
             <section className="Component-Overview">
                 <div className="center-table">
-                    <h1>Components</h1>
+                    <h1>{t("components.label")}</h1>
                     {components && <ComponentsTable SetComponent={HandleSelectedComponent} components={components} />}
                 </div>
             </section>
 
             {selectedComponent && (
                 <section className="Component-Graph">
-                    <h1>History {selectedComponent.description} </h1>
+                    <h1>
+                        {t("history.label")} {selectedComponent.description}{" "}
+                    </h1>
                     <ActionsGraph component_id={selectedComponent.id} />
                 </section>
             )}
