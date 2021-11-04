@@ -29,5 +29,10 @@ namespace Backend_Logic.Containers
         {
             return _componentDAL.GetPreviousActions(component_id, amount, type);
         }
+
+        public void SetMaxActions(int component_id, int max_actions)
+        {
+            _componentDAL.SetMaxAction(component_id, max_actions);
+        }
     }
 }

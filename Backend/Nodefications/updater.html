@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Updater</title>
+		<style>
+			form {
+				display: flex;
+				flex-direction: column;
+			}
+
+			input {
+				width: 200px;
+				margin-bottom: 5px;
+			}
+			button {
+				width: min-content;
+			}
+			.on {
+				background-color: lime;
+			}
+			.off {
+				background-color: red;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Updater</h1>
+		<form>
+			<label><b>Start</b></label>
+			<input id="start" type="date" />
+			<label><b>Jump (time in seconds)</b></label>
+			<label>This jump will occur every 5 seconds</label>
+			<input id="jump" type="number" min="5" defaultValue="5" />
+		</form>
+		<div style="display: flex; flex-direction: column">
+			<div style="display: flex">
+				Status:
+				<div
+					class="off"
+					id="status"
+					style="width: 50px; height: 1rem; margin-left: 5px"
+				></div>
+			</div>
+			<button id="startButton">Start</button>
+			<button id="stopButton">Stop</button>
+		</div>
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io();
+
+			var start = document.getElementById("start");
+			var jump = document.getElementById("jump");
+			var startButton = document.getElementById("startButton");
+			var stopButton = document.getElementById("stopButton");
+			var statusDiv = document.getElementById("status");
+
+			startButton.addEventListener("click", () => {
+				var interval = jump.value;
+				if (interval < 5) {
+					interval = 5;
+				}
+				socket.emit("Set Timer", { interval, startDate: start.value });
+			});
+
+			stopButton.addEventListener("click", () => {
+				socket.emit("Stop Timer");
+			});
+
+			socket.on("Timer Started", () => {
+				statusDiv.setAttribute("class", "on");
+			});
+
+			socket.on("Timer Stopped", () => {
+				statusDiv.setAttribute("class", "off");
+			});
+
+			socket.on("Updater", (data) => {
+				var time = data[0];
+				start.setAttribute("min", time.Min.substring(0, 10));
+				start.setAttribute("max", time.Max.substring(0, 10));
+			});
+		</script>
+	</body>
+</html>

@@ -40,5 +40,13 @@ namespace Backend.Controllers
 
             return Ok(Actions);
         }
+
+        [Route("maxactions"), HttpPut]
+        public IActionResult SetMaxActions(int component_id, int max_actions)
+        {
+            _componentContainer.SetMaxActions(component_id, max_actions);
+
+            return Ok();
+        }
     }
 }

@@ -23,7 +23,6 @@ namespace Backend_DAL
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
                     .AsNoTracking()
-                .Include(c => c.MaintenanceHistory)
                 .FirstOrDefault();
         }
 
@@ -32,12 +31,11 @@ namespace Backend_DAL
             return _Context.Components
                 .Include(c => c.History)
                     .ThenInclude(h => h.ProductionLine)
-                .Include(c => c.MaintenanceHistory)
                     .AsNoTracking()
                 .ToList();
         }
 
-        public List<int> GetPreviousActions(int component_id, int amount, string type)
+        public List<int> GetPreviousActions(int component_id, int amountOfWeeks, string type)
         {
             ComponentDTO component = _Context.Components.Where(c => c.Id == component_id)
                 .Include(c => c.History)
@@ -54,7 +52,7 @@ namespace Backend_DAL
             }
 
             List<int> actions = new List<int>();
-            for (int i = 0; i < amount; i++)
+            for (int i = 0; i < amountOfWeeks; i++)
             {
                 int actionsThisWeek = 0;
                 //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
@@ -63,7 +61,7 @@ namespace Backend_DAL
 
                 // Default sorting is by weeks
                 DateTime firstDatetime = MockNowDate.AddDays(i * -7);
-                DateTime secondDatetime = firstDatetime.AddDays(-7); 
+                DateTime secondDatetime = firstDatetime.AddDays(-7);
 
                 if (type == "months")
                 {
@@ -83,6 +81,12 @@ namespace Backend_DAL
             }
 
             return actions;
+        }
+
+        public void SetMaxAction(int component_id, int max_actions)
+        {
+            _Context.Components.Where(c => c.Id == component_id).FirstOrDefault().MaxActions = max_actions;
+            _Context.SaveChanges();
         }
     }
 }

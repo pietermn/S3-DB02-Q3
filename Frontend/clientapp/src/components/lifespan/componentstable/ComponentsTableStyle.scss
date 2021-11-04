@@ -1,0 +1,82 @@
+@import "../../../variables";
+
+.lifespan-table {
+    width: 80%;
+    height: 80%;
+    display: grid;
+    margin-top: 2rem;
+    grid-auto-rows: 50px;
+    overflow-y: auto;
+    cursor: ns-resize;
+    scroll-padding-top: 5rem;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .row:first-child {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+        box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
+    }
+
+    .row:not(:first-child) {
+        p:first-child {
+            position: relative;
+            justify-content: center;
+
+            &:before {
+                left: 0;
+                @include line-padding;
+            }
+        }
+
+        p:last-child {
+            position: relative;
+            &:before {
+                right: 0;
+                @include line-padding;
+            }
+        }
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 15% auto 20% 15%;
+        border-bottom: 1px solid black;
+
+        p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        &:first-child {
+            p {
+                font-weight: 900;
+            }
+        }
+
+        p:first-child {
+            justify-content: center;
+        }
+
+        svg {
+            font-size: 1.5em;
+        }
+
+        .green {
+            color: map-get($map: $accent-colors, $key: "green");
+        }
+
+        .orange {
+            color: map-get($map: $accent-colors, $key: "orange");
+        }
+
+        .red {
+            color: map-get($map: $accent-colors, $key: "red");
+        }
+    }
+}
