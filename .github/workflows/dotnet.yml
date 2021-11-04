@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./Backend/Backend
 
     steps:
     - uses: actions/checkout@v2
@@ -19,7 +21,7 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: ./Backend/Backend/Backend
+      working-directory: ${{env.working-directory}}
     - name: Build
       run: dotnet build --no-restore
     - name: Test
