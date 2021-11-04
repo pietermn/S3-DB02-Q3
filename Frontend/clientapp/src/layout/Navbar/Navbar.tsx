@@ -5,34 +5,43 @@ import { FaBell as BellIcon, FaWrench as WrenchIcon } from "react-icons/fa";
 import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import "./NavbarStyles.scss";
 import { NotificationContext } from "../../context/NotificationContext";
-import { ReactNode, useContext } from "react";
+import { ReactNode, Suspense, useContext, useEffect, useState } from "react";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { MaintenanceNotification } from "../../globalTypes";
+import { useTranslation } from "react-i18next";
+import PageLoader from "../PageLoader";
+//@ts-ignore
+import ReactCountryFlag from "react-country-flag";
+import i18n from "../../i18n";
+import ReactPlayer from "react-player";
 
 export default function Navbar() {
   return (
-    <nav>
-      <NavbarRedirects />
-      <NavbarUserSection />
-    </nav>
+    <Suspense fallback={<PageLoader />}>
+      <nav>
+        <NavbarRedirects />
+        <NavbarUserSection />
+      </nav>
+    </Suspense>
   );
 }
 
 function NavbarRedirects() {
   const { pathname } = useLocation();
   const history = useHistory();
+  const { t } = useTranslation();
 
   return (
     <section>
       <img alt="Q3" src={Q3Logo} />
       <p className={pathname === "/monitoring" ? "bold-text" : ""} onClick={() => history.push("monitoring")}>
-        Machine Monitoring
+        {t("mm.label")}
       </p>
       <p className={pathname === "/chealth" ? "bold-text" : ""} onClick={() => history.push("chealth")}>
-        Component Health
+        {t("chealth.label")}
       </p>
       <p className={pathname === "/lifespan" ? "bold-text" : ""} onClick={() => history.push("lifespan")}>
-        Lifespan
+        {t("lifespan.label")}
       </p>
     </section>
   );
@@ -46,6 +55,7 @@ interface INotifictionDropdown {
 
 function NotificationDropdown({ title, icon, notifications }: INotifictionDropdown) {
   const history = useHistory();
+  const { t } = useTranslation();
 
   return (
     <div className="Notification-Dropdown">
@@ -69,7 +79,7 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
             );
           })
         ) : (
-          <i>Everything looks good</i>
+          <i>{t("everythinglooksgood.label")}</i>
         )}
       </div>
     </div>
@@ -79,16 +89,42 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
 function NavbarUserSection() {
   const { notifications } = useContext(NotificationContext);
   const { maintenance } = useContext(MaintenanceContext);
+  const { t } = useTranslation();
+  const [openFlags, setOpenFlags] = useState(false);
+  const [currentLang, setCurrentLang] = useState("en");
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    i18n.changeLanguage(currentLang);
+    setPlaying(true);
+  }, [currentLang]);
 
   return (
     <section>
       <div className="Name-Container">
-        <p>First name</p>
-        <p>Last name</p>
+        <p>
+          {t("first.label")}
+          {t("name.label").toLowerCase()}
+        </p>
+        <p>
+          {t("last.label")}
+          {t("name.label").toLowerCase()}
+        </p>
       </div>
       <AccountIcon />
-      <NotificationDropdown title="Notifications" icon={<BellIcon />} notifications={notifications} />
-      <NotificationDropdown title="Maintenance" icon={<WrenchIcon />} notifications={maintenance} />
+      <ReactPlayer url="https://youtu.be/D-cZVjSLhSE?t=10" playing={playing} onStart={() => console.log("test")} />
+      <NotificationDropdown title={t("notifications.label")} icon={<BellIcon />} notifications={notifications} />
+      <NotificationDropdown title={t("maintenance.label")} icon={<WrenchIcon />} notifications={maintenance} />
+      <div className="Flags" onClick={() => setOpenFlags(!openFlags)}>
+        <ReactCountryFlag countryCode={currentLang == "en" ? "GB" : currentLang.toUpperCase()} svg id="Flag__Icon" />
+        {openFlags && (
+          <div className="Flags__Dropdown">
+            <ReactCountryFlag countryCode="NL" svg id="Flag__Icon" onClick={() => setCurrentLang("nl")} />
+            <ReactCountryFlag countryCode="GB" svg id="Flag__Icon" onClick={() => setCurrentLang("en")} />
+            <ReactCountryFlag countryCode="DE" svg id="Flag__Icon" onClick={() => setCurrentLang("de")} />
+          </div>
+        )}
+      </div>
       <LogOutIcon />
     </section>
   );

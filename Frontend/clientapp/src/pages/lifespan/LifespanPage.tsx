@@ -8,6 +8,7 @@ import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents } from "../../api/requests/components";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type IComponentId = {
   componentId: number;
@@ -22,8 +23,8 @@ export default function LifespanPage() {
   const { setMaxActions } = useContext(NotificationContext);
   const { addMaintenance, finishMaintenance, getComponentMaintenance } = useContext(MaintenanceContext);
   const state = location.state as IComponentId;
-  console.log(state);
   const history = useHistory();
+  const { t } = useTranslation();
 
   function findSelectedComponent(components: Component[]) {
     if (state && state.componentId && components) {
@@ -47,7 +48,6 @@ export default function LifespanPage() {
     GetComponentsAsync();
 
     return () => {
-      console.log("test");
       history.replace({ state: undefined });
     };
   }, [components.length, state && state.componentId]);
@@ -73,7 +73,7 @@ export default function LifespanPage() {
         >
           <h1>{selectedComponent?.description}</h1>
           <div className="MaxActions">
-            <h3>Max Actions:</h3>
+            <h3>{t("maxactions.label")}</h3>
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
@@ -98,7 +98,9 @@ export default function LifespanPage() {
             </form>
           </div>
           <div className="Planner">
-            <h3>Plan maintenance</h3>
+            <h3>
+              {t("plan.label")} {t("maintenance.label").toLowerCase()}
+            </h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -106,7 +108,7 @@ export default function LifespanPage() {
               }}
             >
               <textarea
-                placeholder="Maintenance description..."
+                placeholder={`${t("maintenance.label")} ${t("description.label")}... `}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -116,7 +118,7 @@ export default function LifespanPage() {
             </form>
           </div>
           <div className="Maintenance">
-            <h3>Maintenance</h3>
+            <h3>{t("maintenance.label")}</h3>
             <div className="Notification-Container">
               {selectedComponent &&
                 getComponentMaintenance(selectedComponent.id).map((maintenance) => {
@@ -135,12 +137,12 @@ export default function LifespanPage() {
               ClearData();
             }}
           >
-            Close
+            {t("close.label")}
           </button>
         </Modal>
       )}
       <h1>
-        Components <i>Sort by total actions</i>
+        {t("components.label")} <i>{t("sortbytotalactions.label")}</i>
       </h1>
       <div className="center-table">
         {components && <ComponentsTable components={components} setSelectedComponet={handleSelectedComponent} />}
