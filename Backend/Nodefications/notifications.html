@@ -126,7 +126,7 @@
 				l.forEach((n) => {
 					var item = document.createElement("li");
 					item.id = n.id;
-					item.textContent = `ID=${n.Id} CID=${n.ComponentId} | ${n.Message}`;
+					item.textContent = `ID=${n.id} CID=${n.componentId} | ${n.description}`;
 					messages.appendChild(item);
 				});
 				window.scrollTo(0, document.body.scrollHeight);

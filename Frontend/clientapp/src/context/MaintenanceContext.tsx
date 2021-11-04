@@ -29,7 +29,6 @@ export function MaintenanceProvider(props: IMaintenanceProvider) {
 
   useEffect(() => {
     socket.on("Add Maintenance List", (data: MaintenanceNotification[]) => {
-      console.log(data);
       setMaintenance(data);
     });
 
