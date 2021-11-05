@@ -50,6 +50,7 @@ export function NotificationProvider(props: INotificationProvider) {
   }
 
   function setMaxActions(componentId: number, maxActions: number) {
+    console.log({ componentId, maxActions });
     socket.emit("Set Max Actions", {
       componentId,
       maxActions,
