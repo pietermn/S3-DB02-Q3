@@ -29,7 +29,7 @@ namespace Backend_Logic.Containers
 
             if (productions.Count == 0)
             {
-                return new() { new Uptime(0, productionLine_id, System.DateTime.Now, System.DateTime.Now.AddDays(-1), false) };
+                return new() { new Uptime(0, productionLine_id, System.DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
             }
 
             Uptime firstUptime = new(count, productionLine_id, fakeNow.AddDays(-1), productions[0].Timestamp, false);
