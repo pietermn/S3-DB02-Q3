@@ -15,6 +15,7 @@
         "ts-node": "^10.4.0"
     },
     "scripts": {
-        "start": "nodemon index.ts"
+        "start": "nodemon index.ts",
+        "prod": "ts-node index.ts"
     }
 }

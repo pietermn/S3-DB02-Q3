@@ -2,11 +2,11 @@ import mysql from "mysql";
 import { Notification } from "./types";
 
 const sqlConnection = mysql.createConnection({
-  host: "localhost",
+  host: process.env.ConnectionServer ? process.env.ConnectionServer : "localhost",
   user: "root",
   password: "root",
   database: "db",
-  port: 3307,
+  port: process.env.ConnectionPort ? parseInt(process.env.ConnectionPort) : 3307,
 });
 
 export default class SQL {
@@ -35,29 +35,24 @@ export default class SQL {
   };
 
   static removeNotification = (notificationId: number) => {
-    sqlConnection.query(
-      "DELETE FROM `Notifications` WHERE Id = " + notificationId
-    );
+    sqlConnection.query("DELETE FROM `Notifications` WHERE Id = " + notificationId);
   };
 
   static updaterTimespan = async () => {
     const p = new Promise((resolve, reject) => {
-      sqlConnection.query(
-        "SELECT MIN(Timestamp) AS Min, MAX(Timestamp) AS Max FROM `Productions`",
-        (err, res) => {
-          if (err) reject(err);
-          resolve(res);
-        }
-      );
+      sqlConnection.query("SELECT MIN(Timestamp) AS Min, MAX(Timestamp) AS Max FROM `Productions`", (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+      });
     });
 
     return await p;
   };
 
   static addMaintenance = async (componentId: number, description: string) => {
-    sqlConnection.query(
-      "INSERT INTO `Maintenance` (`ComponentId`, `Description`) VALUES (?, ?)",
-      [componentId, description]
-    );
+    sqlConnection.query("INSERT INTO `Maintenance` (`ComponentId`, `Description`) VALUES (?, ?)", [
+      componentId,
+      description,
+    ]);
   };
 }

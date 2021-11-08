@@ -3,22 +3,24 @@ import { Component } from "./types";
 import sql from "./sql";
 
 export default class ActionsChecker {
-    static componentNeedsNotification = async (componentId: number) => {
-        const res: AxiosResponse<Component> = await axios.get(
-            "https://localhost:5001/component/read?component_id=" + componentId
-        );
-        const component = res.data;
+  static componentNeedsNotification = async (componentId: number) => {
+    let connectionString = process.env.api_url ? process.env.api_url : "https://localhost:5001";
 
-        return component.percentageMaintenance >= 100;
-    };
+    const res: AxiosResponse<Component> = await axios.get(
+      `${connectionString}/component/read?component_id=` + componentId
+    );
+    const component = res.data;
 
-    static allComponentsNeedNotification = async () => {
-        const notifications = await sql.getNotifications();
+    return component.percentageMaintenance >= 100;
+  };
 
-        notifications.forEach(async (n) => {
-            if (!(await this.componentNeedsNotification(n.componentId))) {
-                sql.removeNotification(n.id);
-            }
-        });
-    };
+  static allComponentsNeedNotification = async () => {
+    const notifications = await sql.getNotifications();
+
+    notifications.forEach(async (n) => {
+      if (!(await this.componentNeedsNotification(n.componentId))) {
+        sql.removeNotification(n.id);
+      }
+    });
+  };
 }
