@@ -51,7 +51,11 @@ io.on("connection", async (socket) => {
                     data.maxActions
             );
             if (await ActionsChecker.componentNeedsNotification(data.componentId)) {
-                sql.addNotification(data.componentId, "");
+                if (await sql.componentHasNoNotification(data.componentId)) {
+                    sql.addNotification(data.componentId, "");
+                }
+            } else {
+                sql.removeNotificationFromComponent(data.componentId);
             }
         }
 
@@ -65,6 +69,8 @@ io.on("connection", async (socket) => {
 
     socket.on("Finish Maintenance", async (data: { maintenanceId: number }) => {
         await axios.put(`http://localhost:5000/maintenance?maintenanceId=${data.maintenanceId}`);
+        sql.resetComponentUses(data.maintenanceId);
+        io.emit("Update Components");
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
 
@@ -102,6 +108,7 @@ io.on("connection", async (socket) => {
         if (!timerActiveComponent) {
             timerComponent = setInterval(async () => {
                 io.emit("Update Components");
+                sql.addUsesToComponent(173, Math.floor(Math.random() * 100));
             }, 30000);
             timerActiveComponent = true;
             io.emit("Timer Started Component");
@@ -112,6 +119,11 @@ io.on("connection", async (socket) => {
         clearInterval(timerComponent);
         timerActiveComponent = false;
         io.emit("Timer Stopped Component");
+    });
+
+    socket.on("Add MM Data", () => {
+        sql.addMMData();
+        io.emit("Update Components");
     });
 });
 

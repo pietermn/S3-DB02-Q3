@@ -29,14 +29,14 @@ namespace Backend_Logic.Containers
 
             if (productions.Count == 0)
             {
-                return new() { new Uptime(0, productionLine_id, System.DateTime.Now, System.DateTime.Now.AddDays(-1), false) };
+                return new() { new Uptime(0, productionLine_id, System.DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
             }
 
             Uptime firstUptime = new(count, productionLine_id, fakeNow.AddDays(-1), productions[0].Timestamp, false);
             count++;
             uptimes.Add(firstUptime);
 
-            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp, true);
+            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp.AddSeconds(productions[0].ShotTime), true);
 
             foreach (ProductionsDTO p in productions.Skip(1))
             {
