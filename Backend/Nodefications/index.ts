@@ -120,6 +120,11 @@ io.on("connection", async (socket) => {
         timerActiveComponent = false;
         io.emit("Timer Stopped Component");
     });
+
+    socket.on("Add MM Data", () => {
+        sql.addMMData();
+        io.emit("Update Components");
+    });
 });
 
 server.listen(port, () => {

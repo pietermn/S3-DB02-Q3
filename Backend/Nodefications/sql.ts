@@ -105,4 +105,13 @@ export default class SQL {
             [maintenanceId]
         );
     };
+
+    static addMMData = () => {
+        console.log("ADDMMDATASQL");
+
+        sqlConnection.query(
+            "INSERT INTO `Productions` (`Id`, `Timestamp`, `ShotTime`, `ProductionLineId`) VALUES (NULL, ?, ?, '364')",
+            [new Date(2020, 8, 30, new Date().getHours(), new Date().getMinutes() - 30, new Date().getSeconds()), 3000]
+        );
+    };
 }

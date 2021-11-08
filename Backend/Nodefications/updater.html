@@ -89,6 +89,10 @@
                 socket.emit("Stop Timer Component");
             });
 
+            fillButton.addEventListener("click", () => {
+                socket.emit("Add MM Data");
+            });
+
             socket.on("Timer Started Component", () => {
                 statusDivComponent.setAttribute("class", "on");
             });

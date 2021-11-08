@@ -36,7 +36,7 @@ namespace Backend_Logic.Containers
             count++;
             uptimes.Add(firstUptime);
 
-            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp, true);
+            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp.AddSeconds(productions[0].ShotTime), true);
 
             foreach (ProductionsDTO p in productions.Skip(1))
             {
