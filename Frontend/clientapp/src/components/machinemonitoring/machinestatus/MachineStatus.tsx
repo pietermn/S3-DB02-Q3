@@ -33,7 +33,7 @@ export default function MachineStatus(props: IMachineStatus) {
             const svg = d3
                 .select(`#${props.name}`)
                 .append("svg")
-                // .attr("height", "2rem")
+                .attr("height", 32)
                 .attr("width", "100%")
                 .attr("margin", 0);
 
