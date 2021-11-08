@@ -2,24 +2,71 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     text-align: left;
 }
 
 .MM-Table {
-    width: 75%;
+    width: 75vw;
     border-spacing: 0;
 
-    thead th {
-        width: 20%;
-        border-bottom: 2px solid black;
-        font-size: x-large;
+    thead,
+    tbody {
+        display: block;
+        width: 100%;
+    }
 
-        &:nth-child(3) {
-            width: 40%;
-        }
+    th,
+    td {
+        display: flex;
+        align-items: center;
 
         &:last-child {
-            text-align: right;
+            justify-content: flex-end;
+        }
+    }
+
+    tr {
+        display: flex;
+        width: 100%;
+        vertical-align: middle;
+        border-bottom: 1px solid #000;
+    }
+
+    thead {
+        tr {
+            border-bottom: 2px solid black;
+        }
+
+        th {
+            width: 20%;
+            font-size: x-large;
+
+            &:nth-child(3) {
+                width: 40%;
+            }
+
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+
+    tbody {
+        height: 85vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        td {
+            width: 20%;
+
+            &:nth-child(3) {
+                width: 40%;
+            }
+
+            &:last-child {
+                text-align: right;
+            }
         }
     }
 }
