@@ -34,7 +34,7 @@ namespace Backend_DAL
 
             return _Context.Productions
                 .Where(p => p.ProductionLineId == productionLine_id
-                && p.Timestamp > fakeNow.AddDays(-1))
+                && p.Timestamp > fakeNow.AddDays(-1) && p.Timestamp < fakeNow)
                 .OrderBy(p => p.Timestamp)
                 .AsNoTracking()
             .ToList();
