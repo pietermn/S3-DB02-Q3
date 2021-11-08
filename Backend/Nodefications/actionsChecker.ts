@@ -13,11 +13,20 @@ export default class ActionsChecker {
     };
 
     static allComponentsNeedNotification = async () => {
-        const notifications = await sql.getNotifications();
+        // const notifications = await sql.getNotifications();
+        const components = await sql.getAllComponents();
 
-        notifications.forEach(async (n) => {
-            if (!(await this.componentNeedsNotification(n.componentId))) {
-                sql.removeNotification(n.id);
+        components.forEach(async (c) => {
+            // if (!(await this.componentNeedsNotification(n.componentId))) {
+            //     sql.removeNotification(n.id);
+            // }
+
+            if (c.currentActions >= c.maxActions && c.maxActions != 1) {
+                if (await sql.componentHasNoNotification(c.id)) {
+                    sql.addNotification(c.id, "");
+                }
+            } else {
+                sql.removeNotificationFromComponent(c.id);
             }
         });
     };

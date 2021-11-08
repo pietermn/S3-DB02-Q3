@@ -46,6 +46,13 @@
             <button id="stopButtonComponent">Stop</button>
         </div>
 
+        <h1>Data Changer</h1>
+        <label>New data for productionline 364 (A3)</label>
+        <div style="display: flex; flex-direction: column">
+            <label>MM Add Data</label>
+            <button id="fillButton">Fill</button>
+        </div>
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var socket = io();
@@ -56,6 +63,7 @@
             var startButtonComponent = document.getElementById("startButtonComponent");
             var stopButtonComponent = document.getElementById("stopButtonComponent");
             var statusDivComponent = document.getElementById("statusComponent");
+            var fillButton = document.getElementById("fillButton");
 
             startButton.addEventListener("click", () => {
                 socket.emit("Start Timer");
