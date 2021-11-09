@@ -26,8 +26,8 @@ export default class ActionsChecker {
                 if (await sql.componentHasNoNotification(c.id)) {
                     sql.addNotification(c.id, "");
                     axios.post(`http://q3-sms:5100/telnyx/create`, {
-                        to: "+31627909540",
-                        text: `Component ${c.description} (${c.id} reached its max uses)`,
+                        to: "+31638458923",
+                        text: `Component: ${c.description} (Id: ${c.id}) reached its max uses`,
                     });
                 }
             } else {

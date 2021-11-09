@@ -13,7 +13,7 @@ services:
     environment:
       - ConnectionServer=db
       - ConnectionPort=3306
-      - api_url=http://q3-backend:5000
+      - api_url=http://q3-backend:5200
     expose:
       - '5300'
     ports:
@@ -54,12 +54,12 @@ services:
       dockerfile: Dockerfile
 
     environment:
-      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_URLS=http://+:5200
       - ConnectionString=server=db;port=3306;user=root;password=root;database=db
 
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "5200:5200"
+      - "5201:5201"
 
     networks:
       - custom-network
