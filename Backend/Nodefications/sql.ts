@@ -2,18 +2,18 @@ import mysql from "mysql";
 import { Component, Notification } from "./types";
 
 const sqlConnection = mysql.createConnection({
-    host: "localhost",
+    host: process.env.ConnectionServer ? process.env.ConnectionServer : "localhost",
     user: "root",
     password: "root",
     database: "db",
-    port: 3307,
+    port: process.env.ConnectionPort ? parseInt(process.env.ConnectionPort) : 3307,
 });
 
 export default class SQL {
     static getAllComponents = async () => {
         const p = new Promise<Component[]>((resolve, reject) => {
             sqlConnection.query(
-                "SELECT Id AS id, MaxActions AS maxActions, CurrentActions AS currentActions FROM Components;",
+                "SELECT Id AS id, MaxActions AS maxActions, CurrentActions AS currentActions, Description AS description FROM Components;",
                 (err, res) => {
                     if (err) reject(err);
                     resolve(res);
