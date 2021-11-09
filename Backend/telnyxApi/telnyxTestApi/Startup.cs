@@ -38,7 +38,7 @@ namespace telnyxApi
                 app.UseDeveloperExceptionPage();
             }
 
-            TelnyxConfiguration.SetApiKey("KEY017BED95BC02AFBB4022AF87B7566CB1_pKNOs4Tx2zc3C8Jn9frGN4");
+            TelnyxConfiguration.SetApiKey("KEY017D03DBE7D9D81E04EE581A8693F8DA_2TErRv41b6y9itf896RV6B");
 
             app.UseHttpsRedirection();
 
