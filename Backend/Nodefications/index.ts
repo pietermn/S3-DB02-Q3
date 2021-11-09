@@ -16,6 +16,7 @@ let timerActive = false;
 let timerComponent: NodeJS.Timer;
 let timerActiveComponent = false;
 
+let connectionString = process.env.api_url ? process.env.api_url : "https://localhost:5001";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 app.get("/", (_req, res) => {
@@ -45,7 +46,7 @@ io.on("connection", async (socket) => {
     socket.on("Set Max Actions", async (data: { componentId: number; maxActions: number }) => {
         if (data.maxActions <= 2147483647) {
             await axios.put(
-                "http://localhost:5000/component/maxactions?component_id=" +
+                `${connectionString}/component/maxactions?component_id=` +
                     data.componentId +
                     "&max_actions=" +
                     data.maxActions
@@ -63,12 +64,12 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("Add Maintenance", async (data: { componentId: number; description: string }) => {
-        await axios.post("http://localhost:5000/maintenance", data);
+        await axios.post(`${connectionString}/maintenance`, data);
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
 
     socket.on("Finish Maintenance", async (data: { maintenanceId: number }) => {
-        await axios.put(`http://localhost:5000/maintenance?maintenanceId=${data.maintenanceId}`);
+        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`);
         sql.resetComponentUses(data.maintenanceId);
         io.emit("Update Components");
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
@@ -140,7 +141,7 @@ async function GetMaintenanceNotifcations() {
                 componentId: number;
                 description: string;
             }[]
-        >("http://localhost:5000/maintenance/readall?done=false")
+        >(`${connectionString}/maintenance/readall?done=false`)
     ).data;
     let maintenanceNotifications: NotificationType[] = [];
 

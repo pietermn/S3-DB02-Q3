@@ -2,10 +2,11 @@ import axios, { AxiosResponse } from "axios";
 import { Component } from "./types";
 import sql from "./sql";
 
+let connectionString = process.env.api_url ? process.env.api_url : "https://localhost:5001";
 export default class ActionsChecker {
     static componentNeedsNotification = async (componentId: number) => {
         const res: AxiosResponse<Component> = await axios.get(
-            "https://localhost:5001/component/read?component_id=" + componentId
+            `${connectionString}/component/read?component_id=` + componentId
         );
         const component = res.data;
 
@@ -24,6 +25,10 @@ export default class ActionsChecker {
             if (c.currentActions >= c.maxActions && c.maxActions != 1) {
                 if (await sql.componentHasNoNotification(c.id)) {
                     sql.addNotification(c.id, "");
+                    axios.post(`http://q3-sms:5100/telnyx/create`, {
+                        to: "+31627909540",
+                        text: `Component ${c.description} (${c.id} reached its max uses)`,
+                    });
                 }
             } else {
                 sql.removeNotificationFromComponent(c.id);
