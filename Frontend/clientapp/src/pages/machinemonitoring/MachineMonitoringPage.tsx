@@ -23,7 +23,7 @@ export default function MachineMonitoringPage() {
                 <thead>
                     <tr>
                         <th>{t("status.label")}</th>
-                        <th>{t("machine.label")}</th>
+                        <th>{t("productionline.label")}</th>
                         <th>{t("uptime.label")}</th>
                         <th>{t("components.label")}</th>
                     </tr>
