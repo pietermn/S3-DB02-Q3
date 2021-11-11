@@ -81,10 +81,6 @@
     max-height: 8rem;
     cursor: ns-resize;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
     div {
       position: relative;
       width: 100%;

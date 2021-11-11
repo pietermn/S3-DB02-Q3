@@ -5,15 +5,23 @@
     width: 100%;
     display: grid;
     grid-template-areas:
-    "component-overview component-graph"
-    "component-overview history-overview";
+        "component-overview component-graph"
+        "component-overview history-overview";
 
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 1fr;
 
-    h1 {
+    h1,
+    h3 {
         font-size: 28px;
         color: map-get($map: $background, $key: "blue");
+        margin: 1rem 0 0.5rem;
+        font-weight: 400;
+    }
+
+    h3 {
+        font-size: 16px;
+        margin: 0;
     }
 }
 
@@ -21,9 +29,11 @@
     grid-area: component-overview;
     display: flex;
     justify-content: center;
+    border-right: 1px solid black;
+    margin-right: 2rem;
 
     .center-table {
-        width: 80%;
+        width: 85%;
     }
 }
 
@@ -33,4 +43,10 @@
 
 .Component-Graph {
     grid-area: component-graph;
+}
+
+.Component-Graph,
+.Component-History-Overview {
+    // padding-left: 2rem;
+    // border-left: 1px solid black;
 }
