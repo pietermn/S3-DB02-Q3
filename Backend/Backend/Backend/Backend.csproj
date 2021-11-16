@@ -23,4 +23,11 @@
     <ProjectReference Include="..\Backend_Logic\Backend_Logic.csproj" />
     <ProjectReference Include="..\Backend_Logic_Interface\Backend_Logic_Interface.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Content Remove="..\..\..\Frontend\clientapp\**" />
+    <None Remove="..\..\..\Frontend\clientapp\**" />
+    <None Include="..\..\..\Frontend\clientapp\**" Exclude="..\..\..\Frontend\clientapp\node_modules\**" />
+</ItemGroup>
 </Project>
