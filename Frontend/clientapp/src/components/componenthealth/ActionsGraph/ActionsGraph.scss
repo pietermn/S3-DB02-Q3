@@ -1,6 +1,6 @@
 .actionsgraph-container {
     height: 80%;
-    width: 75%;
+    width: 90%;
     margin-top: 1.5rem;
     position: relative;
 
@@ -29,10 +29,8 @@
         position: relative;
 
         .tooltip-area {
-            z-index: 100;
+            position: absolute;
             background-color: red;
-            height: 100px;
-            width: 100px;
         }
     }
 
