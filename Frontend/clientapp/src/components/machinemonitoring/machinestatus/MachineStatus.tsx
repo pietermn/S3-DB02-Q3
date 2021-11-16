@@ -33,7 +33,7 @@ export default function MachineStatus(props: IMachineStatus) {
             const svg = d3
                 .select(`#${props.name}`)
                 .append("svg")
-                .attr("height", 50)
+                .attr("height", 64)
                 .attr("width", "100%")
                 .attr("margin", 0);
 
@@ -54,7 +54,7 @@ export default function MachineStatus(props: IMachineStatus) {
                     return calcDifference(u.begin, u.end) * scale;
                 })
                 .attr("height", 32)
-                .attr("fill", (u) => (u.active ? "rgb(126, 211, 33)" : "rgb(229, 50, 18)"));
+                .attr("fill", (u) => (u.active ? "rgb(126, 211, 33)" : "rgb(199, 199, 199)"));
 
             let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
 
@@ -74,9 +74,27 @@ export default function MachineStatus(props: IMachineStatus) {
                 .join("rect")
                 .attr("key", (h) => `Hour ${h}`)
                 .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
-                .attr("width", 0.5)
+                .attr("width", 1)
                 .attr("height", 32)
                 .attr("fill", "rgb(0, 0, 0)");
+
+            svg.selectAll("mybar")
+                .data(hours)
+                .join("g")
+                .attr("key", (h) => `HourTag ${h}`)
+                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale}, 42)rotate(45)`)
+                .attr("font-size", 12)
+                .append("text")
+                .text((h) => {
+                    let hour = new Date(props.uptime[0].begin).getHours();
+                    if (props.uptime.length === 1) {
+                        hour--;
+                    }
+                    if (hour + h > 23) {
+                        return `${hour + h - 24}h`;
+                    }
+                    return `${hour + h}h`;
+                });
             // .append("g")
             // .append("text")
             // .text((h) => hourText(h))
