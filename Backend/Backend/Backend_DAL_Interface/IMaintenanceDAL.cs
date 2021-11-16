@@ -7,7 +7,7 @@ namespace Backend_DAL_Interface
 {
     public interface IMaintenanceDAL
     {
-        public MaintenanceDTO GetMaintenance(int componentId);
+        public List<MaintenanceDTO> GetMaintenance(int componentId);
         public List<MaintenanceDTO> GetAllMaintenance(bool done);
         public void AddMaintenance(MaintenanceDTO maintenance);
         public void FinishMaintance(int MaintenancId);

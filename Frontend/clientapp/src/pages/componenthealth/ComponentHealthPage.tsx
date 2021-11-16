@@ -2,20 +2,23 @@ import { useContext, useEffect, useState } from "react";
 import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsGraph";
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
-import { Component } from "../../globalTypes";
-import { GetComponents, GetPreviousActions } from "../../api/requests/components";
+import { Component, Maintenance, MaintenanceNotification } from "../../globalTypes";
+import { GetComponents, GetAllMaintenance } from "../../api/requests/components";
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
+import MaintenanceTable from "../../components/componenthealth/MaintenanceTable/MaintenanceTable";
+import { MaintenanceContext } from "../../context/MaintenanceContext";
 
 export default function ComponentHealthPage() {
     const { bool } = useContext(UpdaterContext);
     const [components, setComponents] = useState<Component[]>([]);
     const location = useLocation();
     const [selectedComponent, setSelectedComponent] = useState<Component>();
-    const [key, setKey] = useState<number>(0);
+    const [selectedMaintenance, setSelectedMaintenance] = useState<Maintenance[]>([]);
     const { t } = useTranslation();
+    const { finishMaintenance } = useContext(MaintenanceContext);
 
     if (bool) {
         AsyncGetComponents();
@@ -25,10 +28,14 @@ export default function ComponentHealthPage() {
         setComponents(await GetComponents());
     }
 
+    async function GetMaintenance(id: number) {
+        setSelectedMaintenance(await GetAllMaintenance(id));
+    }
+
     function HandleSelectedComponent(component: Component) {
         if (component) {
             setSelectedComponent(component);
-            setKey(component.id);
+            GetMaintenance(component.id);
         }
     }
 
@@ -46,11 +53,22 @@ export default function ComponentHealthPage() {
         }
     }
 
+    function handleFinshMaintenace(id: number) {
+        finishMaintenance(id);
+        let temp = [...selectedMaintenance];
+        temp.forEach((maintenance) => {
+            if (maintenance.id === id) {
+                maintenance.done = true;
+                maintenance.timeDone = new Date();
+            }
+        });
+    }
+
     useEffect(() => {
         if (!components.length) {
             AsyncGetComponents();
         }
-        if (components) {
+        if (components && components.length) {
             const state = location.state as IComponentId;
             FindSelectedComponent(state);
         }
@@ -94,6 +112,10 @@ export default function ComponentHealthPage() {
                     <HistoryTable HistoryMachines={selectedComponent.history} />
                 </section>
             )}
+
+            {selectedMaintenance.length && selectedMaintenance ? (
+                <MaintenanceTable finishMaintenance={handleFinshMaintenace} maintenance={selectedMaintenance} />
+            ) : null}
         </div>
     );
 }

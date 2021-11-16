@@ -1,6 +1,6 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import * as d3 from "d3";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GetPreviousActions } from "../../../api/requests/components";
 import "./ActionsGraph.scss";
@@ -30,7 +30,7 @@ export default function ActionsGraph(props) {
 
     function mouseMove(event, d) {
         const text = d3.select('.tooltip-area__text').attr("z-index", 100)
-        text.text(`Productions: ${d}`);
+        text.text(`Actions: ${d}`);
         const [x, y] = d3.pointer(event);
 
         tooltip
@@ -42,7 +42,7 @@ export default function ActionsGraph(props) {
 
         const x = d3
             .scaleBand()
-            .range([40, myWidth])
+            .range([60, myWidth])
             .domain(
                 actions
                     .slice(0)
@@ -70,9 +70,22 @@ export default function ActionsGraph(props) {
 
         const yAxis = (g) => {
             g
-                .attr("transform", `translate(${margin.left},0)`)
+                .attr("transform", `translate(${margin.left + 20},0)`)
                 .call(d3.axisLeft(y))
         }
+
+        svg.select(".x-axis-label")
+            .attr("transform",
+                "translate(" + (myWidth - 10) + " ," +
+                (myHeight + margin.top) + ")")
+            .style("text-anchor", "middle")
+
+        svg.select(".y-axis-label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0)
+            .attr("x", -40)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
 
         svg.select(".x-axis").transition().duration(800).call(xAxis);
         svg.select(".y-axis").transition().duration(800).call(yAxis)
@@ -142,9 +155,13 @@ export default function ActionsGraph(props) {
                     </select>
                 </div>
                 <svg ref={ref}>
+                    <text className="x-axis-label">Time ({timespan}) {"->"}</text>
+                    <text className="y-axis-label"> {"<-"} Actions</text>
                     <g className="plot-area" />
-                    <g className="x-axis"></g>
-                    <g className="y-axis"></g>
+                    <g className="x-axis">
+                    </g>
+                    <g className="y-axis">
+                    </g>
                     <g className="tooltip-area">
                         <text className="tooltip-area__text"></text>
                     </g>

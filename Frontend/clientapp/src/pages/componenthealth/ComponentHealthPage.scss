@@ -6,10 +6,11 @@
     display: grid;
     grid-template-areas:
         "component-overview component-graph"
-        "component-overview history-overview";
+        "component-overview history-overview"
+        "component-overview component-maintenance";
 
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 50% 33% 30%;
 
     h1,
     h3 {
