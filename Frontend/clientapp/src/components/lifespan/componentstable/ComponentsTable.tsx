@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from "@material-ui/core";
+import { IconButton, TextField, Tooltip } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
 import { Component } from "../../../globalTypes";
@@ -30,7 +30,11 @@ export default function ComponentsTable(props: IComponentsTable) {
         <div className="lifespan-table">
             <div className="row">
                 <p>{t("status.label")}</p>
-                <p>{t("name.label")}</p>
+                <p id="Lifespan-Search">
+                    {t("name.label")}
+                    <div id="Lifespan-Search-Spacer" />
+                    <TextField id="Lifespan-Search-Field" label="Search" variant="outlined" />
+                </p>
                 <p>{t("totalactions.label")}</p>
                 <p>{t("currentactions.label")}</p>
                 <p>
