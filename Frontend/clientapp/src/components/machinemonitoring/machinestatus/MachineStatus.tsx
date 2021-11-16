@@ -34,7 +34,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .select(`#${props.name}`)
                 .append("svg")
                 .attr("height", 64)
-                .attr("width", "100%")
+                .attr("width", "110%")
                 .attr("margin", 0);
 
             let scaleBand: number[] = [];
