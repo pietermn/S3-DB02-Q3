@@ -28,6 +28,16 @@ namespace Backend_DTO.DTOs
         public int MaxActions { get; set; }
         public int CurrentActions { get; set; }
         [NotMapped]
-        public int PercentageMaintenance => CurrentActions / MaxActions * 100;
+        public int PercentageMaintenance => CalculatePercentage();
+
+        private int CalculatePercentage()
+        {
+            if(MaxActions != 0)
+            {
+                return Convert.ToInt32((decimal)CurrentActions / (decimal)MaxActions * 100);
+            }
+            return 0;
+        }
     }
+
 }

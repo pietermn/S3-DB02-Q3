@@ -26,12 +26,29 @@ namespace Backend_DAL
                 .FirstOrDefault();
         }
 
-        public List<MaintenanceDTO> GetAllMaintenance()
+        public List<MaintenanceDTO> GetAllMaintenance(bool done)
         {
             return _Context.Maintenance
+                .Where(m => m.Done == done)
                 .Include(m => m.Component)
                     .AsNoTracking()
                 .ToList();
         }
+
+        public void AddMaintenance(MaintenanceDTO maintenance)
+        {
+            _Context.Maintenance.Add(maintenance);
+            _Context.SaveChanges();
+        }
+
+        public void FinishMaintance(int MaintenancId)
+        {
+            MaintenanceDTO maintenanceDTO = _Context.Maintenance.Where(m => m.Id == MaintenancId).FirstOrDefault();
+            maintenanceDTO.TimeDone = DateTime.Now;
+            maintenanceDTO.Done = true;
+            _Context.SaveChanges();
+        }
+
+
     }
 }

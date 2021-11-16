@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Backend_DAL;
 using Backend_DAL_Interface;
+using DotNetEnv;
 
 namespace Backend
 {
@@ -33,7 +34,15 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Env.TraversePath().Load();
+            string connectionString = Env.GetString("ConnectionString");
+            if (string.IsNullOrEmpty(connectionString))
+            {
             services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db"));
+            } else
+            {
+                services.AddDbContext<Q3Context>(options => options.UseMySQL(connectionString));
+            }
 
             services.AddScoped<IComponentContainer, ComponentContainer>();
             services.AddScoped<IMachineContainer, MachineContainer>();
@@ -59,6 +68,8 @@ namespace Backend
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend", Version = "v1" });
             });
 
+            services.AddCors();
+
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(opt =>
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -75,15 +86,16 @@ namespace Backend
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseCors(x => x
                 .AllowAnyMethod()
                 .AllowAnyHeader()
+                .AllowAnyOrigin()
                 .SetIsOriginAllowed(origin => true)
-                .AllowCredentials()
+                //.AllowCredentials()
              );
 
             app.UseAuthorization();

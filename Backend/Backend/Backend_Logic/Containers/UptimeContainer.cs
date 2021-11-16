@@ -5,6 +5,7 @@ using Backend_Logic_Interface.Containers;
 using Backend_Logic_Interface.Models;
 using Backend_Logic.Models;
 using System.Linq;
+using System;
 
 namespace Backend_Logic.Containers
 {
@@ -21,13 +22,21 @@ namespace Backend_Logic.Containers
             List<ProductionsDTO> productions = _productionsDAL.GetProductionsByIdFromLastDay(productionLine_id);
             List<IUptime> uptimes = new();
             int count = 0;
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int second = DateTime.Now.Second;
+            DateTime fakeNow = new(2020, 9, 30, hour, minute, second);
 
             if (productions.Count == 0)
             {
-                return new() { new Uptime(0, productionLine_id, System.DateTime.Now, System.DateTime.Now.AddDays(-1), false) };
+                return new() { new Uptime(0, productionLine_id, System.DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
             }
 
-            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp, true);
+            Uptime firstUptime = new(count, productionLine_id, fakeNow.AddDays(-1), productions[0].Timestamp, false);
+            count++;
+            uptimes.Add(firstUptime);
+
+            Uptime current = new(count, productions[0].ProductionLineId, productions[0].Timestamp, productions[0].Timestamp.AddSeconds(productions[0].ShotTime), true);
 
             foreach (ProductionsDTO p in productions.Skip(1))
             {
@@ -41,7 +50,7 @@ namespace Backend_Logic.Containers
                     uptimes.Add(new Uptime(count, p.ProductionLineId, current.End, p.Timestamp, false));
                     count++;
 
-                    current = new Uptime(count, p.ProductionLineId, p.Timestamp, p.Timestamp, true);
+                    current = new Uptime(count, p.ProductionLineId, p.Timestamp, p.Timestamp.AddSeconds(p.ShotTime), true);
                 }
                 else // Up
                 {
@@ -49,7 +58,10 @@ namespace Backend_Logic.Containers
                 }
             }
 
+            Uptime lastUptime = new(uptimes.Count + 1, productionLine_id, productions[^1].Timestamp.AddSeconds(productions[^1].ShotTime), fakeNow, false);
+
             uptimes.Add(current);
+            uptimes.Add(lastUptime);
 
             return uptimes;
         }

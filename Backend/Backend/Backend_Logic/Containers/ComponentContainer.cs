@@ -25,9 +25,14 @@ namespace Backend_Logic.Containers
 
         }
 
-        public List<int> GetPreviousActions(int component_id, int amountOfWeeks)
+        public List<int> GetPreviousActions(int component_id, int amount, string type)
         {
-            return _componentDAL.GetPreviousActions(component_id, amountOfWeeks);
+            return _componentDAL.GetPreviousActions(component_id, amount, type);
+        }
+
+        public void SetMaxActions(int component_id, int max_actions)
+        {
+            _componentDAL.SetMaxAction(component_id, max_actions);
         }
     }
 }

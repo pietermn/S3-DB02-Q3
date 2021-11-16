@@ -33,12 +33,20 @@ namespace Backend.Controllers
             return Ok(Components);
         }
 
-        [Route("previousactions/{component_id}/{amountofweeks}"), HttpGet]
-        public IActionResult GetPreviousActions(int component_id, int amountofweeks)
+        [Route("previousactions/{component_id}/{amount}/{type}"), HttpGet]
+        public IActionResult GetPreviousActions(int component_id, int amount, string type)
         {
-            List<int> Actions = _componentContainer.GetPreviousActions(component_id, amountofweeks);
+            List<int> Actions = _componentContainer.GetPreviousActions(component_id, amount, type);
 
             return Ok(Actions);
+        }
+
+        [Route("maxactions"), HttpPut]
+        public IActionResult SetMaxActions(int component_id, int max_actions)
+        {
+            _componentContainer.SetMaxActions(component_id, max_actions);
+
+            return Ok();
         }
     }
 }

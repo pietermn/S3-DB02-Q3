@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Updater</title>
+        <style>
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            input {
+                width: 200px;
+                margin-bottom: 5px;
+            }
+            button {
+                width: min-content;
+            }
+            .on {
+                background-color: lime;
+            }
+            .off {
+                background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Notification Updater</h1>
+        <label>Updating all notifications every 5 seconds</label>
+        <div style="display: flex; flex-direction: column">
+            <div style="display: flex">
+                Status:
+                <div class="off" id="status" style="width: 50px; height: 1rem; margin-left: 5px"></div>
+            </div>
+            <button id="startButton">Start</button>
+            <button id="stopButton">Stop</button>
+        </div>
+
+        <h1>Component Updater</h1>
+        <label>Updating all components every 30 seconds</label>
+        <div style="display: flex; flex-direction: column">
+            <div style="display: flex">
+                Status:
+                <div class="off" id="statusComponent" style="width: 50px; height: 1rem; margin-left: 5px"></div>
+            </div>
+            <button id="startButtonComponent">Start</button>
+            <button id="stopButtonComponent">Stop</button>
+        </div>
+
+        <h1>Data Changer</h1>
+        <label>New data for productionline 364 (A3)</label>
+        <div style="display: flex; flex-direction: column">
+            <label>MM Add Data</label>
+            <button id="fillButton">Fill</button>
+        </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+
+            var startButton = document.getElementById("startButton");
+            var stopButton = document.getElementById("stopButton");
+            var statusDiv = document.getElementById("status");
+            var startButtonComponent = document.getElementById("startButtonComponent");
+            var stopButtonComponent = document.getElementById("stopButtonComponent");
+            var statusDivComponent = document.getElementById("statusComponent");
+            var fillButton = document.getElementById("fillButton");
+
+            startButton.addEventListener("click", () => {
+                socket.emit("Start Timer");
+            });
+
+            stopButton.addEventListener("click", () => {
+                socket.emit("Stop Timer");
+            });
+
+            socket.on("Timer Started", () => {
+                statusDiv.setAttribute("class", "on");
+            });
+
+            socket.on("Timer Stopped", () => {
+                statusDiv.setAttribute("class", "off");
+            });
+
+            startButtonComponent.addEventListener("click", () => {
+                socket.emit("Start Timer Component");
+            });
+
+            stopButtonComponent.addEventListener("click", () => {
+                socket.emit("Stop Timer Component");
+            });
+
+            fillButton.addEventListener("click", () => {
+                socket.emit("Add MM Data");
+            });
+
+            socket.on("Timer Started Component", () => {
+                statusDivComponent.setAttribute("class", "on");
+            });
+
+            socket.on("Timer Stopped Component", () => {
+                statusDivComponent.setAttribute("class", "off");
+            });
+        </script>
+    </body>
+</html>
