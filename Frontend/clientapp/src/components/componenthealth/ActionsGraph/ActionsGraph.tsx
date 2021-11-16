@@ -19,6 +19,26 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [amountTimespan, setAmountTimespan] = useState("4");
 
     // set the dimensions and margins of the graph
+
+    var tooltip = d3.select(".tooltip-area").style("opacity", 1).attr("viewBox", "0 0 700 500");
+
+    function mouseOver(event: MouseEvent, d: number) {
+        tooltip.style("opacity", 1);
+    }
+
+    function mouseLeave(event: MouseEvent, d: number) {
+        tooltip.style("opacity", 0);
+    }
+
+    function mouseMove(event: MouseEvent, d: number) {
+        const text = d3.select("tooltip");
+
+        text.text(`Productions were ${d}`);
+        const [x, y] = d3.pointer(event);
+
+        tooltip.attr("transform", `translate(${x}, ${y})`);
+    }
+
     function DrawGraph() {
         const margin = { top: 10, right: 30, bottom: 90, left: 40 };
         d3.select("#Actions-Graph").select("svg").remove();
@@ -31,6 +51,13 @@ export default function ActionsGraph(props: IActionsGraph) {
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         // Parse the Data
+        d3.select("#Actions-Graph")
+            .select("svg")
+            .append("g")
+            .attr("class", "tooltip-area")
+            .append("text")
+            .attr("class", "tooltip")
+            .text("test");
 
         // X axis
         const x = d3
@@ -70,6 +97,9 @@ export default function ActionsGraph(props: IActionsGraph) {
                 (d, i) =>
                     x(timespan == "months" ? t("month.label") + " " + (i + 1) : t("week.label") + " " + (i + 1)) || 0
             )
+            .on("mousemove", mouseMove)
+            .on("mouseleave", mouseLeave)
+            .on("mouseover", mouseOver)
             .attr("width", x.bandwidth())
             .attr("fill", "#69b3a2")
             // no bar at the beginning thus:

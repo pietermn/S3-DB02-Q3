@@ -4,19 +4,21 @@
 
 .Components-Table {
     width: 100%;
-    height: 70vh;
+    height: 80vh;
     border-spacing: 0;
     position: relative;
 
-    .thead {
-        box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
-    }
+    // .thead {
+    //     box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
+    // }
 
-    .tbody {
+    main {
         position: relative;
-        overflow-x: auto;
         scrollbar-width: thin;
         scrollbar-color: rgb(14, 54, 78) #e0e0e0;
+        padding-top: 4rem;
+        width: 100%;
+        overflow-x: hidden;
 
         &::-webkit-scrollbar {
             width: 7px;
@@ -30,39 +32,35 @@
             background-color: rgb(14, 54, 78);
             border-radius: 50px;
         }
-
-        .row {
-            z-index: 50;
-            height: 4rem;
-
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.15);
-                cursor: pointer;
-            }
-
-            .triangle {
-                position: absolute;
-                width: 40px;
-                height: inherit;
-                background-color: rebeccapurple;
-                z-index: 100;
-                left: 100%;
-            }
-        }
     }
 
     .row {
         width: 100%;
         display: grid;
-        height: 100%;
-        // padding-block: 0.25rem;
         box-sizing: border-box;
         vertical-align: middle;
         grid-template-columns: auto auto;
         border-bottom: 1px solid black;
+        z-index: 50;
+        height: 4rem;
+        position: relative;
+        width: 100%;
 
-        &.selected p {
-            font-weight: 700;
+        &:first-child {
+            font-weight: 900;
+            position: absolute;
+            top: 0;
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        &.selected {
+            p {
+                font-weight: 700;
+            }
         }
 
         p {
@@ -73,6 +71,7 @@
             &:nth-child(2) {
                 text-align: end;
                 padding-right: 1rem;
+                position: relative;
             }
         }
     }

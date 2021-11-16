@@ -1,53 +1,61 @@
 .actionsgraph-container {
-  height: 80%;
-  width: 75%;
-  margin-top: 1.5rem;
-  position: relative;
+    height: 80%;
+    width: 75%;
+    margin-top: 1.5rem;
+    position: relative;
 
-  .loading {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
+    .loading {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 
 #Actions-Graph {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-
-  &.invisible {
-    opacity: 0;
-  }
-
-  svg {
-    margin-bottom: -2.5rem;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
-  }
 
-  #amount-timespan {
-    height: 1.5rem;
-    width: 50px;
-    padding: 0;
-  }
+    &.invisible {
+        opacity: 0;
+    }
 
-  #timespan-select {
-    height: 1.5rem;
-    margin-right: 10px;
-  }
+    svg {
+        margin-bottom: -2.5rem;
+        height: 100%;
+        width: 100%;
+        position: relative;
 
-  #amount-timespan,
-  #timespan-select {
-    height: 30px;
-    border: none;
-    outline: 1px solid black;
-    margin-bottom: 1rem;
-  }
+        .tooltip-area {
+            z-index: 100;
+            background-color: red;
+            height: 100px;
+            width: 100px;
+        }
+    }
+
+    #amount-timespan {
+        height: 1.5rem;
+        width: 50px;
+        padding: 0;
+    }
+
+    #timespan-select {
+        height: 1.5rem;
+        margin-right: 10px;
+    }
+
+    #amount-timespan,
+    #timespan-select {
+        height: 30px;
+        border: none;
+        outline: 1px solid black;
+        margin-bottom: 1rem;
+    }
 }
 
 .invisible {
-  opacity: 0;
+    opacity: 0;
 }
