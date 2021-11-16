@@ -30,5 +30,7 @@
   "plan.label": "plan",
   "sortbytotalactions.label": "Sort by total actions",
   "currentactions.label": "Current Actions",
-  "max.label": "Max"
+  "max.label": "Max",
+  "uptimetooltip.label": "24h display showing the machine is running or not",
+  "maxtooltip.label": "Percentage of the current actions compared to the max actions"
 }
