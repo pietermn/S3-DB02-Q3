@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build
+    name: Build Backend
     runs-on: windows-latest
     env:
       working-directory: ./Backend/Backend
