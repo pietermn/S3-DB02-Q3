@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
+  buildBackend:
     name: Build Backend
     runs-on: windows-latest
     env:
