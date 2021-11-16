@@ -45,3 +45,4 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"pietermn_S3-DB02-Q3" /o:"pietermn" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build --no-restore
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{env.working-directory}}
