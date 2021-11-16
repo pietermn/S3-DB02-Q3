@@ -4,13 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GetPreviousActions } from "../../../api/requests/components";
 import "./ActionsGraph.scss";
+import { useD3 } from "./useD3Hook";
 
-interface IActionsGraph {
-    component_id: number;
-}
-
-export default function ActionsGraph(props: IActionsGraph) {
-    const [actions, setActions] = useState<number[]>([]);
+export default function ActionsGraph(props) {
+    const [actions, setActions] = useState([]);
     let maxValue = Math.max(...actions.map((w) => w), 0);
     const [myWidth] = useState((window.innerWidth / 3) * 2 * 0.75);
     const [myHeight] = useState((window.innerHeight / 2) * 0.6);
@@ -19,23 +16,33 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [amountTimespan, setAmountTimespan] = useState("4");
 
     // set the dimensions and margins of the graph
-    function DrawGraph() {
-        const margin = { top: 10, right: 30, bottom: 90, left: 40 };
-        d3.select("#Actions-Graph").select("svg").remove();
+    let ref;
 
-        // append the svg object to the body of the page
-        const svg = d3
-            .select("#Actions-Graph")
-            .append("svg")
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+    var tooltip = d3.select(".tooltip-area").style("opacity", 0)
 
-        // Parse the Data
+    function mouseOver() {
+        tooltip.style("opacity", 1);
+    }
 
-        // X axis
+    function mouseLeave() {
+        tooltip.style("opacity", 0);
+    }
+
+    function mouseMove(event, d) {
+        const text = d3.select('.tooltip-area__text').attr("z-index", 100)
+        text.text(`Productions: ${d}`);
+        const [x, y] = d3.pointer(event);
+
+        tooltip
+            .attr('transform', `translate(${x}, ${y - 10})`);
+    }
+
+    ref = useD3((svg) => {
+        const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+
         const x = d3
             .scaleBand()
-            .range([0, myWidth])
+            .range([40, myWidth])
             .domain(
                 actions
                     .slice(0)
@@ -46,47 +53,49 @@ export default function ActionsGraph(props: IActionsGraph) {
             )
 
             .padding(0.2);
-
-        svg.append("g")
-            .attr("transform", `translate(0,${myHeight})`)
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("transform", "translate(-10,0)rotate(-45)")
-            .style("text-anchor", "end");
-
-        // Add Y axis
         const y = d3
             .scaleLinear()
             .domain(maxValue ? [0, maxValue] : [0, 1, 0])
             .range([myHeight, 0]);
-        svg.append("g").call(d3.axisLeft(y));
 
-        // Bars
-        svg.selectAll("mybar")
+
+        const xAxis = (g) => {
+            g.attr("transform", `translate(0,${myHeight})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end")
+
+        }
+
+        const yAxis = (g) => {
+            g
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(y))
+        }
+
+        svg.select(".x-axis").transition().duration(800).call(xAxis);
+        svg.select(".y-axis").transition().duration(800).call(yAxis)
+
+        svg.select(".plot-area").selectAll(".bar")
             .data(actions)
             .join("rect")
+            .attr("class", "bar")
+            .on("mousemove", mouseMove)
+            .on("mouseleave", mouseLeave)
+            .on("mouseover", mouseOver)
+            .transition()
+            .duration(800)
+            .attr("fill", "#69b3a2")
             .attr(
                 "x",
                 (d, i) =>
                     x(timespan == "months" ? t("month.label") + " " + (i + 1) : t("week.label") + " " + (i + 1)) || 0
             )
             .attr("width", x.bandwidth())
-            .attr("fill", "#69b3a2")
-            // no bar at the beginning thus:
-            .attr("height", (d) => myHeight - y(0)) // always equal to 0
-            .attr("y", (d) => y(0));
-
-        // Animation
-        svg.selectAll("rect")
-            .data(actions)
-            .transition()
-            .duration(800)
-            .attr("y", (d) => y(d) || 0)
-            .attr("height", (d) => myHeight - y(d))
-            .delay((d, i) => {
-                return i * 100;
-            });
-    }
+            .attr("y", (d) => y(d))
+            .attr("height", (d) => y(0) - y(d))
+    }, [actions.length, JSON.stringify(actions)]);
 
     const { t } = useTranslation();
 
@@ -99,13 +108,7 @@ export default function ActionsGraph(props: IActionsGraph) {
         AsyncGetActions();
     }, [props.component_id]);
 
-    useEffect(() => {
-        if (actions.length) {
-            DrawGraph();
-        }
-    }, [JSON.stringify(actions), timespan]);
-
-    async function handleInput(e: React.ChangeEvent<HTMLSelectElement>) {
+    async function handleInput(e) {
         setIsLoading(true);
         switch (e.target.name) {
             case "timespan":
@@ -122,7 +125,7 @@ export default function ActionsGraph(props: IActionsGraph) {
 
     return (
         <div className="actionsgraph-container">
-            <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>
+            <div id="Actions-Graph">
                 <div>
                     <select id="timespan-select" name="timespan" value={timespan} onChange={handleInput}>
                         <option value="weeks">{t("weeks.label")}</option>
@@ -138,6 +141,14 @@ export default function ActionsGraph(props: IActionsGraph) {
                         <option value="10">10</option>
                     </select>
                 </div>
+                <svg ref={ref}>
+                    <g className="plot-area" />
+                    <g className="x-axis"></g>
+                    <g className="y-axis"></g>
+                    <g className="tooltip-area">
+                        <text className="tooltip-area__text"></text>
+                    </g>
+                </svg>
             </div>
             <CircularProgress className={isLoading ? "loading" : "loading invisible"} />
         </div>

@@ -14,13 +14,11 @@ export default function ComponentsTable(props: ITableProps) {
 
     return (
         <div className="Components-Table">
-            <div className="thead">
-                <div className="row">
+            <main>
+                <div className="row header">
                     <p>{t("name.label")}</p>
                     <p>{t("totalactions.label")}</p>
                 </div>
-            </div>
-            <div className="tbody">
                 {props.components.map((component: Component, index: number) => {
                     return (
                         <div
@@ -30,11 +28,11 @@ export default function ComponentsTable(props: ITableProps) {
                         >
                             <p>{component.description}</p>
                             <p>{component.totalActions}</p>
-                            {props.selectedComponentId == component.id && <div className="triangle" />}
+                            {/* {props.selectedComponentId == component.id && <div className="triangle" />} */}
                         </div>
                     );
                 })}
-            </div>
+            </main>
         </div>
     );
 }

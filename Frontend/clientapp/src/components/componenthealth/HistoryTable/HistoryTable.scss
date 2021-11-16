@@ -2,48 +2,48 @@
 
 .History-Table,
 .Components-Table {
-  width: 55%;
-  height: 200px;
+    width: 55%;
+    height: 200px;
 
-  .thead {
-    height: 50px;
-    display: grid;
-    align-items: center;
+    .thead {
+        height: 50px;
+        display: grid;
+        align-items: center;
 
-    p {
-      margin: 0;
-      font-weight: bold;
+        p {
+            margin: 0;
+            font-weight: bold;
+        }
+        border-bottom: 1px solid black;
+
+        .row {
+            border: none;
+        }
     }
-    border-bottom: 1px solid black;
+
+    main {
+        height: 90%;
+        overflow-y: auto;
+        display: grid;
+        justify-items: center;
+        grid-template-rows: repeat(3, 1fr);
+    }
 
     .row {
-      border: none;
+        width: 95%;
+        height: 60px;
+        display: grid;
+        grid-template-columns: auto 175px 175px;
+        border-bottom: 1px solid black;
+
+        p {
+            &:first-child {
+                padding-left: 1rem;
+            }
+        }
     }
-  }
-
-  .tbody {
-    height: 90%;
-    overflow-y: auto;
-    display: grid;
-    justify-items: center;
-    grid-template-rows: repeat(3, 1fr);
-  }
-
-  .row {
-    width: 95%;
-    height: 60px;
-    display: grid;
-    grid-template-columns: auto 175px 175px;
-    border-bottom: 1px solid black;
-
-    p {
-      &:first-child {
-        padding-left: 1rem;
-      }
-    }
-  }
 }
 
 .History-Table {
-  margin-top: 5rem;
+    margin-top: 5rem;
 }

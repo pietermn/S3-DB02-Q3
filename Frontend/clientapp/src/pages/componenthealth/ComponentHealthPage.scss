@@ -30,10 +30,12 @@
     display: flex;
     justify-content: center;
     border-right: 1px solid black;
-    margin-right: 2rem;
+    margin-right: 3rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
+    clip-path: inset(0px -15px 0px 0px);
 
     .center-table {
-        width: 85%;
+        width: 80%;
     }
 }
 
@@ -47,6 +49,4 @@
 
 .Component-Graph,
 .Component-History-Overview {
-    // padding-left: 2rem;
-    // border-left: 1px solid black;
 }
