@@ -30,5 +30,7 @@
   "plan.label": "Plan",
   "sortbytotalactions.label": "Sorteer op totale actions",
   "currentactions.label": "Huidige Acties",
-  "max.label": "Max"
+  "max.label": "Max",
+  "uptimetooltip.label": "24-uurs weergave die aangeeft of de machine draait of niet",
+  "maxtooltip.label": "Percentage van de huidige acties in vergelijking met de maximale acties"
 }

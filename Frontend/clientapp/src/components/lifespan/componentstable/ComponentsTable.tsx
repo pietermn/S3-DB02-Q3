@@ -1,7 +1,9 @@
+import { IconButton, Tooltip } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
 import { Component } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
+import { FaInfoCircle as InfoIcon } from "react-icons/fa";
 
 interface IComponentsTable {
     components: Component[];
@@ -10,6 +12,7 @@ interface IComponentsTable {
 
 export default function ComponentsTable(props: IComponentsTable) {
     const { t } = useTranslation();
+    const maxTooltip = t("maxtooltip.label");
 
     function GetStatusColor(percentage: number): string {
         if (percentage >= 95 && percentage < 100) {
@@ -30,12 +33,19 @@ export default function ComponentsTable(props: IComponentsTable) {
                 <p>{t("name.label")}</p>
                 <p>{t("totalactions.label")}</p>
                 <p>{t("currentactions.label")}</p>
-                <p>{t("max.label")} %</p>
+                <p>
+                    {t("max.label")} %
+                    <Tooltip title={maxTooltip}>
+                        <IconButton style={{ fontSize: "1rem" }} disableRipple>
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
+                </p>
             </div>
             {props.components &&
                 props.components
                     .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                    .map((component, index) => {
+                    .map((component) => {
                         return (
                             <div onClick={() => props.setSelectedComponet(component)} className="row">
                                 <p>

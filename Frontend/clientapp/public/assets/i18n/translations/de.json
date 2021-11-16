@@ -23,12 +23,14 @@
   "maintenance.label": "Instandhaltung",
   "status.label": "Status",
   "uptime.label": "Betriebszeit",
-  "nocomponentsfound.label": "No components found",
-  "productionline.label": "Keine Komponenten gefunden",
+  "nocomponentsfound.label": "Keine Komponenten gefunden",
+  "productionline.label": "Fließband",
   "close.label": "Schließen",
   "maxactions.label": "Max. acties",
   "plan.label": "planen",
   "sortbytotalactions.label": "Nach Gesamtaktionen sortieren",
   "currentactions.label": "Aktuelle Aktionen",
-  "max.label": "Max"
+  "max.label": "Max",
+  "uptimetooltip.label": "24h-Display zeigt an, ob die Maschine läuft oder nicht",
+  "maxtooltip.label": "Prozentsatz der aktuellen Aktionen im Vergleich zu den maximalen Aktionen"
 }

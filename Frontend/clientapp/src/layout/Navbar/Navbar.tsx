@@ -60,6 +60,7 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
     return (
         <div className="Notification-Dropdown">
             {icon}
+            {notifications.length ? <div className="Notification-Dropdown-Dot" /> : null}
             <div className="Notification-Dropdown-Content">
                 <h3>{title}</h3>
                 {notifications && notifications.length ? (

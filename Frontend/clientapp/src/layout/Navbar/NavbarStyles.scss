@@ -21,6 +21,10 @@ nav {
         height: 100%;
         @include flexboxCenter;
 
+        img:hover {
+            cursor: pointer;
+        }
+
         &__Dropdown {
             position: absolute;
             top: 70px;
@@ -80,6 +84,21 @@ nav {
                 margin: 0;
             }
             position: relative;
+
+            svg {
+                -webkit-transform: scaleX(-1);
+                transform: scaleX(-1);
+            }
+
+            &-Dot {
+                background-color: red;
+                width: 12px;
+                height: 12px;
+                border-radius: 12px;
+                position: absolute;
+                left: 65%;
+                top: 62%;
+            }
 
             &-Content {
                 display: none;
