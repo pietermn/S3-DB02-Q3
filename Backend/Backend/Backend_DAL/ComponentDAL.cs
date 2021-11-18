@@ -35,52 +35,54 @@ namespace Backend_DAL
                 .ToList();
         }
 
-        public List<int> GetPreviousActions(int component_id, int amountOfWeeks, string type)
+        public List<ProductionsDTO> GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
         {
             ComponentDTO component = _Context.Components.Where(c => c.Id == component_id)
                 .Include(c => c.History)
                 .FirstOrDefault();
 
-            List<ProductionsDTO> productions = new List<ProductionsDTO>();
+            List<ProductionsDTO> productions = new();
             foreach (ProductionLineHistoryDTO historyDTO in component.History)
             {
-                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(p => p.ProductionLineId == historyDTO.ProductionLineId && historyDTO.StartDate <= p.Timestamp && historyDTO.EndDate >= p.Timestamp).ToList();
+                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(p => p.ProductionLineId == historyDTO.ProductionLineId && beginDate <= p.Timestamp && endDate >= p.Timestamp).ToList();
                 foreach (ProductionsDTO productionsDTO in productionsDTOs)
                 {
                     productions.Add(productionsDTO);
                 }
             }
 
-            List<int> actions = new List<int>();
-            for (int i = 0; i < amountOfWeeks; i++)
-            {
-                int actionsThisWeek = 0;
-                //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
-                //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
-                DateTime MockNowDate = new DateTime(2020, 9, 30);
+            return productions.OrderBy(p => p.Timestamp).ToList();
 
-                // Default sorting is by weeks
-                DateTime firstDatetime = MockNowDate.AddDays(i * -7);
-                DateTime secondDatetime = firstDatetime.AddDays(-7);
+            //List<int> actions = new List<int>();
+            //for (int i = 0; i < amountOfWeeks; i++)
+            //{
+            //    int actionsThisWeek = 0;
+            //    //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
+            //    //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
+            //    DateTime MockNowDate = new DateTime(2020, 9, 30);
 
-                if (type == "months")
-                {
-                    firstDatetime = MockNowDate.AddMonths(-i);
-                    secondDatetime = firstDatetime.AddMonths(-1);
-                }
+            //    // Default sorting is by weeks
+            //    DateTime firstDatetime = MockNowDate.AddDays(i * -7);
+            //    DateTime secondDatetime = firstDatetime.AddDays(-7);
+
+            //    if (type == "months")
+            //    {
+            //        firstDatetime = MockNowDate.AddMonths(-i);
+            //        secondDatetime = firstDatetime.AddMonths(-1);
+            //    }
 
 
-                foreach (ProductionsDTO production in productions)
-                {
-                    if (production.Timestamp < firstDatetime && production.Timestamp > secondDatetime)
-                    {
-                        actionsThisWeek++;
-                    }
-                }
-                actions.Add(actionsThisWeek);
-            }
+            //    foreach (ProductionsDTO production in productions)
+            //    {
+            //        if (production.Timestamp < firstDatetime && production.Timestamp > secondDatetime)
+            //        {
+            //            actionsThisWeek++;
+            //        }
+            //    }
+            //    actions.Add(actionsThisWeek);
+            //}
 
-            return actions;
+            //return actions;
         }
 
         public void SetMaxAction(int component_id, int max_actions)
