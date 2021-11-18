@@ -32,5 +32,6 @@
   "currentactions.label": "Aktuelle Aktionen",
   "max.label": "Max",
   "uptimetooltip.label": "24h-Display zeigt an, ob die Maschine läuft oder nicht",
-  "maxtooltip.label": "Prozentsatz der aktuellen Aktionen im Vergleich zu den maximalen Aktionen"
+  "maxtooltip.label": "Prozentsatz der aktuellen Aktionen im Vergleich zu den maximalen Aktionen",
+  "searchtag.label": "Suche"
 }

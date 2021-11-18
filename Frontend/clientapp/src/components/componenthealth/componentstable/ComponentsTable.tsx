@@ -2,6 +2,7 @@ import { TextField } from "@material-ui/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Component } from "../../../globalTypes";
+import { IoMdArrowDropdown as ArrowDownIcon, IoMdArrowDropup as ArrowUpIcon } from "react-icons/io";
 import "../HistoryTable/HistoryTable.scss";
 import "./ComponentsTable.scss";
 
@@ -13,31 +14,95 @@ interface ITableProps {
 
 export default function ComponentsTable(props: ITableProps) {
     const [search, setSearch] = useState("");
+    const [orderByName, setOrderByName] = useState(true);
+    const [orderDown, setOrderDown] = useState(true);
+    const [components, setComponents] = useState(props.components);
     const { t } = useTranslation();
+    const searchLabel = t("searchtag.label");
 
     function getSearchedComponents() {
         return props.components.filter((c) => c.description.toLowerCase().includes(search.toLowerCase()));
+    }
+
+    function searchHandler(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        // if (e.target.value) {
+        //     setComponents(getSearchedComponents());
+        // } else {
+        //     setComponents(props.components);
+        // }
+        setSearch(e.target.value);
+    }
+
+    function orderHandler(name: boolean) {
+        if (name) {
+            if (orderByName) {
+                setOrderDown(!orderDown);
+            } else {
+                setOrderByName(true);
+                setOrderDown(true);
+            }
+        } else {
+            if (!orderByName) {
+                setOrderDown(!orderDown);
+            } else {
+                setOrderByName(false);
+                setOrderDown(true);
+            }
+        }
+    }
+
+    function order(components: Component[]) {
+        if (orderByName) {
+            let c = components.sort((a, b) => {
+                if (a.name.toString().toLowerCase() < b.name.toString().toLowerCase()) return -1;
+                if (a.name.toString().toLowerCase() > b.name.toString().toLowerCase()) return 1;
+                return 0;
+            });
+
+            if (orderDown) {
+                return c;
+            } else {
+                return c.reverse();
+            }
+        } else {
+            let c = components.sort((a, b) => {
+                if (a.totalActions < b.totalActions) return -1;
+                if (a.totalActions > b.totalActions) return 1;
+                return 0;
+            });
+
+            if (orderDown) {
+                return c;
+            } else {
+                return c.reverse();
+            }
+        }
     }
 
     return (
         <div className="Components-Table">
             <main>
                 <div className="row header">
-                    <p>
-                        {t("name.label")}
-                        <div id="chealth-spacer" />
+                    <div id="chealth-search">
+                        <p onClick={() => orderHandler(true)}>
+                            {t("name.label")}
+                            {orderByName && (orderDown ? <ArrowDownIcon /> : <ArrowUpIcon />)}
+                        </p>
                         <TextField
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            label="Search"
+                            onChange={(e) => searchHandler(e)}
+                            label={searchLabel}
                             variant="outlined"
                             size="small"
                         />
+                    </div>
+                    <p onClick={() => orderHandler(false)}>
+                        {t("totalactions.label")}
+                        {!orderByName && (orderDown ? <ArrowDownIcon /> : <ArrowUpIcon />)}
                     </p>
-                    <p>{t("totalactions.label")}</p>
                 </div>
                 {search
-                    ? getSearchedComponents().map((component: Component, index: number) => {
+                    ? order(getSearchedComponents()).map((component: Component, index: number) => {
                           return (
                               <div
                                   key={index}
@@ -50,7 +115,7 @@ export default function ComponentsTable(props: ITableProps) {
                               </div>
                           );
                       })
-                    : props.components.map((component: Component, index: number) => {
+                    : order(props.components).map((component: Component, index: number) => {
                           return (
                               <div
                                   key={index}

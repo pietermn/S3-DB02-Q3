@@ -52,16 +52,18 @@
             background-color: white;
             z-index: 51;
             top: 0;
-
-            p:first-child {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-            }
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 6rem;
 
             &:hover {
                 background-color: white;
                 cursor: auto;
+            }
+
+            p:hover {
+                cursor: pointer;
             }
         }
 
@@ -89,7 +91,9 @@
         }
     }
 
-    #chealth-spacer {
-        margin-left: 0.5rem;
+    #chealth-search {
+        > :not(p) {
+            margin-left: 0.5rem;
+        }
     }
 }
