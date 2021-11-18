@@ -52,30 +52,24 @@ export default function ComponentsTable(props: ITableProps) {
     }
 
     function order(components: Component[]) {
+        let c = components;
         if (orderByName) {
-            let c = components.sort((a, b) => {
-                if (a.name.toString().toLowerCase() < b.name.toString().toLowerCase()) return -1;
-                if (a.name.toString().toLowerCase() > b.name.toString().toLowerCase()) return 1;
-                return 0;
-            });
-
-            if (orderDown) {
-                return c;
-            } else {
-                return c.reverse();
-            }
+            c = components
+                .sort((a, b) => {
+                    return a.description.toLowerCase().localeCompare(b.description.toLowerCase());
+                })
+                .reverse();
         } else {
-            let c = components.sort((a, b) => {
+            c = components.sort((a, b) => {
                 if (a.totalActions < b.totalActions) return -1;
                 if (a.totalActions > b.totalActions) return 1;
                 return 0;
             });
-
-            if (orderDown) {
-                return c;
-            } else {
-                return c.reverse();
-            }
+        }
+        if (orderDown) {
+            return c.reverse();
+        } else {
+            return c;
         }
     }
 
