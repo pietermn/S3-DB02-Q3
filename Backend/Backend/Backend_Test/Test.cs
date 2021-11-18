@@ -1,12 +1,6 @@
 ﻿using Backend;
 using Backend_Logic.Models;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -41,7 +35,24 @@ namespace Backend_Test
                 response.Content.Headers.ContentType.ToString());
         }
 
+        [Theory]
+        [InlineData(new object[] { "http://localhost:5200/component/read?component_id=173", "Matrijzen", "Roerstaaf 112 mm nr. 9" })]
+        public async Task ReadComponent_CorrectTypeAndProperties(string url, string expectedName, string expectedDescription)
+        {
+            // Arrange
+            var client = _factory.CreateClient();
 
+            // Act
+            var response = await client.GetAsync(url);
+            var component = JsonConvert.DeserializeObject<Component>(await response.Content.ReadAsStringAsync());
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
+            Assert.Equal(expectedName, component.Name);
+            Assert.Equal(expectedDescription, component.Description);
+
+        }
 
 
 
