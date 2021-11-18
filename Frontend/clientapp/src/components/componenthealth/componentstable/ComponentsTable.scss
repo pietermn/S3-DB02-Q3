@@ -12,7 +12,6 @@
         position: relative;
         scrollbar-width: thin;
         scrollbar-color: rgb(14, 54, 78) #e0e0e0;
-        padding-top: 4rem;
         width: 100%;
         overflow-x: hidden;
 
@@ -35,6 +34,7 @@
         display: grid;
         box-sizing: border-box;
         vertical-align: middle;
+        align-items: center;
         grid-template-columns: auto auto;
         border-bottom: 1px solid black;
         z-index: 50;
@@ -44,8 +44,21 @@
 
         &:first-child {
             font-weight: 900;
-            position: absolute;
+            position: sticky;
+            background-color: white;
+            z-index: 51;
             top: 0;
+
+            p:first-child {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            &:hover {
+                background-color: white;
+                cursor: auto;
+            }
         }
 
         &:hover {
@@ -70,5 +83,9 @@
                 position: relative;
             }
         }
+    }
+
+    #chealth-spacer {
+        margin-left: 0.5rem;
     }
 }

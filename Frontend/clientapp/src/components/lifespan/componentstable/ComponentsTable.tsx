@@ -4,6 +4,7 @@ import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
 import { Component } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { FaInfoCircle as InfoIcon } from "react-icons/fa";
+import { useState } from "react";
 
 interface IComponentsTable {
     components: Component[];
@@ -11,6 +12,7 @@ interface IComponentsTable {
 }
 
 export default function ComponentsTable(props: IComponentsTable) {
+    const [search, setSearch] = useState("");
     const { t } = useTranslation();
     const maxTooltip = t("maxtooltip.label");
 
@@ -26,6 +28,10 @@ export default function ComponentsTable(props: IComponentsTable) {
         }
     }
 
+    function getSearchedComponents() {
+        return props.components.filter((c) => c.description.toLowerCase().includes(search.toLowerCase()));
+    }
+
     return (
         <div className="lifespan-table">
             <div className="row">
@@ -33,7 +39,13 @@ export default function ComponentsTable(props: IComponentsTable) {
                 <p id="Lifespan-Search">
                     {t("name.label")}
                     <div id="Lifespan-Search-Spacer" />
-                    <TextField id="Lifespan-Search-Field" label="Search" variant="outlined" />
+                    <TextField
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        label="Search"
+                        variant="outlined"
+                        size="small"
+                    />
                 </p>
                 <p>{t("totalactions.label")}</p>
                 <p>{t("currentactions.label")}</p>
@@ -46,22 +58,37 @@ export default function ComponentsTable(props: IComponentsTable) {
                     </Tooltip>
                 </p>
             </div>
-            {props.components &&
-                props.components
-                    .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                    .map((component) => {
-                        return (
-                            <div onClick={() => props.setSelectedComponet(component)} className="row">
-                                <p>
-                                    <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                </p>
-                                <p>{component.description}</p>
-                                <p>{component.totalActions}</p>
-                                <p>{component.currentActions}</p>
-                                <p>{component.percentageMaintenance}%</p>
-                            </div>
-                        );
-                    })}
+            {props.components && search
+                ? getSearchedComponents()
+                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
+                      .map((component) => {
+                          return (
+                              <div onClick={() => props.setSelectedComponet(component)} className="row">
+                                  <p>
+                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
+                                  </p>
+                                  <p>{component.description}</p>
+                                  <p>{component.totalActions}</p>
+                                  <p>{component.currentActions}</p>
+                                  <p>{component.percentageMaintenance}%</p>
+                              </div>
+                          );
+                      })
+                : props.components
+                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
+                      .map((component) => {
+                          return (
+                              <div onClick={() => props.setSelectedComponet(component)} className="row">
+                                  <p>
+                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
+                                  </p>
+                                  <p>{component.description}</p>
+                                  <p>{component.totalActions}</p>
+                                  <p>{component.currentActions}</p>
+                                  <p>{component.percentageMaintenance}%</p>
+                              </div>
+                          );
+                      })}
         </div>
     );
 }
