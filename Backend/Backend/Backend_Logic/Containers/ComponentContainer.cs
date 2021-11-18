@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
+using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
 
 namespace Backend_Logic.Containers
@@ -34,5 +35,24 @@ namespace Backend_Logic.Containers
         {
             _componentDAL.SetMaxAction(component_id, max_actions);
         }
+
+
+        //private Component ConvertDTOToModel(List<ComponentDTO> componentDTOs)
+        //{
+        //    List<Component> components = new List<Component>();
+        //    foreach (ComponentDTO d in componentDTOs)
+        //    {
+        //        List<ProductionLineHistory> history = new List<ProductionLineHistory>();
+                
+        //        foreach (ProductionLineHistoryDTO p in d.History)
+        //        {
+        //            ProductionLine line = new ProductionLine(p.ProductionLine.Id, p.ProductionLine.Name, p.ProductionLine.Description, p.ProductionLine.Active, p.ProductionLine.Port, p.ProductionLine.Board);
+                    
+        //            history.Add(new ProductionLineHistory(p.Id, line, p.StartDate, p.EndDate));
+        //        }
+
+        //        components.Add(new Component(d.Id, d.Name, d.Type, d.Description, d.TotalActions, d.MaxActions, d.CurrentActions, history, d.MaintenanceHistory));
+        //    }
+        //}
     }
 }

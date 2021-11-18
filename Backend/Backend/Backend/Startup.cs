@@ -60,8 +60,6 @@ namespace Backend
             services.AddScoped<IProductionSideDAL, ProductionSideDAL>();
             services.AddScoped<IProductionDAL, ProductionDAL>();
             services.AddScoped<IMaintenanceDAL, MaintenanceDAL>();
-
-            //services.AddScoped<IProductionLineHistory, ProductionLineHistory>();
            
 
             services.AddControllers();
