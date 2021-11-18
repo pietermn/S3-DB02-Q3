@@ -62,6 +62,7 @@ export default function ComponentHealthPage() {
                 maintenance.timeDone = new Date();
             }
         });
+        setSelectedMaintenance(temp);
     }
 
     useEffect(() => {
@@ -96,26 +97,31 @@ export default function ComponentHealthPage() {
             </section>
 
             {selectedComponent && (
-                <section className="Component-Graph">
-                    <h1>
-                        <b>{t("history.label")}:</b> {selectedComponent.description}
-                    </h1>
-                    <h3>
-                        <b>{t("totalactions.label")}:</b> {selectedComponent.totalActions}
-                    </h3>
-                    <ActionsGraph component_id={selectedComponent.id} />
+                <section className="Component-History-Side">
+                    <section className="Component-Graph">
+                        <h1>
+                            <b>{t("history.label")}:</b> {selectedComponent.description}
+                        </h1>
+                        <h3>
+                            <b>{t("totalactions.label")}:</b> {selectedComponent.totalActions}
+                        </h3>
+                        <ActionsGraph component_id={selectedComponent.id} />
+                    </section>
+
+                    <section className="Component-History-Overview">
+                        <HistoryTable HistoryMachines={selectedComponent.history} />
+                    </section>
+
+                    {selectedMaintenance.length && selectedMaintenance ? (
+                        <section className="Component-Maintenance-Table">
+                            <MaintenanceTable
+                                finishMaintenance={handleFinshMaintenace}
+                                maintenance={selectedMaintenance}
+                            />
+                        </section>
+                    ) : null}
                 </section>
             )}
-
-            {selectedComponent && (
-                <section className="Component-History-Overview">
-                    <HistoryTable HistoryMachines={selectedComponent.history} />
-                </section>
-            )}
-
-            {selectedMaintenance.length && selectedMaintenance ? (
-                <MaintenanceTable finishMaintenance={handleFinshMaintenace} maintenance={selectedMaintenance} />
-            ) : null}
         </div>
     );
 }

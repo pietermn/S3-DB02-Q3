@@ -36,7 +36,7 @@ export default function ComponentsTable(props: IComponentsTable) {
         <div className="lifespan-table">
             <div className="row">
                 <p>{t("status.label")}</p>
-                <p id="Lifespan-Search">
+                <div id="Lifespan-Search">
                     {t("name.label")}
                     <div id="Lifespan-Search-Spacer" />
                     <TextField
@@ -46,27 +46,31 @@ export default function ComponentsTable(props: IComponentsTable) {
                         variant="outlined"
                         size="small"
                     />
-                </p>
+                </div>
                 <p>{t("totalactions.label")}</p>
                 <p>{t("currentactions.label")}</p>
-                <p>
+                <div>
                     {t("max.label")} %
                     <Tooltip title={maxTooltip}>
                         <IconButton style={{ fontSize: "1rem" }} disableRipple>
                             <InfoIcon />
                         </IconButton>
                     </Tooltip>
-                </p>
+                </div>
             </div>
             {props.components && search
                 ? getSearchedComponents()
                       .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
                       .map((component) => {
                           return (
-                              <div onClick={() => props.setSelectedComponet(component)} className="row">
-                                  <p>
+                              <div
+                                  key={component.id}
+                                  onClick={() => props.setSelectedComponet(component)}
+                                  className="row"
+                              >
+                                  <div>
                                       <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </p>
+                                  </div>
                                   <p>{component.description}</p>
                                   <p>{component.totalActions}</p>
                                   <p>{component.currentActions}</p>
@@ -78,10 +82,14 @@ export default function ComponentsTable(props: IComponentsTable) {
                       .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
                       .map((component) => {
                           return (
-                              <div onClick={() => props.setSelectedComponet(component)} className="row">
-                                  <p>
+                              <div
+                                  key={component.id}
+                                  onClick={() => props.setSelectedComponet(component)}
+                                  className="row"
+                              >
+                                  <div>
                                       <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </p>
+                                  </div>
                                   <p>{component.description}</p>
                                   <p>{component.totalActions}</p>
                                   <p>{component.currentActions}</p>

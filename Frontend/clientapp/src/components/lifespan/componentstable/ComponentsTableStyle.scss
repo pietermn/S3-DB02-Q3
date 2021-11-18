@@ -23,9 +23,14 @@
             cursor: pointer;
         }
 
-        p:first-child {
+        div:first-child {
+            padding-left: 2rem;
+        }
+
+        p:first-child,
+        div:first-child {
             position: relative;
-            justify-content: center;
+            // justify-content: center;
 
             &:before {
                 left: 0;
@@ -47,20 +52,22 @@
         grid-template-columns: 10% auto 20% 15% 15%;
         border-bottom: 1px solid black;
 
-        p {
+        p,
+        div {
             margin: 0;
             display: flex;
             align-items: center;
         }
 
         &:first-child {
-            p {
+            p,
+            div {
                 font-weight: 900;
             }
         }
 
         p:first-child {
-            justify-content: center;
+            margin-left: 1rem;
         }
 
         svg {
