@@ -9,6 +9,7 @@ How to run application.
  - Wait till the docker containers are fully operational
 
  - Go in to the Frontend folder and open "cliental" in powershell
+
  - Type "npm i" and press enter
 
  - Type "npm run start" and press enter
