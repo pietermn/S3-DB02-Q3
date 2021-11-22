@@ -105,7 +105,7 @@ export default function ComponentHealthPage() {
                         <h3>
                             <b>{t("totalactions.label")}:</b> {selectedComponent.totalActions}
                         </h3>
-                        <ActionsGraph component_id={selectedComponent.id} />
+                        <ActionsGraph componentId={selectedComponent.id} />
                     </section>
 
                     <section className="Component-History-Overview">

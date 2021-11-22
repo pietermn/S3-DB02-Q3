@@ -7,7 +7,7 @@ namespace Backend_DTO.DTOs
     public class ProductionsDateDTO
     {
         public string TimespanIndicator { get; set; }
-        public string CurrentTimespan { get; set; }
+        public int CurrentTimespan { get; set; }
         public int Productions { get; set; }
     }
 }

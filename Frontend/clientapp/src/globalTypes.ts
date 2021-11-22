@@ -69,3 +69,9 @@ export type Maintenance = {
     timeDone: Date;
     done: boolean;
 };
+
+export type ProductionDate = {
+    timespanIndicator: string;
+    currentTimespan: string;
+    productions: number;
+};

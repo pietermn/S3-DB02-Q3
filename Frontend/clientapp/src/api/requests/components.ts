@@ -1,4 +1,4 @@
-import { Component, Maintenance, MaintenanceNotification } from "../../globalTypes";
+import { Component, Maintenance, MaintenanceNotification, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
 
 export const GetComponents = async () => {
@@ -10,12 +10,12 @@ export const GetComponents = async () => {
     return components;
 };
 
-export const GetPreviousActions = async (component_id: number, timespan: string, timespanAmount: string) => {
-    let actions: number[] = [];
-    await Api.get<number[]>(`component/previousactions/${component_id}/${timespanAmount}/${timespan}`).then((res) => {
+export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
+    let actions: ProductionDate[] = [];
+    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`).then((res) => {
         actions = res.data;
     });
-
+    console.log(actions);
     return actions;
 };
 
