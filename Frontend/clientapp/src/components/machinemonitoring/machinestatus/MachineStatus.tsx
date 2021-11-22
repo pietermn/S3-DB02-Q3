@@ -57,6 +57,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .attr("fill", (u) => (u.active ? "rgb(126, 211, 33)" : "rgb(199, 199, 199)"));
 
             let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+            let tagHours = [4, 8, 12, 16, 20, 24];
 
             // if minutes are 27, hour bar needs to go back 33 minutes
             let beginM = new Date(props.uptime[0].begin).getMinutes();
@@ -79,10 +80,10 @@ export default function MachineStatus(props: IMachineStatus) {
                 .attr("fill", "rgb(0, 0, 0)");
 
             svg.selectAll("mybar")
-                .data(hours)
+                .data(tagHours)
                 .join("g")
                 .attr("key", (h) => `HourTag ${h}`)
-                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale}, 42)rotate(45)`)
+                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale - 14}, 50)`)
                 .attr("font-size", 12)
                 .append("text")
                 .text((h) => {
@@ -91,10 +92,11 @@ export default function MachineStatus(props: IMachineStatus) {
                         hour--;
                     }
                     if (hour + h > 23) {
-                        return `${hour + h - 24}h`;
+                        return `${hour + h - 24 < 10 ? "0" : ""}${hour + h - 24}:00`;
                     }
-                    return `${hour + h}h`;
+                    return `${hour + h < 10 ? "0" : ""}${hour + h}:00`;
                 });
+
             // .append("g")
             // .append("text")
             // .text((h) => hourText(h))
@@ -108,9 +110,6 @@ export default function MachineStatus(props: IMachineStatus) {
             // .attr("width", "10ch")
 
             // .attr("height", "1rem");
-        }
-        function hourText(hour: number) {
-            return new Date(new Date(props.uptime[0].begin).getHours() + hour, 0, 0).toLocaleTimeString();
         }
     }
 

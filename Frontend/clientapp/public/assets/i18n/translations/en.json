@@ -32,5 +32,6 @@
   "currentactions.label": "Current Actions",
   "max.label": "Max",
   "uptimetooltip.label": "24h display showing the machine is running or not",
-  "maxtooltip.label": "Percentage of the current actions compared to the max actions"
+  "maxtooltip.label": "Percentage of the current actions compared to the max actions",
+  "searchtag.label": "Search"
 }

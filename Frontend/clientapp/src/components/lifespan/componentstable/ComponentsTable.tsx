@@ -15,6 +15,7 @@ export default function ComponentsTable(props: IComponentsTable) {
     const [search, setSearch] = useState("");
     const { t } = useTranslation();
     const maxTooltip = t("maxtooltip.label");
+    const searchLabel = t("searchtag.label");
 
     function GetStatusColor(percentage: number): string {
         if (percentage >= 95 && percentage < 100) {
@@ -42,7 +43,7 @@ export default function ComponentsTable(props: IComponentsTable) {
                     <TextField
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        label="Search"
+                        label={searchLabel}
                         variant="outlined"
                         size="small"
                     />

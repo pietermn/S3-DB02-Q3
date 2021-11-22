@@ -32,5 +32,6 @@
   "currentactions.label": "Huidige Acties",
   "max.label": "Max",
   "uptimetooltip.label": "24-uurs weergave die aangeeft of de machine draait of niet",
-  "maxtooltip.label": "Percentage van de huidige acties in vergelijking met de maximale acties"
+  "maxtooltip.label": "Percentage van de huidige acties in vergelijking met de maximale acties",
+  "searchtag.label": "Zoeken"
 }
