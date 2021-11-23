@@ -2,95 +2,126 @@ import { useContext, useEffect, useState } from "react";
 import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsGraph";
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
-import { Component } from "../../globalTypes";
-import {
-  GetComponents,
-  GetPreviousActions,
-} from "../../api/requests/components";
+import { Component, Maintenance, MaintenanceNotification } from "../../globalTypes";
+import { GetComponents, GetAllMaintenance } from "../../api/requests/components";
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
+import MaintenanceTable from "../../components/componenthealth/MaintenanceTable/MaintenanceTable";
+import { MaintenanceContext } from "../../context/MaintenanceContext";
 
 export default function ComponentHealthPage() {
-  const { bool } = useContext(UpdaterContext);
-  const [components, setComponents] = useState<Component[]>([]);
-  const location = useLocation();
-  const [selectedComponent, setSelectedComponent] = useState<Component>();
-  const [key, setKey] = useState<number>(0);
-  const { t } = useTranslation();
+    const { bool } = useContext(UpdaterContext);
+    const [components, setComponents] = useState<Component[]>([]);
+    const location = useLocation();
+    const [selectedComponent, setSelectedComponent] = useState<Component>();
+    const [selectedMaintenance, setSelectedMaintenance] = useState<Maintenance[]>([]);
+    const { t } = useTranslation();
+    const { finishMaintenance } = useContext(MaintenanceContext);
 
-  if (bool) {
-    AsyncGetComponents();
-  }
-
-  async function AsyncGetComponents() {
-    setComponents(await GetComponents());
-  }
-
-  function HandleSelectedComponent(component: Component) {
-    if (component) {
-      setSelectedComponent(component);
-      setKey(component.id);
+    if (bool) {
+        AsyncGetComponents();
     }
-  }
 
-  function FindSelectedComponent(state: IComponentId) {
-    if (!selectedComponent) {
-      if (state) {
-        for (let i = 0; i < components.length; i++) {
-          if (components[i].id === state.componentId) {
-            HandleSelectedComponent(components[i]);
-          }
+    async function AsyncGetComponents() {
+        setComponents(await GetComponents());
+    }
+
+    async function GetMaintenance(id: number) {
+        setSelectedMaintenance(await GetAllMaintenance(id));
+    }
+
+    function HandleSelectedComponent(component: Component) {
+        if (component) {
+            setSelectedComponent(component);
+            GetMaintenance(component.id);
         }
-      } else {
-        HandleSelectedComponent(components[0]);
-      }
     }
-  }
 
-  useEffect(() => {
-    if (!components.length) {
-      AsyncGetComponents();
+    function FindSelectedComponent(state: IComponentId) {
+        if (!selectedComponent) {
+            if (state) {
+                for (let i = 0; i < components.length; i++) {
+                    if (components[i].id === state.componentId) {
+                        HandleSelectedComponent(components[i]);
+                    }
+                }
+            } else {
+                HandleSelectedComponent(components[0]);
+            }
+        }
     }
-    if (components) {
-      const state = location.state as IComponentId;
-      FindSelectedComponent(state);
+
+    function handleFinshMaintenace(id: number) {
+        finishMaintenance(id);
+        let temp = [...selectedMaintenance];
+        temp.forEach((maintenance) => {
+            if (maintenance.id === id) {
+                maintenance.done = true;
+                maintenance.timeDone = new Date();
+            }
+        });
+        setSelectedMaintenance(temp);
     }
-  }, [components.length, FindSelectedComponent]);
 
-  type IComponentId = {
-    componentId: number;
-  };
+    useEffect(() => {
+        if (!components.length) {
+            AsyncGetComponents();
+        }
+        if (components && components.length) {
+            const state = location.state as IComponentId;
+            FindSelectedComponent(state);
+        }
+    }, [components.length, FindSelectedComponent]);
 
-  return (
-    <div className="Components-Full-Page">
-      <section className="Component-Overview">
-        <div className="center-table">
-          <h1>{t("components.label")}</h1>
-          {components && (
-            <ComponentsTable
-              SetComponent={HandleSelectedComponent}
-              components={components}
-            />
-          )}
+    type IComponentId = {
+        componentId: number;
+    };
+
+    return (
+        <div className="Components-Full-Page">
+            <section className="Component-Overview">
+                <div className="center-table">
+                    <h1>
+                        <b>{t("components.label")}</b>
+                    </h1>
+                    {components && (
+                        <ComponentsTable
+                            selectedComponentId={selectedComponent?.id || 0}
+                            SetComponent={HandleSelectedComponent}
+                            components={components}
+                        />
+                    )}
+                </div>
+            </section>
+
+            {selectedComponent && (
+                <section className="Component-History-Side">
+                    <section className="Component-Graph">
+                        <h1>
+                            <b>{t("history.label")}:</b> {selectedComponent.description}
+                        </h1>
+                        <h3>
+                            <b>{t("totalactions.label")}:</b> {selectedComponent.totalActions}
+                        </h3>
+                        <ActionsGraph componentId={selectedComponent.id} />
+                    </section>
+
+                    <section className="Component-History-Overview">
+                        <HistoryTable HistoryMachines={selectedComponent.history} />
+                    </section>
+
+                    {selectedMaintenance.length && selectedMaintenance ? (
+                        <section className="Component-Maintenance-Table">
+                            <MaintenanceTable
+                                finishMaintenance={handleFinshMaintenace}
+                                maintenance={selectedMaintenance}
+                            />
+                        </section>
+                    ) : null}
+                </section>
+            )}
         </div>
-      </section>
-
-      {selectedComponent && (
-        <section className="Component-Graph">
-          <h1>
-            {t("history.label")} {selectedComponent.description}{" "}
-          </h1>
-          <ActionsGraph component_id={selectedComponent.id} />
-        </section>
-      )}
-
-      {selectedComponent && (
-        <section className="Component-History-Overview">
-          <HistoryTable HistoryMachines={selectedComponent.history} />
-        </section>
-      )}
-    </div>
-  );
+    );
 }

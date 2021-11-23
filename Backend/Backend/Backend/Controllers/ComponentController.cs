@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
@@ -33,12 +34,20 @@ namespace Backend.Controllers
             return Ok(Components);
         }
 
-        [Route("previousactions/{component_id}/{amount}/{type}"), HttpGet]
-        public IActionResult GetPreviousActions(int component_id, int amount, string type)
-        {
-            List<int> Actions = _componentContainer.GetPreviousActions(component_id, amount, type);
+        //[Route("previousactions/{component_id}/{amount}/{type}"), HttpGet]
+        //public IActionResult GetPreviousActions(int component_id, int amount, string type)
+        //{
+        //    List<int> Actions = _componentContainer.GetPreviousActions(component_id, amount, type);
 
-            return Ok(Actions);
+        //    return Ok(Actions);
+        //}
+
+        [Route("previousactions/{component_id}/{beginDate}/{endDate}"), HttpGet]
+        public IActionResult GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
+        {
+            List<ProductionsDateDTO> Productions = _componentContainer.GetPreviousActions(component_id, beginDate, endDate);
+
+            return Ok(Productions);
         }
 
         [Route("maxactions"), HttpPut]

@@ -22,9 +22,9 @@ namespace Backend.Controllers
         [Route("read"), HttpGet]
         public IActionResult Read(int component_id)
         {
-            MaintenanceDTO component = _maintenanceContainer.GetMaintenance(component_id);
+            List<MaintenanceDTO> maintenance = _maintenanceContainer.GetMaintenance(component_id);
 
-            return Ok(component);
+            return Ok(maintenance);
         }
         
         [Route("readall"), HttpGet]
