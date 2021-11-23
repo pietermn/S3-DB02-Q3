@@ -107,7 +107,7 @@ services:
   #     - custom-network
 
   db:
-    image: mysql:latest
+    image: mariadb:latest
     container_name: Q3_Database
     command: --default-authentication-plugin=mysql_native_password
     volumes:
