@@ -34,7 +34,7 @@ namespace Backend_Test.TestClasses
             // Act
             var response = await client.GetAsync(url);
             var test = JsonConvert.DeserializeObject<ComponentDTO[]>(await response.Content.ReadAsStringAsync());
-            System.Diagnostics.Debugger.Break();
+            //System.Diagnostics.Debugger.Break();
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299

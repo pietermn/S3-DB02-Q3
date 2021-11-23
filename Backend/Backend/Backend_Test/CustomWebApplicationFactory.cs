@@ -22,21 +22,44 @@ namespace Backend_Test
             {
                 var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<Q3Context>));
 
-                if (dbContext != null)
-                {
-                    services.Remove(dbContext);
-                }
+                //if (dbContext != null)
+                //{
+                //    services.Remove(dbContext);
+                //}
 
-                var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+                //var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
 
-                //services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db"));
-                services.AddDbContext<Q3Context>(options =>
-                {
-                    options.UseInMemoryDatabase("db");
-                });
+                ////services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db"));
+                //services.AddDbContext<Q3Context>(options =>
+                //{
+                //    options.UseInMemoryDatabase("db");
+                //});
 
                 var sp = services.BuildServiceProvider();
                 services.AddScoped<Q3Context>();
+
+                //builder.Configure(( IFillTestData fill) => 
+                //{
+                //    fill.fillData();
+                //    //app.UseHttpsRedirection();
+
+                //    app.UseRouting();
+
+                //    app.UseCors(x => x
+                //        .AllowAnyMethod()
+                //        .AllowAnyHeader()
+                //        .AllowAnyOrigin()
+                //        .SetIsOriginAllowed(origin => true)
+                //     //.AllowCredentials()
+                //     );
+
+                //    app.UseAuthorization();
+
+                //    app.UseEndpoints(endpoints =>
+                //    {
+                //        endpoints.MapControllers();
+                //    });
+                //});
 
                 //using (var scope = sp.CreateScope())
                 //{
@@ -47,7 +70,7 @@ namespace Backend_Test
                 //            appContext.Database.EnsureCreated();
                 //            //FillTestData fillTestData = new(appContext);
                 //            //fillTestData.fillData();
-                            
+
                 //        }
                 //        catch (Exception ex)
                 //        {
@@ -56,11 +79,6 @@ namespace Backend_Test
                 //        }
                 //    }
                 //}
-            });
-
-            builder.Configure((app, env) =>
-            {
-
             });
         }
     }
