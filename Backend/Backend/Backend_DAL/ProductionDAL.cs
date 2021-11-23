@@ -39,5 +39,10 @@ namespace Backend_DAL
                 .AsNoTracking()
             .ToList();
         }
+
+        public List<ProductionsDTO> GetAllProductionsFromProductionLine(int productionLine_id)
+        {
+            return _Context.Productions.Where(p => p.ProductionLineId == productionLine_id).ToList();
+        }
     }
 }

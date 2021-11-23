@@ -7,5 +7,6 @@ namespace Backend_DAL_Interface
     {
         public List<ProductionsDTO> GetProductionsByIdFromLastDay(int productionLine_id);
         public List<ProductionsDTO> GetProductionsFromLastDay();
+        public List<ProductionsDTO> GetAllProductionsFromProductionLine(int productionLine_id);
     }
 }
