@@ -34,6 +34,7 @@ namespace Backend_Test.TestClasses
             // Act
             var response = await client.GetAsync(url);
             var test = JsonConvert.DeserializeObject<ComponentDTO[]>(await response.Content.ReadAsStringAsync());
+            System.Diagnostics.Debugger.Break();
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -64,12 +65,12 @@ namespace Backend_Test.TestClasses
 
         //GetPreviousActions(id, amount, type)      GEBRUIKER WE DEZE WEL???
         [Theory]
-        [InlineData(new object[] { "https://localhost:5200/component/previousactions/173/3/months" })]
-        public async Task GetPreviousActionsComponent(string url)
+        [InlineData(new object[] { "https://localhost:5200/component/previousactions/173/3/months", new int[]{ 0, 0, 0 } })]
+        public async Task GetPreviousActionsComponent(string url, int[] expected)
         {
             // Arrange
             var client = _factory.CreateClient();
-            int[] expected = new int[]{ 0, 0, 0};
+            //int[] expected = new int[]{ 0, 0, 0};
 
             // Act
             var response = await client.GetAsync(url);

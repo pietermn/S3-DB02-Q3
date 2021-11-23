@@ -1,6 +1,5 @@
 ﻿using Backend;
 using Backend_DTO.DTOs;
-using Backend_Logic.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,26 +10,26 @@ using Xunit;
 
 namespace Backend_Test.TestClasses
 {
-    public class ProductionLineTests
+    public class ProductionLineHistoryTests
     : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> _factory;
 
-        public ProductionLineTests(CustomWebApplicationFactory<Startup> factory)
+        public ProductionLineHistoryTests(CustomWebApplicationFactory<Startup> factory)
         {
             _factory = factory;
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/productionline/readall", 28 })]
-        public async Task ReadAllProdcutionLines_CorrectTypeAndAmount(string url, int expected)
+        [InlineData(new object[] { "http://localhost:5200/productionlinehistory/readall", 301 })]
+        public async Task ReadAllProdcutionLineHistories_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
             var response = await client.GetAsync(url);
-            var line = JsonConvert.DeserializeObject<ProductionLineDTO[]>(await response.Content.ReadAsStringAsync());
+            var line = JsonConvert.DeserializeObject<ProductionLineHistoryDTO[]>(await response.Content.ReadAsStringAsync());
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -40,8 +39,8 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/productionline/read?productionLine_id=363", 3 })]
-        public async Task ReadProductionLine(string url, int expected)
+        [InlineData(new object[] { "http://localhost:5200/productionlinehistory/read?productionLineHistory_id=1", 390 })]
+        public async Task ReadProductionLineHistory(string url, int expected)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -49,16 +48,15 @@ namespace Backend_Test.TestClasses
             // Act
             var response = await client.GetAsync(url);
             string test = await response.Content.ReadAsStringAsync();
-            
-            var productionLine = JsonConvert.DeserializeObject<ProductionLineDTO>(test);
+
+            var productionLineHistory = JsonConvert.DeserializeObject<ProductionLineHistoryDTO>(test);
 
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            Assert.Equal(expected, productionLine.Machines.Count());
+            Assert.Equal(expected, productionLineHistory.ProductionLineId);
             Assert.Equal("application/json; charset=utf-8",
                 response.Content.Headers.ContentType.ToString());
         }
-
     }
 }

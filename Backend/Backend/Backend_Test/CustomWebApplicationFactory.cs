@@ -1,5 +1,7 @@
 ﻿using Backend;
 using Backend_DAL;
+using Backend_Test.Properties;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -20,33 +22,45 @@ namespace Backend_Test
             {
                 var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<Q3Context>));
 
-                //if (dbContext != null)
-                //    services.Remove(dbContext);
-
-                //var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
-
-                //services.AddDbContext<Q3Context>(options =>
-                //{
-                //    options.UseInMemoryDatabase("InMemoryEmployeeTest");
-                //    options.UseInternalServiceProvider(serviceProvider);
-                //});
-                var sp = services.BuildServiceProvider();
-
-                using (var scope = sp.CreateScope())
+                if (dbContext != null)
                 {
-                    using (var appContext = scope.ServiceProvider.GetRequiredService<Q3Context>())
-                    {
-                        try
-                        {
-                            appContext.Database.EnsureCreated();
-                        }
-                        catch (Exception ex)
-                        {
-                            //Log errors
-                            throw;
-                        }
-                    }
+                    services.Remove(dbContext);
                 }
+
+                var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+                //services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db"));
+                services.AddDbContext<Q3Context>(options =>
+                {
+                    options.UseInMemoryDatabase("db");
+                });
+
+                var sp = services.BuildServiceProvider();
+                services.AddScoped<Q3Context>();
+
+                //using (var scope = sp.CreateScope())
+                //{
+                //    using (var appContext = scope.ServiceProvider.GetRequiredService<Q3Context>())
+                //    {
+                //        try
+                //        {
+                //            appContext.Database.EnsureCreated();
+                //            //FillTestData fillTestData = new(appContext);
+                //            //fillTestData.fillData();
+                            
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            //Log errors
+                //            throw;
+                //        }
+                //    }
+                //}
+            });
+
+            builder.Configure((app, env) =>
+            {
+
             });
         }
     }

@@ -22,7 +22,7 @@ namespace Backend_Test.TestClasses
 
         [Theory]
         [InlineData(new object[] { "http://localhost:5200/machine/readall", 65 })]
-        public async Task ReadAllComponents_CorrectTypeAndAmount(string url, int expected)
+        public async Task ReadAllMachines_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -40,7 +40,7 @@ namespace Backend_Test.TestClasses
 
         [Theory]
         [InlineData(new object[] { "http://localhost:5200/machine/read?machine_id=100", "A01", "NE 280 ton" })]
-        public async Task ReadComponent_CorrectTypeAndProperties(string url, string expectedName, string expectedDescription)
+        public async Task ReadMachine(string url, string expectedName, string expectedDescription)
         {
             // Arrange
             var client = _factory.CreateClient();
