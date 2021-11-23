@@ -110,7 +110,7 @@ services:
     image: mysql:latest
     container_name: Q3_Database
     command: --default-authentication-plugin=mysql_native_password
-    volumes: 
+    volumes:
       - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_USER: 'user'
@@ -124,7 +124,7 @@ services:
       - custom-network
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
       retries: 10
 
@@ -158,46 +158,7 @@ services:
 
     networks:
       - custom-network
-      
 
-  sonarqube:
-    image: sonarqube:9.1.0-community
-    expose:
-      - 9000
-    ports:
-      - "9000:9000"
-    networks:
-      - sonarnet
-    environment:
-      - sonar.jdbc.url=jdbc:postgresql://sonardb:5432/sonar
-      - sonar.jdbc.username=sonar
-      - sonar.jdbc.password=sonar
-    volumes:
-      - sonarqube_conf:/opt/sonarqube/conf
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-          
-  sonardb:
-    image: postgres
-    networks:
-      - sonarnet
-    environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-    volumes:
-      - postgresql:/var/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
-
-networks: 
+networks:
   custom-network:
     driver: bridge
-  sonarnet:
-
-volumes:
-  sonarqube_conf:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_bundled-plugins:
-  postgresql:
-  postgresql_data:
