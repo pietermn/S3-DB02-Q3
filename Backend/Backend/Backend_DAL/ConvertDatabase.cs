@@ -17,7 +17,7 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new MySqlConnection($"Server=localhost;Uid=root;Database=q3_mms_db;Pwd=root;Port=3307;Allow Zero Datetime=True");
+            MySqlConnection GeneralConnection = new ($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
             return GeneralConnection;
         }
     }
@@ -226,11 +226,12 @@ namespace Backend_DAL
             return 0;
         }
 
-        private List<ProductionsDTO> GetProductionsFromProductionLine(int productionLineId)
+        private List<ProductionsDTO> GetProductionsFromProductionLine(int productionLineId, string table)
         {
-            using var command = _connection.CreateCommand();
+            //using var command = _connection.CreateCommand();
 
-            command.CommandText = "SELECT t.id AS 'Id', md.timestamp AS 'Timestamp', md.shot_time AS 'ShotTime' FROM `monitoring_data_202009` md INNER JOIN `machine_monitoring_poorten` mm ON mm.port=md.port AND mm.board=md.board INNER JOIN `treeview` t ON t.naam=mm.name WHERE t.id=@ProductionLineId;";
+            string cmdText = $"SELECT t.id AS 'Id', md.timestamp AS 'Timestamp', md.shot_time AS 'ShotTime' FROM {table} md INNER JOIN `machine_monitoring_poorten` mm ON mm.port=md.port AND mm.board=md.board INNER JOIN `treeview` t ON t.naam=mm.name WHERE t.id=@ProductionLineId;";
+            using MySqlCommand command = new(cmdText, _connection);
             command.Parameters.AddWithValue("@ProductionLineId", productionLineId);
 
             _connection.Open();
@@ -251,7 +252,6 @@ namespace Backend_DAL
 
                 Productions.Add(new ProductionsDTO() { Timestamp = timestamp, ShotTime = shottime });
             }
-
             return Productions;
         }
 
@@ -300,18 +300,38 @@ namespace Backend_DAL
 
             //_Context.SaveChanges();
 
-            List<ComponentDTO> Components = _Context.Components
-                .Include(c => c.History)
-                .ToList();
+            //List<ComponentDTO> Components = _Context.Components
+            //    .Include(c => c.History)
+            //    .ToList();
 
-            foreach (ComponentDTO component in Components)
+            //foreach (ComponentDTO component in Components)
+            //{
+            //    int totalActions = 0;
+            //    foreach (ProductionLineHistoryDTO history in component.History)
+            //    {
+            //        totalActions += _Context.Productions.Where(p => p.ProductionLineId == history.ProductionLineId && history.StartDate <= p.Timestamp && history.EndDate >= p.Timestamp).Count();
+            //    }
+            //    component.TotalActions = totalActions;
+            //}
+
+            //_Context.SaveChanges();
+            _Context.Database.SetCommandTimeout(100000);
+            List<ProductionLineDTO> ProductionLines = _Context.ProductionLines.Include(pl => pl.Productions).ToList();
+
+            foreach (ProductionLineDTO productionLineDTO in ProductionLines)
             {
-                int totalActions = 0;
-                foreach (ProductionLineHistoryDTO history in component.History)
-                {
-                    totalActions += _Context.Productions.Where(p => p.ProductionLineId == history.ProductionLineId && history.StartDate <= p.Timestamp && history.EndDate >= p.Timestamp).Count();
-                }
-                component.TotalActions = totalActions;
+                productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202011"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202012"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202101"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202102"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202103"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202104"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202105"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202106"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202107"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202108"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202109"));
+                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202110"));
             }
 
             _Context.SaveChanges();

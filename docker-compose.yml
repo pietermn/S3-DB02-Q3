@@ -55,7 +55,7 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://+:5200
-      - ConnectionString=server=db;port=3306;user=root;password=root;database=db
+      - ConnectionString=server=db;port=3306;user=root;password=root;database=db;SslMode=None
 
     ports:
       - "5200:5200"
@@ -107,11 +107,11 @@ services:
   #     - custom-network
 
   db:
-    image: mysql:latest
+    image: mariadb:latest
     container_name: Q3_Database
     command: --default-authentication-plugin=mysql_native_password
-    volumes: 
-      - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
+    # volumes:
+    # - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'root'
@@ -124,7 +124,7 @@ services:
       - custom-network
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
       retries: 10
 
@@ -156,9 +156,9 @@ services:
     ports:
       - 8080:80
 
-    networks: 
+    networks:
       - custom-network
 
-networks: 
+networks:
   custom-network:
     driver: bridge
