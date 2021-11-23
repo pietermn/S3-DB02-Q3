@@ -44,7 +44,13 @@ namespace Backend_DAL
             List<ProductionsDTO> productions = new();
             foreach (ProductionLineHistoryDTO historyDTO in component.History)
             {
-                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(p => p.ProductionLineId == historyDTO.ProductionLineId && beginDate <= p.Timestamp && endDate >= p.Timestamp).ToList();
+                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(
+                    p => p.ProductionLineId == historyDTO.ProductionLineId 
+                    && beginDate <= p.Timestamp 
+                    && endDate >= p.Timestamp 
+                    && historyDTO.StartDate <= p.Timestamp
+                    && historyDTO.EndDate >= p.Timestamp)
+                    .ToList();
                 foreach (ProductionsDTO productionsDTO in productionsDTOs)
                 {
                     productions.Add(productionsDTO);

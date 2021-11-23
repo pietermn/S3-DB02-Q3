@@ -33,18 +33,6 @@ namespace Backend_Logic.Containers
             return cul.Calendar.GetWeekOfYear(timestamp, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
 
-        private int GetCurrentTimespan(string timespanIndicator, DateTime timestamp)
-        {
-            return timespanIndicator switch
-            {
-                "Days" => timestamp.Day,
-                "Weeks" => GetWeekOfYear(timestamp),
-                "Months" => timestamp.Month,
-                "Year" => timestamp.Year,
-                _ => timestamp.Year / 10,
-            };
-        }
-
         private List<ProductionsDateDTO> FillProductionDates(int dayDifference, DateTime beginDate)
         {
             List<ProductionsDateDTO> productionsDateDTOs = new();
@@ -56,50 +44,55 @@ namespace Backend_Logic.Containers
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Day",
-                        CurrentTimespan = beginDate.AddDays(i).Day
+                        CurrentTimespan = beginDate.AddDays(-i).Day.ToString()
                     });
                 }
             }
-            if (dayDifference > 10 && dayDifference < 7 * 10)
+            else if (dayDifference > 10 && dayDifference < 7 * 10)
             {
-                for (int i = 0; i < dayDifference / 7; i++)
+                int forloopMax = dayDifference % 7 == 0 ? dayDifference / 7 : dayDifference / 7 + 1;
+                for (int i = 0; i < forloopMax; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Week",
-                        CurrentTimespan = GetWeekOfYear(beginDate.AddDays(i * 7))
+                        CurrentTimespan = GetWeekOfYear(beginDate.AddDays(-i * 7)).ToString()
                     });
                 }
             }
-            if (dayDifference > 7 * 10 && dayDifference < 30 * 10)
+            else if (dayDifference > 7 * 10 && dayDifference < 30 * 10)
             {
-                for (int i = 0; i < dayDifference / 30; i++)
+                int forloopMax = dayDifference % 30 == 0 ? dayDifference / 30 : dayDifference / 30 + 1;
+                for (int i = 0; i < forloopMax; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Month",
-                        CurrentTimespan = beginDate.AddMonths(i).Month
+                        CurrentTimespan = beginDate.AddMonths(-i).ToString("MMMM")
                     });
                 }
             }
-            if (dayDifference > 30 * 10 && dayDifference < 365 * 10)
+            else if (dayDifference > 30 * 10 && dayDifference < 365 * 10)
             {
-                for (int i = 0; i < dayDifference / 365; i++)
+                int forloopMax = dayDifference % 365 == 0 ? dayDifference / 365 : dayDifference / 365 + 1;
+                for (int i = 0; i < forloopMax; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Year",
-                        CurrentTimespan = beginDate.AddYears(i).Year
+                        CurrentTimespan = beginDate.AddYears(-i).Year.ToString()
                     });
                 }
             }
             else {
-                for (int i = 0; i < dayDifference / 365 * 10; i++)
+                int forloopMax = dayDifference % 3650 == 0 ? dayDifference / 3650 : dayDifference / 3650 + 1;
+
+                for (int i = 0; i < forloopMax; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Decenium",
-                        CurrentTimespan = beginDate.AddYears(i * 10).Year / 10
+                        CurrentTimespan = (beginDate.AddYears(-i * 10).Year / 10).ToString()
                     });
                 }
             }
@@ -111,18 +104,18 @@ namespace Backend_Logic.Containers
         {
             List<ProductionsDTO> productions = _componentDAL.GetPreviousActions(component_id, beginDate, endDate);
 
-            List<ProductionsDateDTO> ProductionDates = FillProductionDates((endDate - beginDate).Days, beginDate);
+            List<ProductionsDateDTO> ProductionDates = FillProductionDates((endDate - beginDate).Days, endDate);
 
             foreach (ProductionsDTO production in productions)
             {
                 foreach(ProductionsDateDTO productionsDate in ProductionDates)
                 {
                     string timespanIndicator = productionsDate.TimespanIndicator;
-                    if ((timespanIndicator == "Day" && productionsDate.CurrentTimespan == production.Timestamp.Day)
-                        || (timespanIndicator == "Week" && productionsDate.CurrentTimespan == GetWeekOfYear(production.Timestamp))
-                        || (timespanIndicator == "Month" && productionsDate.CurrentTimespan == production.Timestamp.Month)
-                        || (timespanIndicator == "Year" && productionsDate.CurrentTimespan == production.Timestamp.Year)
-                        || (timespanIndicator == "Decenium" && productionsDate.CurrentTimespan == production.Timestamp.Year / 10))
+                    if ((timespanIndicator == "Day" && productionsDate.CurrentTimespan == production.Timestamp.Day.ToString())
+                        || (timespanIndicator == "Week" && productionsDate.CurrentTimespan == GetWeekOfYear(production.Timestamp).ToString())
+                        || (timespanIndicator == "Month" && productionsDate.CurrentTimespan == production.Timestamp.ToString("MMMM"))
+                        || (timespanIndicator == "Year" && productionsDate.CurrentTimespan == production.Timestamp.Year.ToString())
+                        || (timespanIndicator == "Decenium" && productionsDate.CurrentTimespan == (production.Timestamp.Year / 10).ToString()))
                     {
                         productionsDate.Productions++;
                     }
