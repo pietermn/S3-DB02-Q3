@@ -5,6 +5,7 @@ import { Component } from "../../../globalTypes";
 import { IoMdArrowDropdown as ArrowDownIcon, IoMdArrowDropup as ArrowUpIcon } from "react-icons/io";
 import "../HistoryTable/HistoryTable.scss";
 import "./ComponentsTable.scss";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 interface ITableProps {
     components: Component[];
@@ -73,9 +74,22 @@ export default function ComponentsTable(props: ITableProps) {
         }
     }
 
+    const cols: GridColDef[] = [
+        { field: "description", headerName: "Name" },
+        { field: "totalActions", headerName: "Total Actions" },
+    ];
+
     return (
         <div className="Components-Table">
-            <main>
+            <DataGrid
+                className="ChDataGrid"
+                columns={cols}
+                rows={props.components}
+                rowsPerPageOptions={[]}
+                pageSize={100}
+            />
+
+            {/* <main>
                 <div className="row header">
                     <div id="chealth-search">
                         <p onClick={() => orderHandler(true)}>
@@ -120,7 +134,7 @@ export default function ComponentsTable(props: ITableProps) {
                               </div>
                           );
                       })}
-            </main>
+            </main> */}
         </div>
     );
 }
