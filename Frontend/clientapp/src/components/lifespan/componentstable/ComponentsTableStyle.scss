@@ -2,8 +2,8 @@
 
 .lifespan-table {
     width: 80%;
-    height: 80%;
-    display: grid;
+    height: 100%;
+    // display: grid;
     margin-top: 2rem;
     grid-auto-rows: 50px;
     overflow-y: auto;
@@ -107,8 +107,6 @@
     }
 }
 
-.LsDataGrid {
-    .MuiDataGrid-cell:focus {
-        outline: none !important;
-    }
+.LsDataGrid :focus {
+    outline: none !important;
 }

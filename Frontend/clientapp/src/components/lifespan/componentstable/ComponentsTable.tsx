@@ -1,7 +1,7 @@
 import { IconButton, TextField, Tooltip } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
-import { Component } from "../../../globalTypes";
+import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { FaInfoCircle as InfoIcon } from "react-icons/fa";
 import { useState } from "react";
@@ -10,10 +10,10 @@ import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 interface IComponentsTable {
     components: Component[];
     setSelectedComponet: (component: Component) => void;
+    getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
 
 export default function ComponentsTable(props: IComponentsTable) {
-    const [search, setSearch] = useState("");
     const { t } = useTranslation();
     const [sortModel, setSortModel] = useState<GridSortModel>([
         {
@@ -21,8 +21,6 @@ export default function ComponentsTable(props: IComponentsTable) {
             sort: "desc",
         },
     ]);
-    const maxTooltip = t("maxtooltip.label");
-    const searchLabel = t("searchtag.label");
 
     function GetStatusColor(percentage: number): string {
         if (percentage >= 95 && percentage < 100) {
@@ -36,21 +34,19 @@ export default function ComponentsTable(props: IComponentsTable) {
         }
     }
 
-    function getSearchedComponents() {
-        return props.components.filter((c) => c.description.toLowerCase().includes(search.toLowerCase()));
-    }
-
     const cols: GridColDef[] = [
         {
             field: "status",
             headerName: t("status.label"),
             align: "center",
+            headerAlign: "center",
             renderCell: (params) => {
                 return <StatusDot className={GetStatusColor(params.row.percentageMaintenance)} />;
             },
             sortable: false,
             filterable: false,
             hideSortIcons: true,
+            disableColumnMenu: true,
         },
         {
             field: "description",
@@ -58,9 +54,37 @@ export default function ComponentsTable(props: IComponentsTable) {
             width: 300,
         },
         {
+            field: "maintenance",
+            headerName: t("maintenance.label"),
+            width: 300,
+            sortable: false,
+            filterable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+            renderCell: (params) => {
+                let m = props.getComponentNotifications(params.row.id);
+                return m.length ? (
+                    m.length === 1 ? (
+                        // <Tooltip title={m[0].description}>
+                        <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
+                    ) : (
+                        // </Tooltip>
+                        // <Tooltip title={m[0].description}>
+                        <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">
+                            <b>({m.length})</b> {m[0].description}
+                        </div>
+                        // </Tooltip>
+                    )
+                ) : (
+                    <div></div>
+                );
+            },
+        },
+        {
             field: "totalActions",
             headerName: t("totalactions.label"),
             align: "right",
+            headerAlign: "right",
             filterable: false,
             width: 150,
         },
@@ -68,6 +92,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             field: "currentActions",
             headerName: t("currentactions.label"),
             align: "right",
+            headerAlign: "right",
             filterable: false,
             width: 150,
         },
@@ -75,6 +100,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             field: "percentageMaintenance",
             headerName: t("max.label"),
             align: "right",
+            headerAlign: "right",
             filterable: false,
             width: 150,
             renderCell: (params) => {
@@ -87,6 +113,7 @@ export default function ComponentsTable(props: IComponentsTable) {
         <div className="lifespan-table">
             <DataGrid
                 disableColumnSelector
+                disableSelectionOnClick
                 className="LsDataGrid"
                 columns={cols}
                 rows={props.components}
