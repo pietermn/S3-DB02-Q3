@@ -10,6 +10,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Backend_DAL
 {
@@ -17,7 +18,7 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new ($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
+            MySqlConnection GeneralConnection = new($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
             return GeneralConnection;
         }
     }
@@ -315,28 +316,63 @@ namespace Backend_DAL
             //}
 
             //_Context.SaveChanges();
-            _Context.Database.SetCommandTimeout(100000);
-            List<ProductionLineDTO> ProductionLines = _Context.ProductionLines.Include(pl => pl.Productions).ToList();
+            //_Context.Database.SetCommandTimeout(100000);
+            //List<ProductionLineDTO> ProductionLines = _Context.ProductionLines.Include(pl => pl.Productions).ToList();
 
-            foreach (ProductionLineDTO productionLineDTO in ProductionLines)
+            //foreach (ProductionLineDTO productionLineDTO in ProductionLines)
+            //{
+            //    productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202011"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202012"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202101"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202102"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202103"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202104"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202105"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202106"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202107"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202108"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202109"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202110"));
+            //}
+
+            //_Context.SaveChanges();
+
+            //using var command = _connection.CreateCommand();
+
+            DateTime startDate = new(2020, 9, 1);
+            DateTime endDate = new(2020, 10, 1);
+
+            string cmdTextTable = $"CREATE TABLE `Productions-{startDate.Year}-{startDate.Month}` (`Id` int PRIMARY KEY, `Timestamp` datetime NOT NULL, `ShotTime` double NOT NULL, `ProductionLineId` int DEFAULT NULL)";
+            using MySqlCommand commandTables = new(cmdTextTable, _connection);
+
+            _connection.Open();
+            commandTables.ExecuteNonQuery();
+            _connection.Close();
+
+            List<ProductionsDTO> Productions = _Context.Productions.Where(p => p.Timestamp >= startDate && p.Timestamp < endDate).ToList();
+            string cmdText = $"INSERT INTO `Productions-{startDate.Year}-{startDate.Month}` VALUES";
+            _connection.Open();
+
+            int counter = 1;
+            Parallel.ForEach(Productions, production =>
             {
-                productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202011"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202012"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202101"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202102"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202103"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202104"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202105"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202106"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202107"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202108"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202109"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202110"));
-            }
+                cmdText += $" ('{production.Id}', '{production.Timestamp.ToString("yyyy-MM-dd hh:mm:ss")}', '{production.ShotTime}', '{production.ProductionLineId}')";
 
-            _Context.SaveChanges();
+                if (counter == Productions.Count())
+                {
+                    cmdText += ";";
+                }
+                else
+                {
+                    cmdText += ",";
+                }
 
+                counter++;
+            });
+
+            using MySqlCommand command = new(cmdText, _connection);
+            command.ExecuteNonQuery();
+            _connection.Close();
         }
-
     }
 }
