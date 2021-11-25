@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import ActionsGraph from "../../components/componenthealth/ActionsGraph/ActionsGraph";
 import ComponentsTable from "../../components/componenthealth/componentstable/ComponentsTable";
 import HistoryTable from "../../components/componenthealth/HistoryTable/HistoryTable";
-import { Component, Maintenance, MaintenanceNotification } from "../../globalTypes";
+import { Component, Maintenance } from "../../globalTypes";
 import { GetComponents, GetAllMaintenance } from "../../api/requests/components";
 import "./ComponentHealthPage.scss";
 import { useLocation } from "react-router-dom";
@@ -73,6 +73,7 @@ export default function ComponentHealthPage() {
             const state = location.state as IComponentId;
             FindSelectedComponent(state);
         }
+        // eslint-disable-next-line
     }, [components.length, FindSelectedComponent]);
 
     type IComponentId = {

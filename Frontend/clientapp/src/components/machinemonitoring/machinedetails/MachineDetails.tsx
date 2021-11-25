@@ -39,6 +39,7 @@ export default function MachineDetails(props: IMachineDetails) {
         }
 
         getData();
+        // eslint-disable-next-line
     }, [props.id]);
 
     return (

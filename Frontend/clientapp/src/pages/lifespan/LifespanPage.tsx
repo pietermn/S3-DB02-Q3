@@ -2,7 +2,7 @@ import ComponentsTable from "../../components/lifespan/componentstable/Component
 import Modal from "react-modal";
 import "./LifespanPage.scss";
 import { Component } from "../../globalTypes";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents } from "../../api/requests/components";
@@ -30,7 +30,7 @@ export default function LifespanPage() {
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {
-            setSelectedComponent(components.filter((c) => c.id == state.componentId)[0]);
+            setSelectedComponent(components.filter((c) => c.id === state.componentId)[0]);
         }
     }
 
@@ -55,6 +55,7 @@ export default function LifespanPage() {
         return () => {
             history.replace({ state: undefined });
         };
+        // eslint-disable-next-line
     }, [components.length, state && state.componentId]);
 
     function ClearData() {

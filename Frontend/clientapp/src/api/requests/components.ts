@@ -1,4 +1,4 @@
-import { Component, Maintenance, MaintenanceNotification, ProductionDate } from "../../globalTypes";
+import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
 
 export const GetComponents = async () => {

@@ -11,6 +11,7 @@ interface IMachineStatus {
 export default function MachineStatus(props: IMachineStatus) {
     useEffect(() => {
         drawUptime();
+        // eslint-disable-next-line
     }, [props.uptime]);
 
     function calcDifference(begin: Date, end: Date) {

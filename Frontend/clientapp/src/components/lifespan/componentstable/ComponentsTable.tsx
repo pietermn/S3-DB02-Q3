@@ -1,9 +1,7 @@
-import { IconButton, TextField, Tooltip } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
-import { FaInfoCircle as InfoIcon } from "react-icons/fa";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 

@@ -13,7 +13,7 @@ import PageLoader from "../PageLoader";
 //@ts-ignore
 import ReactCountryFlag from "react-country-flag";
 import i18n from "../../i18n";
-import ReactPlayer from "react-player";
+// import ReactPlayer from "react-player";
 import { Badge } from "@material-ui/core";
 
 export default function Navbar() {
@@ -136,9 +136,9 @@ function NavbarUserSection() {
             <div className="Flags" onClick={() => setOpenFlags(!openFlags)}>
                 <ReactCountryFlag
                     onClick={() => {
-                        if (currentLang == "de") setGermanCounter(germanCounter + 1);
+                        if (currentLang === "de") setGermanCounter(germanCounter + 1);
                     }}
-                    countryCode={currentLang == "en" ? "GB" : currentLang.toUpperCase()}
+                    countryCode={currentLang === "en" ? "GB" : currentLang.toUpperCase()}
                     svg
                     id="Flag__Icon"
                 />

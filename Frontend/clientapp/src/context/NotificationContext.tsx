@@ -35,6 +35,7 @@ export function NotificationProvider(props: INotificationProvider) {
         return () => {
             socket.disconnect();
         };
+        // eslint-disable-next-line
     }, []);
 
     function getComponentNotifications(componentId: number) {
