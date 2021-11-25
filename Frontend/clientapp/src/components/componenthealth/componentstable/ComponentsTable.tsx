@@ -105,7 +105,6 @@ export default function ComponentsTable(props: ITableProps) {
                               >
                                   <p>{component.description}</p>
                                   <p>{component.totalActions}</p>
-                                  {/* {props.selectedComponentId == component.id && <div className="triangle" />} */}
                               </div>
                           );
                       })
@@ -118,7 +117,6 @@ export default function ComponentsTable(props: ITableProps) {
                               >
                                   <p>{component.description}</p>
                                   <p>{component.totalActions}</p>
-                                  {/* {props.selectedComponentId == component.id && <div className="triangle" />} */}
                               </div>
                           );
                       })}

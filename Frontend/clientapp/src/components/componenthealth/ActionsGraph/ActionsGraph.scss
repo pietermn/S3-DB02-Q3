@@ -23,6 +23,7 @@
     }
 
     svg {
+        margin-top: 0.5rem;
         margin-bottom: -2.5rem;
         height: 100%;
         width: 100%;
@@ -34,23 +35,9 @@
         }
     }
 
-    #amount-timespan {
-        height: 1.5rem;
-        width: 50px;
-        padding: 0;
-    }
-
-    #timespan-select {
-        height: 1.5rem;
-        margin-right: 10px;
-    }
-
-    #amount-timespan,
-    #timespan-select {
-        height: 30px;
-        border: none;
-        outline: 1px solid black;
-        margin-bottom: 1rem;
+    input {
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
     }
 }
 
