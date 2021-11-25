@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,14 @@ namespace Backend.Controllers
             _componentContainer.SetMaxActions(component_id, max_actions);
 
             return Ok();
+        }
+
+        [Route("predictmaxactions/{component_id}"), HttpGet]
+        public IActionResult GetPredictMaxAction(int component_id)
+        {
+            DateTime date = _componentContainer.PredictMaxActions(component_id);
+
+            return Ok(date);
         }
     }
 }
