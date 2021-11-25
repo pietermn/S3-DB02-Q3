@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Backend_Logic_Interface.Containers;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,12 @@ namespace Backend.Controllers
     public class ComponentController : Controller
     {
         readonly IComponentContainer _componentContainer;
-        public ComponentController(IComponentContainer componentContainer)
+        readonly IComponentDAL _componentDAL;
+
+        public ComponentController(IComponentContainer componentContainer, IComponentDAL componentDAL)
         {
             _componentContainer = componentContainer;
+            _componentDAL = componentDAL;
         }
 
         [Route("read"), HttpGet]
@@ -33,14 +37,6 @@ namespace Backend.Controllers
             
             return Ok(Components);
         }
-
-        //[Route("previousactions/{component_id}/{amount}/{type}"), HttpGet]
-        //public IActionResult GetPreviousActions(int component_id, int amount, string type)
-        //{
-        //    List<int> Actions = _componentContainer.GetPreviousActions(component_id, amount, type);
-
-        //    return Ok(Actions);
-        //}
 
         [Route("previousactions/{component_id}/{beginDate}/{endDate}"), HttpGet]
         public IActionResult GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
