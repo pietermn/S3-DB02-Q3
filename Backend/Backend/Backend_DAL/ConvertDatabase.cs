@@ -339,40 +339,27 @@ namespace Backend_DAL
 
             //using var command = _connection.CreateCommand();
 
-            DateTime startDate = new(2020, 9, 1);
-            DateTime endDate = new(2020, 10, 1);
-
-            string cmdTextTable = $"CREATE TABLE `Productions-{startDate.Year}-{startDate.Month}` (`Id` int PRIMARY KEY, `Timestamp` datetime NOT NULL, `ShotTime` double NOT NULL, `ProductionLineId` int DEFAULT NULL)";
-            using MySqlCommand commandTables = new(cmdTextTable, _connection);
-
-            _connection.Open();
-            commandTables.ExecuteNonQuery();
-            _connection.Close();
-
-            List<ProductionsDTO> Productions = _Context.Productions.Where(p => p.Timestamp >= startDate && p.Timestamp < endDate).ToList();
-            string cmdText = $"INSERT INTO `Productions-{startDate.Year}-{startDate.Month}` VALUES";
-            _connection.Open();
-
-            int counter = 1;
-            Parallel.ForEach(Productions, production =>
+                DateTime startDate = new(2020, 9, 1);
+            for (int i = 0; i < 14; i++)
             {
-                cmdText += $" ('{production.Id}', '{production.Timestamp.ToString("yyyy-MM-dd hh:mm:ss")}', '{production.ShotTime}', '{production.ProductionLineId}')";
+                string cmdTextTable = $"CREATE TABLE `Productions-{startDate:yyyy-MM}` (`Id` int PRIMARY KEY, `Timestamp` datetime NOT NULL, `ShotTime` double NOT NULL, `ProductionLineId` int DEFAULT NULL);";
+                using MySqlCommand commandTables = new(cmdTextTable, _connection);
 
-                if (counter == Productions.Count())
-                {
-                    cmdText += ";";
-                }
-                else
-                {
-                    cmdText += ",";
-                }
+                _connection.Open();
+                commandTables.ExecuteNonQuery();
+                _connection.Close();
 
-                counter++;
-            });
+                startDate = startDate.AddMonths(1);
+            }
 
-            using MySqlCommand command = new(cmdText, _connection);
-            command.ExecuteNonQuery();
-            _connection.Close();
+            //_Context.ProductionDateTime = new DateTime(2020, 8, 1);
+            //List<ProductionsDTO> Productions = _Context.Productions.Where(p => p.Timestamp >= startDate && p.Timestamp < startDate.AddMonths(1)).ToList();
+
+            //_Context.ProductionDateTime = startDate;
+
+            //_Context.Productions.AddRange(Productions);
+            //_Context.SaveChanges();
+
         }
     }
 }
