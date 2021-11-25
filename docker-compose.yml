@@ -110,8 +110,8 @@ services:
     image: mariadb:latest
     container_name: Q3_Database
     command: --default-authentication-plugin=mysql_native_password
-    # volumes:
-    # - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
+    volumes:
+      - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'root'
