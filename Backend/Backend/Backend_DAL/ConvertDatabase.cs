@@ -17,7 +17,7 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new MySqlConnection($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
+            MySqlConnection GeneralConnection = new ($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
             return GeneralConnection;
         }
     }
@@ -228,9 +228,10 @@ namespace Backend_DAL
 
         private List<ProductionsDTO> GetProductionsFromProductionLine(int productionLineId, string table)
         {
-            using var command = _connection.CreateCommand();
+            //using var command = _connection.CreateCommand();
 
-            command.CommandText = $"SELECT t.id AS 'Id', md.timestamp AS 'Timestamp', md.shot_time AS 'ShotTime' FROM {table} md INNER JOIN `machine_monitoring_poorten` mm ON mm.port=md.port AND mm.board=md.board INNER JOIN `treeview` t ON t.naam=mm.name WHERE t.id=@ProductionLineId;";
+            string cmdText = $"SELECT t.id AS 'Id', md.timestamp AS 'Timestamp', md.shot_time AS 'ShotTime' FROM {table} md INNER JOIN `machine_monitoring_poorten` mm ON mm.port=md.port AND mm.board=md.board INNER JOIN `treeview` t ON t.naam=mm.name WHERE t.id=@ProductionLineId;";
+            using MySqlCommand command = new(cmdText, _connection);
             command.Parameters.AddWithValue("@ProductionLineId", productionLineId);
 
             _connection.Open();
@@ -251,7 +252,6 @@ namespace Backend_DAL
 
                 Productions.Add(new ProductionsDTO() { Timestamp = timestamp, ShotTime = shottime });
             }
-
             return Productions;
         }
 
@@ -315,7 +315,7 @@ namespace Backend_DAL
             //}
 
             //_Context.SaveChanges();
-
+            _Context.Database.SetCommandTimeout(100000);
             List<ProductionLineDTO> ProductionLines = _Context.ProductionLines.Include(pl => pl.Productions).ToList();
 
             foreach (ProductionLineDTO productionLineDTO in ProductionLines)
@@ -335,7 +335,7 @@ namespace Backend_DAL
             }
 
             _Context.SaveChanges();
-            
+
         }
 
     }

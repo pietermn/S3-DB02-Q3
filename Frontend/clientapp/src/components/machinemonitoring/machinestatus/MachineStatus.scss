@@ -1,28 +1,29 @@
 @import "../../../variables";
 
 .MM-Uptime {
-	// display: flex;
-	// flex-direction: row;
-	// justify-content: space-between;
-	// align-items: center;
-	height: 2rem;
-	width: 100%;
-	border: 1px solid black;
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: space-between;
+    // align-items: center;
+    margin-top: -16px;
+    height: 2rem;
+    width: 100%;
+    border: 1px solid black;
 
-	// div {
-	//     height: 1.75rem;
-	//     width: 100%;
-	//     display: flex;
-	//     flex-direction: row;
-	//     justify-content: space-between;
-	//     align-items: center;
+    // div {
+    //     height: 1.75rem;
+    //     width: 100%;
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: space-between;
+    //     align-items: center;
 
-	//     &.Good {
-	//         background-color: map-get($map: $accent-colors, $key: "green");
-	//     }
+    //     &.Good {
+    //         background-color: map-get($map: $accent-colors, $key: "green");
+    //     }
 
-	//     &.Bad {
-	//         background-color: map-get($map: $accent-colors, $key: "orange");
-	//     }
-	// }
+    //     &.Bad {
+    //         background-color: map-get($map: $accent-colors, $key: "orange");
+    //     }
+    // }
 }

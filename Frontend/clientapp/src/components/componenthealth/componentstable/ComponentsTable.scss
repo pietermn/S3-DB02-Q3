@@ -4,23 +4,96 @@
 
 .Components-Table {
     width: 100%;
-    height: 70vh;
+    height: 80vh;
     border-spacing: 0;
+    position: relative;
+
+    // .thead {
+    //     box-shadow: 0 4px 4px rgba($color: #000000, $alpha: 0.25);
+    // }
+
+    main {
+        position: relative;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(14, 54, 78) #e0e0e0;
+        width: 100%;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: darkgrey;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgb(14, 54, 78);
+            border-radius: 50px;
+        }
+    }
 
     .row {
-        width: 95%;
+        width: 100%;
         display: grid;
+        box-sizing: border-box;
+        vertical-align: middle;
+        align-items: center;
         grid-template-columns: auto auto;
         border-bottom: 1px solid black;
+        z-index: 50;
+        height: 4rem;
+        position: relative;
+        width: 100%;
+
+        &:first-child {
+            font-weight: 900;
+            position: sticky;
+            background-color: white;
+            z-index: 51;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 6rem;
+
+            &:hover {
+                background-color: white;
+                cursor: auto;
+            }
+
+            p:hover {
+                cursor: pointer;
+            }
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        &.selected {
+            p {
+                font-weight: 700;
+            }
+        }
+
         p {
             &:first-child {
                 padding-left: 1rem;
             }
 
-            &:last-child {
+            &:nth-child(2) {
                 text-align: end;
                 padding-right: 1rem;
+                position: relative;
             }
+        }
+    }
+
+    #chealth-search {
+        > :not(p) {
+            margin-left: 0.5rem;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Backend_DAL
             int hour = DateTime.Now.Hour;
             int minute = DateTime.Now.Minute;
             int second = DateTime.Now.Second;
-            DateTime fakeNow = new(2020, 9, 30, hour, minute, second);
+            DateTime fakeNow = new(2020, 9, 26, hour, minute, second);
 
             return _Context.Productions
                 .Where(p => p.ProductionLineId == productionLine_id

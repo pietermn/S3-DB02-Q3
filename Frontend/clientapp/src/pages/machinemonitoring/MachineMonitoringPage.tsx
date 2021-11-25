@@ -4,10 +4,13 @@ import { ProductionLine } from "../../globalTypes";
 import { GetProductionLines } from "../../api/requests/productionlines";
 import "./MachineMonitoringPage.scss";
 import { useTranslation } from "react-i18next";
+import { FaInfoCircle as InfoIcon } from "react-icons/fa";
+import { IconButton, Tooltip } from "@material-ui/core";
 
 export default function MachineMonitoringPage() {
     const [productionLines, setProductionLines] = useState<ProductionLine[]>([]);
     const { t } = useTranslation();
+    const uptimeTooltip = t("uptimetooltip.label");
 
     async function AsyncGetProductionLines() {
         setProductionLines(await GetProductionLines());
@@ -23,8 +26,15 @@ export default function MachineMonitoringPage() {
                 <thead>
                     <tr>
                         <th>{t("status.label")}</th>
-                        <th>{t("machine.label")}</th>
-                        <th>{t("uptime.label")}</th>
+                        <th>{t("productionline.label")}</th>
+                        <th>
+                            {t("uptime.label")}
+                            <Tooltip title={uptimeTooltip}>
+                                <IconButton disableRipple>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </th>
                         <th>{t("components.label")}</th>
                     </tr>
                 </thead>

@@ -25,11 +25,11 @@ namespace Backend_Logic.Containers
             int hour = DateTime.Now.Hour;
             int minute = DateTime.Now.Minute;
             int second = DateTime.Now.Second;
-            DateTime fakeNow = new(2020, 9, 30, hour, minute, second);
+            DateTime fakeNow = new(2020, 9, 26, hour, minute, second);
 
             if (productions.Count == 0)
             {
-                return new() { new Uptime(0, productionLine_id, System.DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
+                return new() { new Uptime(0, productionLine_id, DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
             }
 
             Uptime firstUptime = new(count, productionLine_id, fakeNow.AddDays(-1), productions[0].Timestamp, false);
@@ -57,11 +57,13 @@ namespace Backend_Logic.Containers
                     current.End = p.Timestamp;
                 }
             }
-
-            Uptime lastUptime = new(uptimes.Count + 1, productionLine_id, productions[^1].Timestamp.AddSeconds(productions[^1].ShotTime), fakeNow, false);
-
             uptimes.Add(current);
-            uptimes.Add(lastUptime);
+
+            if (fakeNow > productions[^1].Timestamp.AddSeconds(productions[^1].ShotTime * 6))
+            {
+                uptimes.Add(new Uptime(uptimes.Count, productionLine_id, productions[^1].Timestamp.AddSeconds(productions[^1].ShotTime), fakeNow, false));
+            }
+
 
             return uptimes;
         }

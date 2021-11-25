@@ -5,15 +5,23 @@
     width: 100%;
     display: grid;
     grid-template-areas:
-    "component-overview component-graph"
-    "component-overview history-overview";
+        "component-overview component-graph"
+        "component-overview history-overview";
 
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 1fr;
 
-    h1 {
+    h1,
+    h3 {
         font-size: 28px;
         color: map-get($map: $background, $key: "blue");
+        margin: 1rem 0 0.5rem;
+        font-weight: 400;
+    }
+
+    h3 {
+        font-size: 16px;
+        margin: 0;
     }
 }
 
@@ -21,6 +29,10 @@
     grid-area: component-overview;
     display: flex;
     justify-content: center;
+    border-right: 1px solid black;
+    margin-right: 3rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
+    clip-path: inset(0px -15px 0px 0px);
 
     .center-table {
         width: 80%;
@@ -33,4 +45,8 @@
 
 .Component-Graph {
     grid-area: component-graph;
+}
+
+.Component-Graph,
+.Component-History-Overview {
 }

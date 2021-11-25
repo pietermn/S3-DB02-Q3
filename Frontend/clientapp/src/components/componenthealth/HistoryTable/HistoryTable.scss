@@ -1,6 +1,7 @@
 @import "../../../variables";
 
-.History-Table, .Components-Table {
+.History-Table,
+.Components-Table {
     width: 55%;
     height: 200px;
 
@@ -20,20 +21,11 @@
         }
     }
 
-    .tbody {
+    main {
         height: 90%;
         overflow-y: auto;
         display: grid;
         justify-items: center;
-        grid-template-rows: repeat(3, 1fr);
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        &:hover {
-            cursor: ns-resize;
-        }
     }
 
     .row {
@@ -53,4 +45,12 @@
 
 .History-Table {
     margin-top: 5rem;
+
+    main {
+        grid-template-rows: repeat(3, 1fr);
+    }
+}
+
+.Components-Table main {
+    align-content: flex-start;
 }
