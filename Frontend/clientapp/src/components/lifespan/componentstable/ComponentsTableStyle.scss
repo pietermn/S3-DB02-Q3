@@ -9,6 +9,18 @@
     overflow-y: auto;
     scroll-padding-top: 5rem;
 
+    .green {
+        color: map-get($map: $accent-colors, $key: "green");
+    }
+
+    .orange {
+        color: map-get($map: $accent-colors, $key: "orange");
+    }
+
+    .red {
+        color: map-get($map: $accent-colors, $key: "red");
+    }
+
     .row:first-child {
         position: sticky;
         top: 0;
@@ -92,5 +104,11 @@
     margin-right: 0.5rem;
     &-Spacer {
         margin-left: 0.5rem;
+    }
+}
+
+.LsDataGrid {
+    .MuiDataGrid-cell:focus {
+        outline: none !important;
     }
 }

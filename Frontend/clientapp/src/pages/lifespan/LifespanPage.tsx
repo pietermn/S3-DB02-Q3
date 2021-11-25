@@ -146,9 +146,9 @@ export default function LifespanPage() {
                     </button>
                 </Modal>
             )}
-            <h1>
+            {/* <h1>
                 {t("components.label")} <i>{t("sortbytotalactions.label")}</i>
-            </h1>
+            </h1> */}
             <div className="center-table">
                 {components && (
                     <ComponentsTable components={components} setSelectedComponet={handleSelectedComponent} />

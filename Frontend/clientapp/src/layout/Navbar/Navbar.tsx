@@ -14,6 +14,7 @@ import PageLoader from "../PageLoader";
 import ReactCountryFlag from "react-country-flag";
 import i18n from "../../i18n";
 import ReactPlayer from "react-player";
+import { Badge } from "@material-ui/core";
 
 export default function Navbar() {
     return (
@@ -59,8 +60,16 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
 
     return (
         <div className="Notification-Dropdown">
-            {icon}
-            {notifications.length ? <div className="Notification-Dropdown-Dot" /> : null}
+            <Badge
+                badgeContent={notifications.length === null ? 0 : notifications.length}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                }}
+            >
+                {icon}
+            </Badge>
+            {/* {notifications.length ? <div className="Notification-Dropdown-Dot" /> : null} */}
             <div className="Notification-Dropdown-Content">
                 <h3>{title}</h3>
                 {notifications && notifications.length ? (
