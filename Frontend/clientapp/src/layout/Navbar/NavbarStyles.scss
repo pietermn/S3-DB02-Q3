@@ -55,6 +55,10 @@ nav {
         align-items: center;
         color: rgba(255, 255, 255, 1);
 
+        &:last-child {
+            padding-right: 1rem;
+        }
+
         p {
             padding-inline: 1.5rem;
             font-size: 20px;

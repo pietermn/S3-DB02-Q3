@@ -1,20 +1,18 @@
+import { ReactNode, Suspense, useContext, useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router";
-import { VscAccount as AccountIcon } from "react-icons/vsc";
 import { FiLogOut as LogOutIcon } from "react-icons/fi";
 import { FaBell as BellIcon, FaWrench as WrenchIcon } from "react-icons/fa";
-import Q3Logo from "../../assets/LOGO_Q3_White.png";
-import "./NavbarStyles.scss";
 import { NotificationContext } from "../../context/NotificationContext";
-import { ReactNode, Suspense, useContext, useEffect, useState } from "react";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { MaintenanceNotification } from "../../globalTypes";
 import { useTranslation } from "react-i18next";
+import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import PageLoader from "../PageLoader";
+import "./NavbarStyles.scss";
+import { Badge, Tooltip } from "@material-ui/core";
+import i18n from "../../i18n";
 //@ts-ignore
 import ReactCountryFlag from "react-country-flag";
-import i18n from "../../i18n";
-// import ReactPlayer from "react-player";
-import { Badge } from "@material-ui/core";
 
 export default function Navbar() {
     return (
@@ -69,7 +67,6 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
             >
                 {icon}
             </Badge>
-            {/* {notifications.length ? <div className="Notification-Dropdown-Dot" /> : null} */}
             <div className="Notification-Dropdown-Content">
                 <h3>{title}</h3>
                 {notifications && notifications.length ? (
@@ -110,27 +107,6 @@ function NavbarUserSection() {
 
     return (
         <section>
-            <div className="Name-Container">
-                <p>
-                    {t("first.label")}
-                    {t("name.label").toLowerCase()}
-                </p>
-                <p>
-                    {t("last.label")}
-                    {t("name.label").toLowerCase()}
-                </p>
-            </div>
-            <AccountIcon />
-            {/* <ReactPlayer
-                url="https://youtu.be/D-cZVjSLhSE?t=10"
-                playing={germanCounter >= 10}
-                style={{ display: "none" }}
-                onProgress={(p) => {
-                    if (p.playedSeconds === 24) {
-                        setGermanCounter(0);
-                    }
-                }}
-            /> */}
             <NotificationDropdown title={t("notifications.label")} icon={<BellIcon />} notifications={notifications} />
             <NotificationDropdown title={t("maintenance.label")} icon={<WrenchIcon />} notifications={maintenance} />
             <div className="Flags" onClick={() => setOpenFlags(!openFlags)}>
@@ -150,7 +126,6 @@ function NavbarUserSection() {
                     </div>
                 )}
             </div>
-            <LogOutIcon />
         </section>
     );
 }
