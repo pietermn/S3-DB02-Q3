@@ -107,7 +107,12 @@ export default function MachineDetails(props: IMachineDetails) {
                                 props.components[0].description
                             )
                         ) : (
-                            props.components.length
+                            <Tooltip title={props.components?.length ? props.components[0].description : ""}>
+                                <div>
+                                    <b>({props.components.length})</b>{" "}
+                                    {props.components?.length ? props.components[0].description.substr(0, 6) : null}...
+                                </div>
+                            </Tooltip>
                         )
                     ) : (
                         <i>{t("none.label")}</i>
