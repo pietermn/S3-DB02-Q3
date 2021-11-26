@@ -25,7 +25,7 @@ namespace Backend_DAL
             int hour = DateTime.Now.Hour;
             int minute = DateTime.Now.Minute;
             int second = DateTime.Now.Second;
-            DateTime fakeNow = new(2020, 9, 26, hour, minute, second);
+            DateTime fakeNow = new(2020, 9, 25, hour, minute, second);
 
             if (fakeNow >= new DateTime(2020, 9, 1) && fakeNow.AddDays(1) < new DateTime(2021, 11, 1))
             {
