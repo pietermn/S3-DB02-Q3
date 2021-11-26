@@ -26,12 +26,14 @@
   "nocomponentsfound.label": "Geen componenten gevonden",
   "productionline.label": "Productielijn",
   "close.label": "Sluiten",
-  "maxactions.label": "Maximale handelingen",
+  "maxactions.label": "Maximale Acties",
   "plan.label": "Plan",
-  "sortbytotalactions.label": "Sorteer op totale actions",
+  "sortbytotalactions.label": "Sorteer op totale acties",
   "currentactions.label": "Huidige Acties",
   "max.label": "Max",
   "uptimetooltip.label": "24-uurs weergave die aangeeft of de machine draait of niet",
   "maxtooltip.label": "Percentage van de huidige acties in vergelijking met de maximale acties",
-  "searchtag.label": "Zoeken"
+  "searchtag.label": "Zoeken",
+  "none.label": "Geen",
+  "maxactionswarning.label": "Geen maximale acties ingesteld"
 }

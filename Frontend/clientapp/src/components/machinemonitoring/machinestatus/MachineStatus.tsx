@@ -78,7 +78,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .data(hours)
                 .join("rect")
                 .attr("key", (h) => `Hour ${h}`)
-                .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
+                .attr("x", (h) => h * hourScale - 1 * hourScale + diffTotalH * hourScale)
                 .attr("width", 1)
                 .attr("height", 32)
                 .attr("fill", "rgb(0, 0, 0)");
@@ -100,20 +100,6 @@ export default function MachineStatus(props: IMachineStatus) {
                     }
                     return `${hour + h < 10 ? "0" : ""}${hour + h}:00`;
                 });
-
-            // .append("g")
-            // .append("text")
-            // .text((h) => hourText(h))
-            // .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
-
-            // .attr("width", 30)
-            // .attr("height", 10);
-
-            // .append("p")
-            // .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
-            // .attr("width", "10ch")
-
-            // .attr("height", "1rem");
         }
     }
 

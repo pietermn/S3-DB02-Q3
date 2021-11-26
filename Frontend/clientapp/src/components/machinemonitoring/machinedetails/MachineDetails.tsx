@@ -110,7 +110,7 @@ export default function MachineDetails(props: IMachineDetails) {
                             props.components.length
                         )
                     ) : (
-                        0
+                        <i>{t("none.label")}</i>
                     )}
                 </td>
             </tr>
