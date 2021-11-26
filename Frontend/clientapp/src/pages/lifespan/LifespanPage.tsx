@@ -60,6 +60,7 @@ export default function LifespanPage() {
                 handleSelectedComponent(c);
             }
         }
+        // eslint-disable-next-line
     }, [state && state.componentId]);
 
     useEffect(() => {
