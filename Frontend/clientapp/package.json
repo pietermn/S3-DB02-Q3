@@ -65,6 +65,10 @@
     ]
   },
   "devDependencies": {
+    "@types/enzyme": "^3.10.10",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5"
+  },
+  "jest": {
+    "transformIgnorePatterns": ["/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"]
   }
 }

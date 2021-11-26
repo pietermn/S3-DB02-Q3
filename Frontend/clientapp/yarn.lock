@@ -1853,6 +1853,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/cheerio@*":
+  "integrity" "sha512-t7ZVArWZlq3dFa9Yt33qFBQIK4CQd1Q3UJp0V+UhP6vgLWLM6Qug7vZuRSGXg45zXeB1Fm5X2vmBkEX58LV2Tw=="
+  "resolved" "https://registry.npmjs.org/@types/cheerio/-/cheerio-0.22.30.tgz"
+  "version" "0.22.30"
+  dependencies:
+    "@types/node" "*"
+
 "@types/d3-array@*":
   "integrity" "sha512-D/G7oG0czeszALrkdUiV68CDiHDxXf+M2mLVqAyKktGd12VKQQljj1sHJGBKjcK4jRH1biBd6ZPQPHpJ0mNa0w=="
   "resolved" "https://registry.npmjs.org/@types/d3-array/-/d3-array-3.0.1.tgz"
@@ -2062,6 +2069,14 @@
     "@types/d3-timer" "*"
     "@types/d3-transition" "*"
     "@types/d3-zoom" "*"
+
+"@types/enzyme@^3.10.10":
+  "integrity" "sha512-/D4wFhiEjUDfPu+j5FVK0g/jf7rqeEIpNfAI+kyxzLpw5CKO0drnW3W5NC38alIjsWgnyQ8pbuPF5+UD+vhVyg=="
+  "resolved" "https://registry.npmjs.org/@types/enzyme/-/enzyme-3.10.10.tgz"
+  "version" "3.10.10"
+  dependencies:
+    "@types/cheerio" "*"
+    "@types/react" "*"
 
 "@types/eslint@^7.2.6":
   "integrity" "sha512-07XlgzX0YJUn4iG1ocY4IX9DzKSmMGUs6ESKlxWhZRaa0fatIWaHWUVapcuGa8r5HFnTqzj+4OCjd5f7EZ/i/A=="
