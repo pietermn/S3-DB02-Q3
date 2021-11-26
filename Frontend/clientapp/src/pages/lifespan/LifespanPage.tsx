@@ -1,6 +1,7 @@
 import ComponentsTable from "../../components/lifespan/componentstable/ComponentsTable";
 import Modal from "react-modal";
 import "./LifespanPage.scss";
+import RemoveYesNo from "../../components/popover/RemoveYesNo";
 import { Component } from "../../globalTypes";
 import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
@@ -20,9 +21,12 @@ export default function LifespanPage() {
     const [selectedComponent, setSelectedComponent] = useState<Component>();
     const [maxActionsInput, setMaxActionsInput] = useState(selectedComponent?.maxActions || 0);
     const [description, setDescription] = useState("");
+    const [removePopover, setRemovePopover] = useState("");
+    const [anchorEl, setAnchorEl] = useState<SVGElement | null>(null);
     const location = useLocation();
     const { setMaxActions } = useContext(NotificationContext);
-    const { addMaintenance, finishMaintenance, getComponentMaintenance } = useContext(MaintenanceContext);
+    const { addMaintenance, finishMaintenance, getComponentMaintenance, removeMaintenance } =
+        useContext(MaintenanceContext);
     const state = location.state as IComponentId;
     const history = useHistory();
     const { t } = useTranslation();
@@ -140,7 +144,27 @@ export default function LifespanPage() {
                                     return (
                                         <div key={maintenance.id}>
                                             <p>{maintenance.description}</p>
-                                            <ImCheckmark onClick={() => finishMaintenance(maintenance.id)} />
+                                            <ImCheckmark
+                                                aria-describedby={`Popover-${maintenance.id}`}
+                                                onClick={(e) => {
+                                                    setRemovePopover(maintenance.id.toString());
+                                                    setAnchorEl(e.currentTarget);
+                                                }}
+                                            />
+                                            <RemoveYesNo
+                                                openState={removePopover === maintenance.id.toString()}
+                                                setOpenState={setRemovePopover}
+                                                anchorId={`Popover-${maintenance.id}`}
+                                                anchor={anchorEl}
+                                                setAnchor={setAnchorEl}
+                                                message={<>{t("resetactions.label")}</>}
+                                                remove={() => {
+                                                    finishMaintenance(maintenance.id);
+                                                }}
+                                                cancel={() => {
+                                                    removeMaintenance(maintenance.id);
+                                                }}
+                                            />
                                         </div>
                                     );
                                 })}

@@ -7,6 +7,7 @@ interface IMaintenanceContext {
     getComponentMaintenance: (component_id: number) => MaintenanceNotification[];
     addMaintenance: (component_id: number, description: string) => void;
     finishMaintenance: (maintenanceId: number) => void;
+    removeMaintenance: (maintenanceId: number) => void;
 }
 
 const defaultState: IMaintenanceContext = {
@@ -14,6 +15,7 @@ const defaultState: IMaintenanceContext = {
     getComponentMaintenance: (component_id: number) => [],
     addMaintenance: (component_id: number, description: string) => {},
     finishMaintenance: (maintenanceId: number) => {},
+    removeMaintenance: (maintenanceId: number) => {},
 };
 
 export const MaintenanceContext = createContext(defaultState);
@@ -48,6 +50,10 @@ export function MaintenanceProvider(props: IMaintenanceProvider) {
         });
     }
 
+    function removeMaintenance(maintenanceId: number) {
+        socket.emit("Remove Maintenance", { maintenanceId });
+    }
+
     function addMaintenance(component_id: number, description: string) {
         socket.emit("Add Maintenance", {
             componentId: component_id,
@@ -62,6 +68,7 @@ export function MaintenanceProvider(props: IMaintenanceProvider) {
                 addMaintenance,
                 finishMaintenance,
                 getComponentMaintenance,
+                removeMaintenance,
             }}
         >
             {props.children}

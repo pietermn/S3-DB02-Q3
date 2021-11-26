@@ -76,6 +76,12 @@ io.on("connection", async (socket) => {
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
 
+    socket.on("Remove Maintenance", async (data: { maintenanceId: number }) => {
+        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`);
+        io.emit("Update Components");
+        io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
+    });
+
     socket.on("Add Notification", async (notification) => {
         sql.addNotification(notification.componentId, notification.message);
         await ActionsChecker.allComponentsNeedNotification();

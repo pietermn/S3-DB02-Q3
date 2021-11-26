@@ -35,5 +35,8 @@
   "maxtooltip.label": "Percentage van de huidige acties in vergelijking met de maximale acties",
   "searchtag.label": "Zoeken",
   "none.label": "Geen",
-  "maxactionswarning.label": "Geen maximale acties ingesteld"
+  "maxactionswarning.label": "Geen maximale acties ingesteld",
+  "resetactions.label": "Wilt u de huidige acties terug naar 0 zetten?",
+  "yes.label": "Ja",
+  "no.label": "Nee"
 }

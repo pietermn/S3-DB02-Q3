@@ -35,5 +35,8 @@
   "maxtooltip.label": "Percentage of the current actions compared to the max actions",
   "searchtag.label": "Search",
   "none.label": "None",
-  "maxactionswarning.label": "No max actions set"
+  "maxactionswarning.label": "No max actions set",
+  "resetactions.label": "Do you want to set the current actions to 0?",
+  "yes.label": "Yes",
+  "no.label": "No"
 }

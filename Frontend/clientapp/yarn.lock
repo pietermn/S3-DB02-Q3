@@ -1697,7 +1697,14 @@
     "prop-types" "^15.7.2"
     "react-is" "^17.0.2"
 
-"@mui/material@^5.1.0":
+"@mui/icons-material@^5.2.0":
+  "integrity" "sha512-NvyrVaGKpP4R1yFw8BCnE0QcsQ67RtpgxPr4FtH8q60MDYPuPVczLOn5Ash5CFavoDWur/NfM/4DpT54yf3InA=="
+  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.2.0.tgz"
+  "version" "5.2.0"
+  dependencies:
+    "@babel/runtime" "^7.16.3"
+
+"@mui/material@^5.0.0", "@mui/material@^5.1.0":
   "integrity" "sha512-AJehUbf0pWA+X9x+rXM4xHjLdNSf3YZzVt9YP/Pa75HCIDn4Dg2neiZu/Cg57C19WMlUf3nyn4Vkz4nD48DgPA=="
   "resolved" "https://registry.npmjs.org/@mui/material/-/material-5.2.0.tgz"
   "version" "5.2.0"
