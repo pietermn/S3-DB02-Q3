@@ -59,7 +59,7 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
     return (
         <div className="Notification-Dropdown">
             <Badge
-                badgeContent={notifications.length === null ? 0 : notifications.length}
+                badgeContent={notifications === null ? 0 : notifications.length}
                 anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",

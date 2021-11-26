@@ -1,9 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
+import { FaExclamationTriangle as WarningIcon } from "react-icons/fa";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { Tooltip } from "@material-ui/core";
+import { Icon, IconButton } from "@mui/material";
 
 interface IComponentsTable {
     components: Component[];
@@ -13,6 +16,7 @@ interface IComponentsTable {
 
 export default function ComponentsTable(props: IComponentsTable) {
     const { t } = useTranslation();
+    const maw = t("maxactionswarning.label");
     const [sortModel, setSortModel] = useState<GridSortModel>([
         {
             field: "percentageMaintenance",
@@ -105,8 +109,27 @@ export default function ComponentsTable(props: IComponentsTable) {
                 return <div>{params.row.percentageMaintenance}%</div>;
             },
         },
+        {
+            field: "warning",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            align: "center",
+            headerAlign: "center",
+            renderCell: (params) => {
+                if (params.row.maxActions === 1) {
+                    return (
+                        <Tooltip title={maw}>
+                            <IconButton>
+                                <WarningIcon className="orange" />
+                            </IconButton>
+                        </Tooltip>
+                    );
+                }
+            },
+        },
     ];
-
     return (
         <div className="lifespan-table">
             <DataGrid
