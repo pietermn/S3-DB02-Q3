@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { GetPreviousActions } from "../../../api/requests/components";
 import { ProductionDate } from "../../../globalTypes";
 import "./ActionsGraph.scss";
+import ActionsGraphSkeleton from "./ActionsGraphSkeleton";
 import { useD3 } from "./useD3Hook";
 
 interface IActionsGraph {
@@ -132,17 +133,18 @@ export default function ActionsGraph(props: IActionsGraph) {
 
     return (
         <div className="actionsgraph-container">
-            <div id="Actions-Graph">
-                <div>
-                    <input
-                        min="2010-01-01"
-                        max={dateInput(new Date())}
-                        type="date"
-                        value={beginDate}
-                        onChange={(e) => setBeginDate(e.target.value)}
-                    />
-                    <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                </div>
+            <div>
+                <input
+                    min="2010-01-01"
+                    max={dateInput(new Date())}
+                    type="date"
+                    value={beginDate}
+                    onChange={(e) => setBeginDate(e.target.value)}
+                />
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            </div>
+            {isLoading && <ActionsGraphSkeleton isLoading={isLoading} />}
+            <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>
                 <svg ref={ref}>
                     <text className="x-axis-label">
                         Time ({actions.length ? actions[0].timespanIndicator + "s" : ""}) {"->"}
@@ -156,7 +158,6 @@ export default function ActionsGraph(props: IActionsGraph) {
                     </g>
                 </svg>
             </div>
-            <CircularProgress className={isLoading ? "loading" : "loading invisible"} />
         </div>
     );
 }
