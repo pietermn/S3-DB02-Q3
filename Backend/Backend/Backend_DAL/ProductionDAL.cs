@@ -9,17 +9,12 @@ namespace Backend_DAL
 {
     public class ProductionDAL : IProductionDAL
     {
-        readonly Q3Context _Context;
-
-        public ProductionDAL(Q3Context context)
-        {
-            _Context = context;
-        }
+        public Q3Context _Context = new();
 
         public List<ProductionsDTO> GetProductionsFromLastDay()
         {
             return _Context.Productions
-                .Where(p => p.Timestamp > new DateTime(2020,9,30).AddDays(-1))
+                .Where(p => p.Timestamp > new DateTime(2020, 9, 30).AddDays(-1))
                 .OrderBy(p => p.ProductionLineId)
                 .AsNoTracking()
             .ToList();
@@ -32,12 +27,19 @@ namespace Backend_DAL
             int second = DateTime.Now.Second;
             DateTime fakeNow = new(2020, 9, 26, hour, minute, second);
 
-            return _Context.Productions
-                .Where(p => p.ProductionLineId == productionLine_id
-                && p.Timestamp > fakeNow.AddDays(-1) && p.Timestamp < fakeNow)
+            if (fakeNow >= new DateTime(2020, 9, 1) && fakeNow.AddDays(1) < new DateTime(2021, 11, 1))
+            {
+                _Context = new Q3Context(fakeNow);
+                return
+                _Context.Productions.Where(
+                    p => fakeNow <= p.Timestamp
+                    && fakeNow.AddDays(1) >= p.Timestamp
+                    && p.ProductionLineId == productionLine_id)
                 .OrderBy(p => p.Timestamp)
-                .AsNoTracking()
-            .ToList();
+                    .ToList();
+            }
+
+            return new List<ProductionsDTO>();
         }
     }
 }

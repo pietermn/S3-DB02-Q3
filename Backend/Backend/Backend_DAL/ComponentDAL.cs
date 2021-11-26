@@ -9,12 +9,7 @@ namespace Backend_DAL
 {
     public class ComponentDAL : IComponentDAL
     {
-        readonly Q3Context _Context;
-
-        public ComponentDAL(Q3Context context)
-        {
-            _Context = context;
-        }
+        public Q3Context _Context = new();
 
         public ComponentDTO GetComponent(int component_id)
         {
@@ -42,53 +37,34 @@ namespace Backend_DAL
                 .FirstOrDefault();
 
             List<ProductionsDTO> productions = new();
-            foreach (ProductionLineHistoryDTO historyDTO in component.History)
+
+            for (DateTime i = beginDate; i < endDate; i = i.AddMonths(1))
             {
-                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(
-                    p => p.ProductionLineId == historyDTO.ProductionLineId 
-                    && beginDate <= p.Timestamp 
-                    && endDate >= p.Timestamp 
-                    && historyDTO.StartDate <= p.Timestamp
-                    && historyDTO.EndDate >= p.Timestamp)
-                    .ToList();
-                foreach (ProductionsDTO productionsDTO in productionsDTOs)
+                if (i >= new DateTime(2020, 9, 1) && i < new DateTime(2021, 11, 1))
                 {
-                    productions.Add(productionsDTO);
+                    _Context = new Q3Context(i);
+                    List<ProductionsDTO> monthlyProductions = 
+                    _Context.Productions.Where(
+                        p => beginDate <= p.Timestamp
+                        && endDate >= p.Timestamp)
+                        .ToList();
+
+                    foreach (ProductionsDTO productionsDTO in monthlyProductions)
+                    {
+                        foreach (ProductionLineHistoryDTO historyDTO in component.History)
+                        {
+                            if (productionsDTO.ProductionLineId == historyDTO.ProductionLineId
+                                && productionsDTO.Timestamp > historyDTO.StartDate
+                                && productionsDTO.Timestamp < historyDTO.EndDate)
+                            {
+                                productions.Add(productionsDTO);
+                            }
+                        }
+                    }
                 }
             }
 
             return productions.OrderBy(p => p.Timestamp).ToList();
-
-            //List<int> actions = new List<int>();
-            //for (int i = 0; i < amountOfWeeks; i++)
-            //{
-            //    int actionsThisWeek = 0;
-            //    //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
-            //    //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
-            //    DateTime MockNowDate = new DateTime(2020, 9, 30);
-
-            //    // Default sorting is by weeks
-            //    DateTime firstDatetime = MockNowDate.AddDays(i * -7);
-            //    DateTime secondDatetime = firstDatetime.AddDays(-7);
-
-            //    if (type == "months")
-            //    {
-            //        firstDatetime = MockNowDate.AddMonths(-i);
-            //        secondDatetime = firstDatetime.AddMonths(-1);
-            //    }
-
-
-            //    foreach (ProductionsDTO production in productions)
-            //    {
-            //        if (production.Timestamp < firstDatetime && production.Timestamp > secondDatetime)
-            //        {
-            //            actionsThisWeek++;
-            //        }
-            //    }
-            //    actions.Add(actionsThisWeek);
-            //}
-
-            //return actions;
         }
 
         public void SetMaxAction(int component_id, int max_actions)
