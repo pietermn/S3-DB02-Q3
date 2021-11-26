@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
-import { FaExclamationTriangle as WarningIcon } from "react-icons/fa";
+import {
+    FaExclamationTriangle as WarningIcon,
+    FaExclamation as WarnIcon,
+    FaTimes as ErrorIcon,
+    FaWrench as MaintenanceIcon,
+    FaCheck as GoodIcon,
+} from "react-icons/fa";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { useState } from "react";
@@ -24,18 +29,6 @@ export default function ComponentsTable(props: IComponentsTable) {
         },
     ]);
 
-    function GetStatusColor(percentage: number): string {
-        if (percentage >= 95 && percentage < 100) {
-            return "orange";
-        }
-
-        if (percentage >= 100) {
-            return "red";
-        } else {
-            return "green";
-        }
-    }
-
     const cols: GridColDef[] = [
         {
             field: "status",
@@ -43,7 +36,23 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "center",
             headerAlign: "center",
             renderCell: (params) => {
-                return <StatusDot className={GetStatusColor(params.row.percentageMaintenance)} />;
+                switch (true) {
+                    case params.row.percentageMaintenance >= 100 &&
+                        props.getComponentNotifications(params.row.id).length > 0:
+                        return <MaintenanceIcon className="red" />;
+                    case params.row.percentageMaintenance >= 100:
+                        return <ErrorIcon className="red" />;
+                    case params.row.percentageMaintenance >= 95 &&
+                        params.row.percentageMaintenance < 100 &&
+                        props.getComponentNotifications(params.row.id).length > 0:
+                        return <MaintenanceIcon className="orange" />;
+                    case params.row.percentageMaintenance >= 95 && params.row.percentageMaintenance < 100:
+                        return <WarnIcon className="orange" />;
+                    case props.getComponentNotifications(params.row.id).length > 0:
+                        return <MaintenanceIcon className="green" />;
+                    default:
+                        return <GoodIcon className="green" />;
+                }
             },
             sortable: false,
             filterable: false,

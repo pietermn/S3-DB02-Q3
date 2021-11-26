@@ -50,6 +50,15 @@ export default function LifespanPage() {
     }
 
     useEffect(() => {
+        if (state) {
+            let c = components.find((c) => c.id === state.componentId);
+            if (c) {
+                handleSelectedComponent(c);
+            }
+        }
+    }, [state && state.componentId]);
+
+    useEffect(() => {
         GetComponentsAsync();
 
         return () => {
