@@ -60,7 +60,8 @@ io.on("connection", async (socket) => {
             }
         }
 
-        io.emit("Add Notification List", await ActionsChecker.allComponentsNeedNotification());
+        await ActionsChecker.allComponentsNeedNotification();
+        io.emit("Add Notification List", await sql.getNotifications());
     });
 
     socket.on("Add Maintenance", async (data: { componentId: number; description: string }) => {

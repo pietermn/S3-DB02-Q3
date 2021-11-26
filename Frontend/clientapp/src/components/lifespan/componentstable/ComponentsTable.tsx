@@ -6,7 +6,7 @@ import "./ComponentsTableStyle.scss";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 import { Tooltip } from "@material-ui/core";
-import { Icon, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 interface IComponentsTable {
     components: Component[];
@@ -145,6 +145,12 @@ export default function ComponentsTable(props: IComponentsTable) {
                 onSortModelChange={setSortModel}
                 onRowClick={(data) => {
                     props.setSelectedComponet(data.row as Component);
+                }}
+                loading={props.components.length === 0}
+                components={{
+                    NoRowsOverlay: () => {
+                        return null;
+                    },
                 }}
             />
             {/* <div className="row">

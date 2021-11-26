@@ -44,7 +44,10 @@ export default class SQL {
             sqlConnection.query(
                 'SELECT Notifications.Id AS id, ComponentId as componentId, Components.Description AS "component", Message as description FROM `Notifications` INNER JOIN `Components` ON Notifications.ComponentId = Components.Id;',
                 (err, res) => {
-                    if (err) reject(err);
+                    if (err) {
+                        reject(err);
+                        console.log(err);
+                    }
                     resolve(res);
                 }
             );

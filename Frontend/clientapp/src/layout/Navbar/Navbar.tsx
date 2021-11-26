@@ -1,6 +1,5 @@
 import { ReactNode, Suspense, useContext, useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router";
-import { FiLogOut as LogOutIcon } from "react-icons/fi";
 import { FaBell as BellIcon, FaWrench as WrenchIcon } from "react-icons/fa";
 import { NotificationContext } from "../../context/NotificationContext";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
@@ -9,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import Q3Logo from "../../assets/LOGO_Q3_White.png";
 import PageLoader from "../PageLoader";
 import "./NavbarStyles.scss";
-import { Badge, Tooltip } from "@material-ui/core";
+import { Badge } from "@material-ui/core";
 import i18n from "../../i18n";
 //@ts-ignore
 import ReactCountryFlag from "react-country-flag";
