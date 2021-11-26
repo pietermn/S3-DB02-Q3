@@ -4,11 +4,14 @@ using Backend_DTO.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace Backend_DAL
 {
     public class ProductionDAL : IProductionDAL
     {
+        readonly MySqlConnection _connection = Connection.GetConnection();
         public Q3Context _Context = new();
 
         public List<ProductionsDTO> GetProductionsFromLastDay()

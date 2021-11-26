@@ -1,5 +1,9 @@
+import axios, { Canceler, CancelTokenSource } from "axios";
 import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
+
+const CancelToken = axios.CancelToken;
+let cancel: Canceler;
 
 export const GetComponents = async () => {
     let components: Component[] = [];
@@ -12,9 +16,22 @@ export const GetComponents = async () => {
 
 export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
     let actions: ProductionDate[] = [];
-    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`).then((res) => {
-        actions = res.data;
-    });
+
+    if (cancel != undefined) {
+        cancel();
+    }
+
+    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {
+        cancelToken: new CancelToken(function executor(c) {
+            cancel = c;
+        }),
+    })
+        .then((res) => {
+            actions = res.data;
+        })
+        .catch(function (thrown) {
+            console.log(thrown);
+        });
     return actions;
 };
 
