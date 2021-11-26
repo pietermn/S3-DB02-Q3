@@ -26,12 +26,12 @@ namespace Backend.Controllers
         //    return Ok();
         //}
 
-        [HttpPut]
-        public IActionResult ConvertToSeperateTables()
-        {
-            _DAL.ConvertAll();
+        //[HttpPut]
+        //public IActionResult ConvertToSeperateTables()
+        //{
+        //    _DAL.ConvertAll();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }

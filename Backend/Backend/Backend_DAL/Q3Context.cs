@@ -1,4 +1,5 @@
 ﻿using Backend_DTO.DTOs;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -9,12 +10,9 @@ namespace Backend_DAL
 {
     public class Q3Context : DbContext
     {
-        public Q3Context(DbContextOptions<Q3Context> options) : base(options)
-        {
+        public Q3Context () { }
 
-        }
-
-        public void SetDatetime(DateTime dateTime)
+        public Q3Context(DateTime dateTime)
         {
             ProductionDateTime = dateTime;
         }
@@ -29,8 +27,21 @@ namespace Backend_DAL
         public DateTime ProductionDateTime { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder
-                .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
+        {
+            Env.TraversePath().Load();
+            string connectionString = Env.GetString("ConnectionString");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                optionsBuilder.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db;SslMode=None");
+            }
+            else
+            {
+                optionsBuilder.UseMySQL(connectionString);
+            }
+
+            optionsBuilder
+                    .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +49,8 @@ namespace Backend_DAL
             {
                 p.ToTable($"Productions-{ProductionDateTime.ToString("yyyy-MM")}");
             });
+
+
         }
     }
 }

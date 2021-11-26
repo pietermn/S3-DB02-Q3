@@ -339,26 +339,27 @@ namespace Backend_DAL
 
             //using var command = _connection.CreateCommand();
 
-                DateTime startDate = new(2020, 9, 1);
-            for (int i = 0; i < 14; i++)
-            {
-                string cmdTextTable = $"CREATE TABLE `Productions-{startDate:yyyy-MM}` (`Id` int PRIMARY KEY, `Timestamp` datetime NOT NULL, `ShotTime` double NOT NULL, `ProductionLineId` int DEFAULT NULL);";
-                using MySqlCommand commandTables = new(cmdTextTable, _connection);
+                DateTime startDate = new(2021, 10, 1);
+            //for (int i = 0; i < 14; i++)
+            //{
+            //    string cmdTextTable = $"CREATE TABLE `Productions-{startDate:yyyy-MM}` (`Id` int PRIMARY KEY, `Timestamp` datetime NOT NULL, `ShotTime` double NOT NULL, `ProductionLineId` int DEFAULT NULL);";
+            //    using MySqlCommand commandTables = new(cmdTextTable, _connection);
 
-                _connection.Open();
-                commandTables.ExecuteNonQuery();
-                _connection.Close();
+            //    _connection.Open();
+            //    commandTables.ExecuteNonQuery();
+            //    _connection.Close();
 
-                startDate = startDate.AddMonths(1);
-            }
+            //    startDate = startDate.AddMonths(1);
+            //}
 
-            //_Context.ProductionDateTime = new DateTime(2020, 8, 1);
-            //List<ProductionsDTO> Productions = _Context.Productions.Where(p => p.Timestamp >= startDate && p.Timestamp < startDate.AddMonths(1)).ToList();
+            Q3Context context = new(new DateTime(2020, 8, 1));
 
-            //_Context.ProductionDateTime = startDate;
+            List<ProductionsDTO> Productions = context.Productions.Where(p => p.Timestamp >= startDate && p.Timestamp < startDate.AddMonths(1)).ToList();
 
-            //_Context.Productions.AddRange(Productions);
-            //_Context.SaveChanges();
+            context = new Q3Context(startDate);
+
+            context.Productions.AddRange(Productions);
+            context.SaveChanges();
 
         }
     }
