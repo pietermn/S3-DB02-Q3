@@ -38,15 +38,22 @@ namespace Backend_DAL
 
             List<ProductionsDTO> productions = new();
 
-            for (DateTime i = beginDate; i < endDate; i = i.AddMonths(1))
+            int monthDifference = ((beginDate.Year - endDate.Year) * 12) + (beginDate.Month - endDate.Month);
+            if (endDate.Year > beginDate.Year) monthDifference *= -1;
+
+            if (endDate > beginDate) return new List<ProductionsDTO>();
+
+            for (int i = 0; i <= monthDifference; i++)
             {
-                if (i >= new DateTime(2020, 9, 1) && i < new DateTime(2021, 11, 1))
+                DateTime currentDatetime = beginDate.AddMonths(i);
+                if (currentDatetime >= new DateTime(2020, 9, 1) && currentDatetime < new DateTime(2021, 11, 1))
                 {
-                    _Context = new Q3Context(i);
-                    List<ProductionsDTO> monthlyProductions = 
+                    _Context = new Q3Context(currentDatetime);
+                    List<ProductionsDTO> monthlyProductions =
                     _Context.Productions.Where(
-                        p => beginDate <= p.Timestamp
+                        p => currentDatetime <= p.Timestamp
                         && endDate >= p.Timestamp)
+                    .AsNoTracking()
                         .ToList();
 
                     foreach (ProductionsDTO productionsDTO in monthlyProductions)

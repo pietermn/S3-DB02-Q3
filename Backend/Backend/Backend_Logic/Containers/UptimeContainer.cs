@@ -12,9 +12,12 @@ namespace Backend_Logic.Containers
     public class UptimeContainer : IUptimeContainer
     {
         readonly IProductionDAL _productionsDAL;
-        public UptimeContainer(IProductionDAL productionsDAL)
+        readonly IProductionLineDAL _productionLineDAL;
+
+        public UptimeContainer(IProductionDAL productionsDAL, IProductionLineDAL productionLineDAL)
         {
             _productionsDAL = productionsDAL;
+            _productionLineDAL = productionLineDAL;
         }
 
         public List<IUptime> GetUptimeByIdFromLastDay(int productionLine_id)
@@ -68,29 +71,18 @@ namespace Backend_Logic.Containers
             return uptimes;
         }
 
-        //public List<IUptime> GetUptimeFromLastDay()
-        //{
-        //    List<ProductionsDTO> productions = _productionsDAL.GetProductionsFromLastDay();
+        public List<IUptimeCollection> GetUptimeFromLastDay()
+        {
+            List<ProductionLineDTO> productionLines = _productionLineDAL.GetProductionLines();
+            List<IUptimeCollection> uptimeCollections = new();
 
-        //    List<IUptime> Uptimes = new();
+            foreach(ProductionLineDTO productionLine in productionLines)
+            {
+                uptimeCollections.Add(new UptimeCollection() { ProductionLineId = productionLine.Id, Uptimes = GetUptimeByIdFromLastDay(productionLine.Id) });
+            }
 
-        //    foreach (ProductionsDTO p in productions)
-        //    {
-        //        double diff = p.ShotTime * 3;
-        //        bool act = true;
+            return uptimeCollections;
 
-        //        if (Uptimes.Count != 0)
-        //        {
-        //            if (Uptimes[^1].Timestamp.AddSeconds(diff) < p.Timestamp)
-        //            {
-        //                act = false;
-        //            }
-        //        }
-
-        //        Uptimes.Add(new Uptime(Uptimes.Count + 1, p.ProductionLineId, p.Timestamp, act));
-        //    }
-
-        //    return Uptimes;
-        //}
+        }
     }
 }

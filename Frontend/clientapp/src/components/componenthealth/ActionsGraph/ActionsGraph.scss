@@ -4,23 +4,19 @@
     margin-top: 1.5rem;
     position: relative;
 
-    .loading {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+    input {
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
+        z-index: 100;
     }
 }
 
 #Actions-Graph {
+    z-index: 100;
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-
-    &.invisible {
-        opacity: 0;
-    }
 
     svg {
         margin-top: 0.5rem;
@@ -34,13 +30,45 @@
             background-color: red;
         }
     }
-
-    input {
-        margin-bottom: 0.5rem;
-        margin-right: 0.5rem;
-    }
 }
 
 .invisible {
-    opacity: 0;
+    display: none !important;
+}
+
+.ActionsGraph-Skeleton {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: flex-end;
+    position: relative;
+
+    .SkeletonBar {
+        height: 80%;
+        width: 17%;
+        margin-left: 2rem;
+        margin-bottom: 10px;
+
+        &:nth-child(3) {
+            height: 65%;
+        }
+        &:nth-child(4) {
+            height: 30%;
+        }
+        &:nth-child(5) {
+            height: 45%;
+        }
+    }
+
+    .Axis {
+        position: absolute;
+        height: 90%;
+        width: 5px;
+
+        &:nth-child(2) {
+            width: 90%;
+            height: 5px;
+            margin-inline: 5px;
+        }
+    }
 }
