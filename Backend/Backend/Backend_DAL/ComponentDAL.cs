@@ -38,10 +38,10 @@ namespace Backend_DAL
 
             List<ProductionsDTO> productions = new();
 
-            int monthDifference = ((beginDate.Year - endDate.Year) * 12) + (beginDate.Month - endDate.Month);
+            int monthDifference = ((beginDate.Year - endDate.Year) * 12) + (endDate.Month - beginDate.Month);
             if (endDate.Year > beginDate.Year) monthDifference *= -1;
 
-            if (endDate > beginDate) return new List<ProductionsDTO>();
+            if (endDate < beginDate) return new List<ProductionsDTO>();
 
             for (int i = 0; i <= monthDifference; i++)
             {
