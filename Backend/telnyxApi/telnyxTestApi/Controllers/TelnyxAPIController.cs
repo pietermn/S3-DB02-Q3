@@ -9,10 +9,9 @@ namespace telnyxApi.Controllers
 {
     [ApiController]
     [Route("Telnyx")]
-    public class TelnyxAPIController : ControllerBase
+    public class TelnyxApiController : ControllerBase
     {
-        TelnyxAPI api = new();
-        private readonly ILogger<TelnyxAPIController> _logger;
+        readonly TelnyxApi api = new();
 
         [Route("create"), HttpPost]
         public async Task<IActionResult> SendAsync(Sms sms)
