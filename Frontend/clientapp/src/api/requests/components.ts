@@ -17,7 +17,7 @@ export const GetComponents = async () => {
 export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
     let actions: ProductionDate[] = [];
 
-    if (cancel != undefined) {
+    if (cancel !== undefined) {
         cancel();
     }
 

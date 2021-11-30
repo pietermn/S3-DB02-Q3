@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 import { Tooltip } from "@material-ui/core";
 import { IconButton } from "@mui/material";
@@ -28,6 +28,14 @@ export default function ComponentsTable(props: IComponentsTable) {
             sort: "desc",
         },
     ]);
+    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+    let dgWidth = (innerWidth + 96) * 0.8;
+
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setInnerWidth(window.innerWidth);
+        });
+    }, []);
 
     const cols: GridColDef[] = [
         {
@@ -58,16 +66,17 @@ export default function ComponentsTable(props: IComponentsTable) {
             filterable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
+            width: dgWidth * 0.05,
         },
         {
             field: "description",
             headerName: t("name.label"),
-            width: 300,
+            width: dgWidth * 0.25,
         },
         {
             field: "maintenance",
             headerName: t("maintenance.label"),
-            width: 300,
+            width: dgWidth * 0.25,
             sortable: false,
             filterable: false,
             hideSortIcons: true,
@@ -97,7 +106,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            width: dgWidth * 0.1,
         },
         {
             field: "currentActions",
@@ -105,7 +114,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            width: dgWidth * 0.1,
         },
         {
             field: "percentageMaintenance",
@@ -113,7 +122,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            width: dgWidth * 0.1,
             renderCell: (params) => {
                 return <div>{params.row.percentageMaintenance}%</div>;
             },
@@ -126,6 +135,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             disableColumnMenu: true,
             align: "center",
             headerAlign: "center",
+            width: dgWidth * 0.05,
             renderCell: (params) => {
                 if (params.row.maxActions === 1) {
                     return (
