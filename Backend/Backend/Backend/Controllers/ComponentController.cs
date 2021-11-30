@@ -53,5 +53,13 @@ namespace Backend.Controllers
 
             return Ok();
         }
+
+        [Route("predictmaxactions/{component_id}"), HttpGet]
+        public IActionResult GetPredictMaxAction(int component_id)
+        {
+            DateTime date = _componentContainer.PredictMaxActions(component_id);
+
+            return Ok(date);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Backend_Logic_Interface.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,8 +14,10 @@ namespace Backend_Logic.Models
         public bool Active { get; private set; }
         public int Port { get; private set; }
         public int Board { get; private set; }
-        List<IMachine> Machines { get; set; }
-        List<IComponent> Components { get; set; }
+        public List<IMachine> Machines { get; set; }
+        public List<IComponent> Components { get; set; }
+
+        public ProductionLine() { }
 
         public ProductionLine(int id, string name, string description, bool active, int port, int board)
         {
@@ -33,8 +36,8 @@ namespace Backend_Logic.Models
             Active = active;
             Port = port;
             Board = board;
-            Machines = machines;
-            Components = components;
+            this.Machines = machines;
+            this.Components = components;
         }
     }
 }

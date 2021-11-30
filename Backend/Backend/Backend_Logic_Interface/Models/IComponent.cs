@@ -11,8 +11,8 @@ namespace Backend_Logic_Interface.Models
         public string Name { get; }
         public ComponentType Type { get; }
         public string Description { get; }
-        public int Port { get; }
-        public int Board { get; }
+        //public int Port { get; }
+        //public int Board { get; }
         public int TotalActions { get; }
         public int MaxActions { get;  }
         public int CurrentActions {get;}

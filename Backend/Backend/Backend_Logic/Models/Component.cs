@@ -11,8 +11,8 @@ namespace Backend_Logic.Models
         public string Name { get; private set; }
         public ComponentType Type { get; private set; }
         public string Description { get; private set; }
-        public int Port { get; private set; }
-        public int Board { get; private set; }
+        //public int Port { get; private set; }
+        //public int Board { get; private set; }
         public int TotalActions { get; private set; }
         public int MaxActions { get; private set; }
         public int CurrentActions { get; private set; }
@@ -20,14 +20,16 @@ namespace Backend_Logic.Models
         public List<IProductionLineHistory> History { get; private set; }
         public List<IMaintenance> MaintenanceHistory { get; private set; }
 
-        public Component(int id, string name, ComponentType type ,string description, int port, int board, int totalActions, int maxActions, int currentActions, List<IProductionLineHistory> list, List<IMaintenance> listMain)
+        public Component() { }
+
+        public Component(int id, string name, ComponentType type ,string description, /*int port, int board,*/ int totalActions, int maxActions, int currentActions, List<IProductionLineHistory> list, List<IMaintenance> listMain)
         {
             Id = id;
             Name = name;
             Type = type;
             Description = description;
-            Port = port;
-            Board = board;
+            //Port = port;
+            //Board = board;
             TotalActions = totalActions;
             MaxActions = maxActions;
             CurrentActions = currentActions;
