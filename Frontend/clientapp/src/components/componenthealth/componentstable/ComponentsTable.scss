@@ -40,7 +40,6 @@
         z-index: 50;
         height: 4rem;
         position: relative;
-        width: 100%;
 
         &:first-child {
             font-weight: 900;
@@ -92,4 +91,23 @@
             margin-left: 0.5rem;
         }
     }
+}
+
+.ChDataGrid {
+    div:nth-child(2) {
+        div:nth-child(1) {
+            div:nth-child(1) {
+                div:nth-child(2) {
+                    div:nth-child(2) {
+                        svg.MuiDataGrid-iconSeparator {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.ChDataGrid :focus {
+    outline: none !important;
 }

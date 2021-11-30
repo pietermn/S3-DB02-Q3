@@ -27,3 +27,29 @@ code {
         border-radius: 50px;
     }
 }
+
+.Popover {
+    &__Yes__No {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 0.5rem;
+
+        div:first-child {
+            color: black;
+            max-width: 25ch;
+            margin-bottom: 0.5rem;
+        }
+
+        button {
+            color: white;
+            border-radius: 3px;
+            margin: 0 0.25rem;
+            background-color: rgb(14, 54, 78);
+
+            &:hover {
+                background-color: rgba(14, 54, 78, 0.8);
+            }
+        }
+    }
+}

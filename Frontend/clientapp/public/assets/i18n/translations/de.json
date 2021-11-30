@@ -26,12 +26,17 @@
   "nocomponentsfound.label": "Keine Komponenten gefunden",
   "productionline.label": "Fließband",
   "close.label": "Schließen",
-  "maxactions.label": "Max. acties",
-  "plan.label": "planen",
+  "maxactions.label": "Max. actionen",
+  "plan.label": "Planen",
   "sortbytotalactions.label": "Nach Gesamtaktionen sortieren",
   "currentactions.label": "Aktuelle Aktionen",
   "max.label": "Max",
   "uptimetooltip.label": "24h-Display zeigt an, ob die Maschine läuft oder nicht",
   "maxtooltip.label": "Prozentsatz der aktuellen Aktionen im Vergleich zu den maximalen Aktionen",
-  "searchtag.label": "Suche"
+  "searchtag.label": "Suche",
+  "none.label": "Kein",
+  "maxactionswarning.label": "Kein maximale actionen eingeführt",
+  "resetactions.label": "Möchten Sie die aktuellen Aktionen auf 0 setzen?",
+  "yes.label": "Ja",
+  "no.label": "Nein"
 }

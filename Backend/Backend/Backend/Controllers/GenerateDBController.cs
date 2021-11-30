@@ -12,14 +12,22 @@ namespace Backend.Controllers
     [ApiController]
     public class GenerateDatabaseController : ControllerBase
     {
-        //readonly IConvertDbDAL _DAL;
-        //public GenerateDatabaseController(IConvertDbDAL dal)
-        //{
-        //    _DAL = dal;
-        //}
+        readonly IConvertDbDAL _DAL;
+        public GenerateDatabaseController(IConvertDbDAL dal)
+        {
+            _DAL = dal;
+        }
 
         //[HttpGet]
         //public IActionResult GenerateDatabase()
+        //{
+        //    _DAL.ConvertAll();
+
+        //    return Ok();
+        //}
+
+        //[HttpPut]
+        //public IActionResult ConvertToSeperateTables()
         //{
         //    _DAL.ConvertAll();
 

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { GrStatusGoodSmall as StatusDot } from "react-icons/gr";
+import { FaTimes as OfflineIcon, FaCog as OnlineIcon } from "react-icons/fa";
 import MachineStatus from "../machinestatus/MachineStatus";
 import Modal from "react-modal";
 import "./MachineDetails.scss";
@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { getUptimesFromLastDayById } from "../../../api/requests/uptime";
 import { UpdaterContext } from "../../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
+import { Tooltip } from "@material-ui/core";
 
 interface IMachineDetails {
     id: number;
@@ -38,6 +39,7 @@ export default function MachineDetails(props: IMachineDetails) {
         }
 
         getData();
+        // eslint-disable-next-line
     }, [props.id]);
 
     return (
@@ -76,14 +78,46 @@ export default function MachineDetails(props: IMachineDetails) {
                 <button onClick={() => setShow(false)}>{t("close.label")}</button>
             </Modal>
             <tr className="MM-Data" onClick={() => setShow(true)}>
-                <td className={uptime && uptime.length ? (uptime[uptime.length - 1].active ? "Good" : "Bad") : "Bad"}>
-                    <StatusDot />
+                <td
+                    className={uptime && uptime.length ? (uptime[uptime.length - 1].active ? "Good" : "Bad") : "Bad"}
+                    style={{ fontSize: "2rem" }}
+                >
+                    {uptime && uptime.length ? (
+                        uptime[uptime.length - 1].active ? (
+                            <OnlineIcon className="IconSpin" />
+                        ) : (
+                            <OfflineIcon />
+                        )
+                    ) : (
+                        <OfflineIcon />
+                    )}
                 </td>
                 <td>{props.productionLine}</td>
                 <td>
                     <MachineStatus name={props.productionLine} uptime={uptime} />
                 </td>
-                <td>{props.components?.length || 0}</td>
+                <td>
+                    {props.components?.length ? (
+                        props.components.length === 1 ? (
+                            props.components[0].description.length > 10 ? (
+                                <Tooltip title={props.components[0].description}>
+                                    <div>{props.components[0].description.substr(0, 9)}...</div>
+                                </Tooltip>
+                            ) : (
+                                props.components[0].description
+                            )
+                        ) : (
+                            <Tooltip title={props.components?.length ? props.components[0].description : ""}>
+                                <div>
+                                    <b>({props.components.length})</b>{" "}
+                                    {props.components?.length ? props.components[0].description.substr(0, 6) : null}...
+                                </div>
+                            </Tooltip>
+                        )
+                    ) : (
+                        <i>{t("none.label")}</i>
+                    )}
+                </td>
             </tr>
         </>
     );

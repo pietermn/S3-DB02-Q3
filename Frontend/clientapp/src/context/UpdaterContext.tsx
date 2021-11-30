@@ -1,6 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { GetProductionLines } from "../api/requests/productionlines";
-import { ProductionLine } from "../globalTypes";
 import { SocketContext } from "./SocketContext";
 
 interface IUpdaterContext {
@@ -26,6 +24,7 @@ export function UpdaterProvider(props: IUpdaterProvider) {
             setBool(true);
             setBool(false);
         });
+        // eslint-disable-next-line
     }, []);
 
     return <UpdaterContext.Provider value={{ bool }}>{props.children}</UpdaterContext.Provider>;

@@ -27,7 +27,7 @@ namespace Backend.Controllers
         //[Route("readall"), HttpGet]
         //public IActionResult ReadAll()
         //{
-        //    List<IUptime> Uptimes = _uptimeContainer.GetUptimeFromLastDay();
+        //    List<IUptimeCollection> Uptimes = _uptimeContainer.GetUptimeFromLastDay();
 
         //    return Ok(Uptimes);
         //}

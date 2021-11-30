@@ -55,7 +55,7 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://+:5200
-      - ConnectionString=server=db;port=3306;user=root;password=root;database=db
+      - ConnectionString=server=db;port=3306;user=root;password=root;database=db;SslMode=None
 
     ports:
       - "5200:5200"
@@ -107,7 +107,7 @@ services:
   #     - custom-network
 
   db:
-    image: mysql:latest
+    image: mariadb:latest
     container_name: Q3_Database
     command: --default-authentication-plugin=mysql_native_password
     volumes:

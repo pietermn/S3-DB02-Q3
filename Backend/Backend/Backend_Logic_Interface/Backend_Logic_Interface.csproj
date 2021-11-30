@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Backend_DTO\Backend_DTO.csproj" />
     <ProjectReference Include="..\Enums\Enums.csproj" />
+    <ProjectReference Include="..\Backend_DTO\Backend_DTO.csproj" />
   </ItemGroup>
 
 </Project>

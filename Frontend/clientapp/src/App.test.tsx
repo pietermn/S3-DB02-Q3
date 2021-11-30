@@ -1,9 +1,10 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import MmPage from "./pages/machinemonitoring/MachineMonitoringPage";
+import { shallow } from "enzyme";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("HomePage", () => {
+    let wrapper = shallow(<MmPage />);
+
+    it("should render table header", () => {
+        expect(wrapper.find("tr").first().find("th").length).toBe(4);
+    });
 });
