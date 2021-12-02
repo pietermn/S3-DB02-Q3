@@ -131,6 +131,8 @@ export default function ActionsGraph(props: IActionsGraph) {
         AsyncGetActions();
     }, [props.componentId, beginDate, endDate]);
 
+    console.log(isLoading);
+
     return (
         <div className="actionsgraph-container">
             <div>

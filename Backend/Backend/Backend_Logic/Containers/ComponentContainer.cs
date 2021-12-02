@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Backend_Logic.Models;
@@ -45,7 +46,7 @@ namespace Backend_Logic.Containers
 
             if (dayDifference <= 10)
             {
-                for(int i = 0; i < dayDifference; i++)
+                for (int i = 0; i < dayDifference; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
@@ -90,7 +91,8 @@ namespace Backend_Logic.Containers
                     });
                 }
             }
-            else {
+            else
+            {
                 int forloopMax = dayDifference % 3650 == 0 ? dayDifference / 3650 : dayDifference / 3650 + 1;
 
                 for (int i = 0; i < forloopMax; i++)
@@ -114,7 +116,7 @@ namespace Backend_Logic.Containers
 
             foreach (ProductionsDTO production in productions)
             {
-                foreach(ProductionsDateDTO productionsDate in ProductionDates)
+                foreach (ProductionsDateDTO productionsDate in ProductionDates)
                 {
                     string timespanIndicator = productionsDate.TimespanIndicator;
                     if ((timespanIndicator == "Day" && productionsDate.CurrentTimespan == production.Timestamp.Day.ToString())
@@ -143,11 +145,11 @@ namespace Backend_Logic.Containers
         //    foreach (ComponentDTO d in componentDTOs)
         //    {
         //        List<ProductionLineHistory> history = new List<ProductionLineHistory>();
-                
+
         //        foreach (ProductionLineHistoryDTO p in d.History)
         //        {
         //            ProductionLine line = new ProductionLine(p.ProductionLine.Id, p.ProductionLine.Name, p.ProductionLine.Description, p.ProductionLine.Active, p.ProductionLine.Port, p.ProductionLine.Board);
-                    
+
         //            history.Add(new ProductionLineHistory(p.Id, line, p.StartDate, p.EndDate));
         //        }
 
@@ -157,52 +159,51 @@ namespace Backend_Logic.Containers
 
         public DateTime PredictMaxActions(int component_id)
         {
-            DateTime MockDateNow = new DateTime(2021, 6, 1);
+            DateTime MockDateNow = new(2021, 6, 1);
 
             ComponentDTO component = GetComponent(component_id);
-            List<ProductionLineHistoryDTO> productionLineHistories = component.History;
+            List<ProductionLineHistoryDTO> productionLineHistories = component.History.OrderBy(h => h.StartDate).ToList();
 
-            int tempCurrent= component.CurrentActions ;
+            int tempCurrent = component.CurrentActions;
 
-            foreach(ProductionLineHistoryDTO p in productionLineHistories) 
+            foreach (ProductionLineHistoryDTO p in productionLineHistories)
             {
-                if (p.EndDate >= MockDateNow)
+                if (p.EndDate >= MockDateNow || p.EndDate.ToString("yyyy-MM-dd") == "0001-01-01")
                 {
-                int difference = (int)(p.StartDate - p.EndDate).TotalMinutes;
-                int gem = CalaculateAverageProductions(p.ProductionLineId, component, MockDateNow);
-                int TotalProductionsFromProductionLine = difference * gem;
-                int minutesSpend=0;
+                    int difference = p.EndDate.ToString("yyyy-MM-dd") != "0001-01-01" ? (int)(p.EndDate - p.StartDate).TotalMinutes : (int)(p.StartDate - new DateTime(2021-08-30)).TotalMinutes;
+                    int gem = CalaculateAverageProductions(p.ProductionLineId, component, MockDateNow);
+                    int TotalProductionsFromProductionLine = difference * gem;
+                    int minutesSpend = 0;
 
-                if(tempCurrent + TotalProductionsFromProductionLine >= component.MaxActions)
-                {
-                    minutesSpend = (component.MaxActions - component.CurrentActions) / gem;
-                    return p.StartDate.AddMinutes(minutesSpend);
-                }
-                
-                tempCurrent += TotalProductionsFromProductionLine;
+                    if (tempCurrent + TotalProductionsFromProductionLine >= component.MaxActions)
+                    {
+                        minutesSpend = (component.MaxActions - component.CurrentActions) / gem;
+                        return p.StartDate.AddMinutes(minutesSpend);
+                    }
+
+                    tempCurrent += TotalProductionsFromProductionLine;
 
                 }
             }
-            return new DateTime(1,1,1);
+            return new DateTime(1, 1, 1);
         }
 
         private int CalaculateAverageProductions(int productionLineId, ComponentDTO component, DateTime mockDate) //VERLEDEN
         {
-            List<ProductionsDTO> productions = _productionDAL.GetAllProductionsFromProductionLine(productionLineId);
-            
 
-            List<ProductionLineHistoryDTO> productionLineHistories = component.History.Where(p => p.EndDate < mockDate && p.ProductionLineId == productionLineId).ToList();
+            List<ProductionLineHistoryDTO> productionLineHistories = component.History.Where(p => p.StartDate < mockDate && p.ProductionLineId == productionLineId && p.EndDate.ToString("yyyy-MM-dd") != "0001-01-01").ToList();
 
             List<int> averages = new();
 
-            foreach(ProductionLineHistoryDTO plH in productionLineHistories)
+            foreach (ProductionLineHistoryDTO plH in productionLineHistories)
             {
+                List<ProductionsDTO> productions = _productionDAL.GetAllProductionsFromProductionLine(plH.ProductionLineId);
+
                 int AmountOfProductions = 0;
-                int difference = (int)(plH.StartDate - plH.EndDate).TotalMinutes;
+                int difference = (int)(plH.EndDate - plH.StartDate).TotalMinutes;
                 foreach (ProductionsDTO p in productions)
                 {
-
-                    if(plH.StartDate <= p.Timestamp && p.Timestamp <= plH.EndDate)
+                    if (plH.StartDate <= p.Timestamp && p.Timestamp <= plH.EndDate)
                     {
                         AmountOfProductions++;
                     }
@@ -210,7 +211,7 @@ namespace Backend_Logic.Containers
                 averages.Add(AmountOfProductions / difference);
             }
             int average = 0;
-            foreach(int a in averages)
+            foreach (int a in averages)
             {
                 average += a;
             }

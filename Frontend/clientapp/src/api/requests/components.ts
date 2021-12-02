@@ -17,14 +17,14 @@ export const GetComponents = async () => {
 export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
     let actions: ProductionDate[] = [];
 
-    if (cancel != undefined) {
-        cancel();
-    }
+    // if (cancel != undefined) {
+    //     cancel();
+    // }
 
     await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {
-        cancelToken: new CancelToken(function executor(c) {
-            cancel = c;
-        }),
+        // cancelToken: new CancelToken(function executor(c) {
+        //     cancel = c;
+        // }),
     })
         .then((res) => {
             actions = res.data;
