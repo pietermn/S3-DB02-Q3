@@ -44,7 +44,7 @@ namespace Backend_DAL
         public void FinishMaintance(int MaintenancId)
         {
             MaintenanceDTO maintenanceDTO = _Context.Maintenance.Where(m => m.Id == MaintenancId).FirstOrDefault();
-            maintenanceDTO.TimeDone = DateTime.Now;
+            maintenanceDTO.TimeDone = DateTime.Now.AddHours(1);
             maintenanceDTO.Done = true;
             _Context.SaveChanges();
         }
