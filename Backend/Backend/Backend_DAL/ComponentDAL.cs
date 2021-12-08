@@ -46,7 +46,7 @@ namespace Backend_DAL
             for (int i = 0; i <= monthDifference; i++)
             {
                 DateTime currentDatetime = beginDate.AddMonths(i);
-                if (currentDatetime >= new DateTime(2020, 9, 1) && currentDatetime < new DateTime(2021, 11, 1))
+                if (currentDatetime >= new DateTime(2020, 9, 1) && currentDatetime < new DateTime(2021, 10, 1))
                 {
                     _Context = new Q3Context(currentDatetime);
                     List<ProductionsDTO> monthlyProductions =

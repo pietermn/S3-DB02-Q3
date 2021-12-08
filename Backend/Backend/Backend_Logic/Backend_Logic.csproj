@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Backend_DAL_Interface\Backend_DAL_Interface.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Flurl.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.2.0" />
+  </ItemGroup>
 </Project>

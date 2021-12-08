@@ -27,6 +27,20 @@ services:
       db:
         condition: service_healthy
 
+  ml-python:
+    container_name: predictive-maintenance
+    image: ${DOCKER_REGISTRY-}predictivemaintenance
+    build:
+      context: Backend/Predictive-Maintenance
+      dockerfile: Dockerfile
+
+    networks:
+      - custom-network
+
+    depends_on:
+      db:
+        condition: service_healthy
+
   # Q3-Frontend:
   #   container_name: Q3-Frontend
   #   image: ${DOCKER_REGISTRY-}q3frontend

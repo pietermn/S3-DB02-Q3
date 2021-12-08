@@ -139,7 +139,7 @@ namespace Backend_DAL
         {
             using var command = _connection.CreateCommand();
 
-            command.CommandText = "SELECT treeview.id AS 'ProductionLineId', start_date AS 'StartDate', end_date AS 'EndDate' FROM `production_data`  INNER JOIN `machine_monitoring_poorten` ON machine_monitoring_poorten.port = production_data.port AND machine_monitoring_poorten.board = production_data.board INNER JOIN `treeview` ON treeview.naam LIKE machine_monitoring_poorten.name WHERE treeview_id=@ComponentId;";
+            command.CommandText = "SELECT treeview.id AS 'ProductionLineId', start_date AS 'StartDate', end_date AS 'EndDate', start_time as 'StartTime', end_time as 'EndTime' FROM `production_data`  INNER JOIN `machine_monitoring_poorten` ON machine_monitoring_poorten.port = production_data.port AND machine_monitoring_poorten.board = production_data.board INNER JOIN `treeview` ON treeview.naam LIKE machine_monitoring_poorten.name WHERE treeview_id=@ComponentId;";
             command.Parameters.AddWithValue("@ComponentId", componentId);
 
             _connection.Open();
@@ -157,11 +157,19 @@ namespace Backend_DAL
                 int id = Convert.ToInt32(row["ProductionLineId"]);
 
                 DateTime startDate = Convert.ToDateTime(row["StartDate"]);
+                string startTimeStr = Convert.ToString(row["StartTime"]);
+                string[] starttimes = startTimeStr.Split(":");
+
+                startDate = new(startDate.Year, startDate.Month, startDate.Month, Convert.ToInt32(starttimes[0]), Convert.ToInt32(starttimes[1]), Convert.ToInt32(starttimes[2]));
 
                 DateTime endDate = new DateTime(1, 1, 1);
                 try
                 {
                     endDate = Convert.ToDateTime(row["EndDate"]);
+                    string endTimeStr = Convert.ToString(row["EndTime"]);
+                    string[] endtimes = endTimeStr.Split(":");
+
+                    endDate = new(endDate.Year, endDate.Month, endDate.Day, Convert.ToInt32(endtimes[0]), Convert.ToInt32(endtimes[1]), Convert.ToInt32(endtimes[2]));
                 }
                 catch (MySqlConversionException)
                 {
@@ -270,6 +278,15 @@ namespace Backend_DAL
 
         public void ConvertAll()
         {
+            List<ComponentDTO> Components = _Context.Components.Include(c => c.History).ToList();
+
+            foreach(ComponentDTO component in Components)
+            {
+                component.History = GetHistory(component.Id);
+            }
+
+            _Context.SaveChanges();
+
             //List<ProductionSideDTO> ProductionSides = GetProductionSides();
 
             //foreach (ProductionSideDTO productionSideDTO in ProductionSides)
@@ -376,33 +393,33 @@ namespace Backend_DAL
             //context.Productions.AddRange(Productions);
             //context.SaveChanges();
 
-            Q3Context context = new(new DateTime(2020, 9, 1));
-            List<ComponentDTO> Components = context.Components.Include(c => c.History).ToList();
+            //Q3Context context = new(new DateTime(2020, 9, 1));
+            //List<ComponentDTO> Components = context.Components.Include(c => c.History).ToList();
 
-            foreach (ComponentDTO component in Components)
-            {
-                int totalActions = 0;
-                DateTime startDate = new(2020, 9, 1);
+            //foreach (ComponentDTO component in Components)
+            //{
+            //    int totalActions = 0;
+            //    DateTime startDate = new(2020, 9, 1);
 
-                foreach (ProductionLineHistoryDTO plH in component.History)
-                {
-                    startDate = new(2020, 9, 1);
-                    context = new(startDate);
+            //    foreach (ProductionLineHistoryDTO plH in component.History)
+            //    {
+            //        startDate = new(2020, 9, 1);
+            //        context = new(startDate);
 
-                    for (int i = 0; i < 10; i++)
-                    {
-                        totalActions += context.Productions.Where(p => p.Timestamp >= plH.StartDate && p.Timestamp <= plH.EndDate && p.ProductionLineId == plH.ProductionLineId).AsNoTracking().Count();
-                        startDate = startDate.AddMonths(1);
-                        context = new(startDate);
+            //        for (int i = 0; i < 10; i++)
+            //        {
+            //            totalActions += context.Productions.Where(p => p.Timestamp >= plH.StartDate && p.Timestamp <= plH.EndDate && p.ProductionLineId == plH.ProductionLineId).AsNoTracking().Count();
+            //            startDate = startDate.AddMonths(1);
+            //            context = new(startDate);
 
-                    }
-                }
-                context = new();
-                ComponentDTO newComponent = context.Components.Where(c => c.Id == component.Id).FirstOrDefault();
-                newComponent.CurrentActions = totalActions;
-                newComponent.TotalActions = totalActions;
-                context.SaveChanges();
-            }
+            //        }
+            //    }
+            //    context = new();
+            //    ComponentDTO newComponent = context.Components.Where(c => c.Id == component.Id).FirstOrDefault();
+            //    newComponent.CurrentActions = totalActions;
+            //    newComponent.TotalActions = totalActions;
+            //    context.SaveChanges();
+            //}
         }
     }
 }
