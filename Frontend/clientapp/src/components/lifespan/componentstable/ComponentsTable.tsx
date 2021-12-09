@@ -29,7 +29,7 @@ export default function ComponentsTable(props: IComponentsTable) {
         },
     ]);
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-    let dgWidth = (innerWidth + 96) * 0.8;
+    let dgWidth = innerWidth * 0.8;
 
     useEffect(() => {
         window.addEventListener("resize", () => {
