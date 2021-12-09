@@ -38,6 +38,10 @@ export const GetPredictedActions = async (component_id: number, beginDate: strin
     return actions;
 };
 
+export const PredictMaintenance = async (component_id: number) => {
+    return (await Api.get<Date>(`component/predictmaxactions/${component_id}`)).data;
+};
+
 export const GetAllMaintenance = async (component_id: number) => {
     let maintenance: Maintenance[] = [];
 

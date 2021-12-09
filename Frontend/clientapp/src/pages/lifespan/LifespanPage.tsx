@@ -6,7 +6,7 @@ import { Component } from "../../globalTypes";
 import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
-import { GetComponents } from "../../api/requests/components";
+import { GetComponents, PredictMaintenance as ApiPredictMaintenance } from "../../api/requests/components";
 import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
@@ -31,6 +31,7 @@ export default function LifespanPage() {
     const history = useHistory();
     const { t } = useTranslation();
     const { bool } = useContext(UpdaterContext);
+    const [predictedMaintenance, setPredictedMaintenance] = useState("");
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {
@@ -40,6 +41,7 @@ export default function LifespanPage() {
 
     function handleSelectedComponent(component: Component) {
         setSelectedComponent(component);
+        PredictMaintenance(component.id);
         setMaxActionsInput(component.maxActions);
     }
     async function GetComponentsAsync() {
@@ -77,6 +79,19 @@ export default function LifespanPage() {
         setDescription("");
     }
 
+    async function PredictMaintenance(componentId: number) {
+        setPredictedMaintenance("loading...");
+        let date = await ApiPredictMaintenance(componentId);
+
+        if (new Date(date).toLocaleDateString() === "01/01/1") {
+            setPredictedMaintenance("Cannot predict this component");
+        } else if (new Date(date).toLocaleDateString() == "01/06/2021") {
+            setPredictedMaintenance("Has already hit its max actions");
+        } else {
+            setPredictedMaintenance(new Date(date).toLocaleDateString());
+        }
+    }
+
     return (
         <div className="Lifespan-page">
             {selectedComponent && (
@@ -112,9 +127,16 @@ export default function LifespanPage() {
                                 value={maxActionsInput}
                                 onChange={({ target }) => setMaxActionsInput(parseInt(target.value))}
                             />
-                            <button type="submit">
-                                <ImCheckmark />
-                            </button>
+                            <div className="MaxActions-Container">
+                                <p>
+                                    <b>Predicted to require maintenance on:</b>
+                                    <br />
+                                    {predictedMaintenance}
+                                </p>
+                                <button type="submit">
+                                    <ImCheckmark />
+                                </button>
+                            </div>
                         </form>
                     </div>
                     <div className="Planner">

@@ -8,6 +8,18 @@
     min-height: 550px;
 }
 
+.MaxActions-Container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    p {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.7);
+    }
+}
+
 .MaxActions,
 .Maintenance,
 .Planner {

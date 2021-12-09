@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import * as d3 from "d3";
 import { useEffect, useState } from "react";
 import { GetPredictedActions, GetPreviousActions } from "../../../api/requests/components";
@@ -153,7 +154,7 @@ export default function ActionsGraph(props: IActionsGraph) {
                 <svg className="legend" width="3rem" height="1rem">
                     <rect fill="#69b3a2" height="1rem" width="3rem" />
                 </svg>
-                <>Actual actions</>
+                <>Previous actions</>
                 <svg className="legend" width="3rem" height="1rem">
                     <rect fill="#fff" strokeDasharray={6} stroke="#69b3a2" height="1rem" width="3rem" />
                 </svg>
@@ -161,7 +162,7 @@ export default function ActionsGraph(props: IActionsGraph) {
                 {loadingPredictive && (
                     <>
                         <CircularProgress className="Loading-Icon" size="1rem" />
-                        <>Loading predictive maintenance</>
+                        <>Loading predicted actions</>
                     </>
                 )}
             </div>
