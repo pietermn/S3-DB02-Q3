@@ -39,6 +39,7 @@ export default function MachineDetails(props: IMachineDetails) {
         }
 
         getData();
+        // eslint-disable-next-line
     }, [props.id]);
 
     return (
@@ -106,10 +107,15 @@ export default function MachineDetails(props: IMachineDetails) {
                                 props.components[0].description
                             )
                         ) : (
-                            props.components.length
+                            <Tooltip title={props.components?.length ? props.components[0].description : ""}>
+                                <div>
+                                    <b>({props.components.length})</b>{" "}
+                                    {props.components?.length ? props.components[0].description.substr(0, 6) : null}...
+                                </div>
+                            </Tooltip>
                         )
                     ) : (
-                        0
+                        <i>{t("none.label")}</i>
                     )}
                 </td>
             </tr>

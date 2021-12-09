@@ -2,12 +2,41 @@
 
 .lifespan-table {
     width: 80%;
-    height: 80%;
-    display: grid;
+    height: 100%;
+    // display: grid;
     margin-top: 2rem;
     grid-auto-rows: 50px;
     overflow-y: auto;
     scroll-padding-top: 5rem;
+    overflow-x: hidden;
+
+    button:hover {
+        background: none !important;
+    }
+
+    .green,
+    .orange,
+    .red {
+        font-size: 1.5rem;
+    }
+
+    .green {
+        color: map-get($map: $accent-colors, $key: "green");
+    }
+
+    .orange {
+        color: map-get($map: $accent-colors, $key: "orange");
+    }
+
+    .red {
+        color: map-get($map: $accent-colors, $key: "red");
+    }
+
+    .MuiDataGrid-columnHeader:last-child {
+        .MuiDataGrid-columnSeparator {
+            display: none;
+        }
+    }
 
     .row:first-child {
         position: sticky;
@@ -23,9 +52,14 @@
             cursor: pointer;
         }
 
-        p:first-child {
+        div:first-child {
+            padding-left: 2rem;
+        }
+
+        p:first-child,
+        div:first-child {
             position: relative;
-            justify-content: center;
+            // justify-content: center;
 
             &:before {
                 left: 0;
@@ -47,20 +81,22 @@
         grid-template-columns: 10% auto 20% 15% 15%;
         border-bottom: 1px solid black;
 
-        p {
+        p,
+        div {
             margin: 0;
             display: flex;
             align-items: center;
         }
 
         &:first-child {
-            p {
+            p,
+            div {
                 font-weight: 900;
             }
         }
 
         p:first-child {
-            justify-content: center;
+            margin-left: 1rem;
         }
 
         svg {
@@ -86,4 +122,8 @@
     &-Spacer {
         margin-left: 0.5rem;
     }
+}
+
+.LsDataGrid :focus {
+    outline: none !important;
 }

@@ -18,12 +18,20 @@ namespace Backend.Controllers
             _DAL = dal;
         }
 
-        [HttpGet]
-        public IActionResult GenerateDatabase()
-        {
-            _DAL.ConvertAll();
+        //[HttpGet]
+        //public IActionResult GenerateDatabase()
+        //{
+        //    _DAL.ConvertAll();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
+
+        //[HttpPut]
+        //public IActionResult ConvertToSeperateTables()
+        //{
+        //    _DAL.ConvertAll();
+
+        //    return Ok();
+        //}
     }
 }

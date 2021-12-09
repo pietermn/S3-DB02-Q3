@@ -4,12 +4,12 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-areas:
-        "component-overview component-graph"
-        "component-overview history-overview";
+    // grid-template-areas:
+    //     "component-overview component-graph"
+    //     "component-overview history-overview"
+    //     "component-overview component-maintenance";
 
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr 1fr;
 
     h1,
     h3 {
@@ -26,27 +26,36 @@
 }
 
 .Component-Overview {
-    grid-area: component-overview;
+    columns: 1;
     display: flex;
     justify-content: center;
     border-right: 1px solid black;
     margin-right: 3rem;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
     clip-path: inset(0px -15px 0px 0px);
+    height: 100%;
 
     .center-table {
         width: 80%;
     }
 }
 
-.Component-History-Overview {
-    grid-area: history-overview;
+.Component-History-Side {
+    height: 100%;
+    columns: 2;
+    display: grid;
+    grid-template-rows: 50% 40% 30%;
+    overflow-y: auto;
 }
 
 .Component-Graph {
-    grid-area: component-graph;
+    grid-row: 1;
 }
 
-.Component-Graph,
 .Component-History-Overview {
+    grid-row: 2;
+}
+
+.Component-Maintenance-Table {
+    grid-row: 3;
 }

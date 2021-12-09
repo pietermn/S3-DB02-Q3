@@ -1,8 +1,9 @@
 import ComponentsTable from "../../components/lifespan/componentstable/ComponentsTable";
 import Modal from "react-modal";
 import "./LifespanPage.scss";
+import RemoveYesNo from "../../components/popover/RemoveYesNo";
 import { Component } from "../../globalTypes";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents } from "../../api/requests/components";
@@ -20,9 +21,12 @@ export default function LifespanPage() {
     const [selectedComponent, setSelectedComponent] = useState<Component>();
     const [maxActionsInput, setMaxActionsInput] = useState(selectedComponent?.maxActions || 0);
     const [description, setDescription] = useState("");
+    const [removePopover, setRemovePopover] = useState("");
+    const [anchorEl, setAnchorEl] = useState<SVGElement | null>(null);
     const location = useLocation();
     const { setMaxActions } = useContext(NotificationContext);
-    const { addMaintenance, finishMaintenance, getComponentMaintenance } = useContext(MaintenanceContext);
+    const { addMaintenance, finishMaintenance, getComponentMaintenance, removeMaintenance } =
+        useContext(MaintenanceContext);
     const state = location.state as IComponentId;
     const history = useHistory();
     const { t } = useTranslation();
@@ -30,7 +34,7 @@ export default function LifespanPage() {
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {
-            setSelectedComponent(components.filter((c) => c.id == state.componentId)[0]);
+            setSelectedComponent(components.filter((c) => c.id === state.componentId)[0]);
         }
     }
 
@@ -50,11 +54,22 @@ export default function LifespanPage() {
     }
 
     useEffect(() => {
+        if (state) {
+            let c = components.find((c) => c.id === state.componentId);
+            if (c) {
+                handleSelectedComponent(c);
+            }
+        }
+        // eslint-disable-next-line
+    }, [state && state.componentId]);
+
+    useEffect(() => {
         GetComponentsAsync();
 
         return () => {
             history.replace({ state: undefined });
         };
+        // eslint-disable-next-line
     }, [components.length, state && state.componentId]);
 
     function ClearData() {
@@ -130,7 +145,27 @@ export default function LifespanPage() {
                                     return (
                                         <div key={maintenance.id}>
                                             <p>{maintenance.description}</p>
-                                            <ImCheckmark onClick={() => finishMaintenance(maintenance.id)} />
+                                            <ImCheckmark
+                                                aria-describedby={`Popover-${maintenance.id}`}
+                                                onClick={(e) => {
+                                                    setRemovePopover(maintenance.id.toString());
+                                                    setAnchorEl(e.currentTarget);
+                                                }}
+                                            />
+                                            <RemoveYesNo
+                                                openState={removePopover === maintenance.id.toString()}
+                                                setOpenState={setRemovePopover}
+                                                anchorId={`Popover-${maintenance.id}`}
+                                                anchor={anchorEl}
+                                                setAnchor={setAnchorEl}
+                                                message={<>{t("resetactions.label")}</>}
+                                                remove={() => {
+                                                    finishMaintenance(maintenance.id);
+                                                }}
+                                                cancel={() => {
+                                                    removeMaintenance(maintenance.id);
+                                                }}
+                                            />
                                         </div>
                                     );
                                 })}
@@ -146,12 +181,16 @@ export default function LifespanPage() {
                     </button>
                 </Modal>
             )}
-            <h1>
+            {/* <h1>
                 {t("components.label")} <i>{t("sortbytotalactions.label")}</i>
-            </h1>
+            </h1> */}
             <div className="center-table">
                 {components && (
-                    <ComponentsTable components={components} setSelectedComponet={handleSelectedComponent} />
+                    <ComponentsTable
+                        components={components}
+                        setSelectedComponet={handleSelectedComponent}
+                        getComponentNotifications={getComponentMaintenance}
+                    />
                 )}
             </div>
         </div>

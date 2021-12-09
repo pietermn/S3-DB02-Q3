@@ -11,6 +11,7 @@ interface IMachineStatus {
 export default function MachineStatus(props: IMachineStatus) {
     useEffect(() => {
         drawUptime();
+        // eslint-disable-next-line
     }, [props.uptime]);
 
     function calcDifference(begin: Date, end: Date) {
@@ -21,6 +22,8 @@ export default function MachineStatus(props: IMachineStatus) {
 
     function drawUptime() {
         if (props.uptime && props.uptime.length) {
+            // props.uptime.forEach((u) => (u.begin = new Date(new Date(u.begin).getTime() + 3600000)));
+            // props.uptime.forEach((u) => (u.end = new Date(new Date(u.end).getTime() + 3600000)));
             const svgDocument = document.querySelector(`#${props.name}`)?.clientWidth;
             const svgWidth = svgDocument || 0;
             const xDiff =
@@ -57,7 +60,8 @@ export default function MachineStatus(props: IMachineStatus) {
                 .attr("fill", (u) => (u.active ? "rgb(126, 211, 33)" : "rgb(199, 199, 199)"));
 
             let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-            let tagHours = [4, 8, 12, 16, 20, 24];
+            // let tagHours = [4, 8, 12, 16, 20, 24];
+            let tagHours = [3, 7, 11, 15, 19, 23];
 
             // if minutes are 27, hour bar needs to go back 33 minutes
             let beginM = new Date(props.uptime[0].begin).getMinutes();
@@ -74,7 +78,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .data(hours)
                 .join("rect")
                 .attr("key", (h) => `Hour ${h}`)
-                .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
+                .attr("x", (h) => h * hourScale - 1 * hourScale + diffTotalH * hourScale)
                 .attr("width", 1)
                 .attr("height", 32)
                 .attr("fill", "rgb(0, 0, 0)");
@@ -96,20 +100,6 @@ export default function MachineStatus(props: IMachineStatus) {
                     }
                     return `${hour + h < 10 ? "0" : ""}${hour + h}:00`;
                 });
-
-            // .append("g")
-            // .append("text")
-            // .text((h) => hourText(h))
-            // .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
-
-            // .attr("width", 30)
-            // .attr("height", 10);
-
-            // .append("p")
-            // .attr("x", (h) => h * hourScale - diffTotalH * hourScale)
-            // .attr("width", "10ch")
-
-            // .attr("height", "1rem");
         }
     }
 

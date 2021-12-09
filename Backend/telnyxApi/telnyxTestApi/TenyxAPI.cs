@@ -8,11 +8,11 @@ using Telnyx;
 
 namespace telnyxApi
 {
-    public class TelnyxAPI
+    public class TelnyxApi
     {
         private readonly MessagingSenderIdService service = new();
 
-        public TelnyxAPI()
+        public TelnyxApi()
         {
         }
 

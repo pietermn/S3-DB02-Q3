@@ -17,13 +17,13 @@ namespace Backend_DAL
             _Context = context;
         }
 
-        public MaintenanceDTO GetMaintenance(int componentId)
+        public List<MaintenanceDTO> GetMaintenance(int componentId)
         {
             return _Context.Maintenance
                 .Include(m => m.Component)
                 .Where(m => m.Component.Id == componentId)
                     .AsNoTracking()
-                .FirstOrDefault();
+                .ToList();
         }
 
         public List<MaintenanceDTO> GetAllMaintenance(bool done)
@@ -44,7 +44,7 @@ namespace Backend_DAL
         public void FinishMaintance(int MaintenancId)
         {
             MaintenanceDTO maintenanceDTO = _Context.Maintenance.Where(m => m.Id == MaintenancId).FirstOrDefault();
-            maintenanceDTO.TimeDone = DateTime.Now;
+            maintenanceDTO.TimeDone = DateTime.Now.AddHours(1);
             maintenanceDTO.Done = true;
             _Context.SaveChanges();
         }

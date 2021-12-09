@@ -8,6 +8,12 @@ nav {
     background-color: map-get($map: $background, $key: "blue");
     height: 70px;
 
+    .MuiBadge-badge {
+        top: 10px;
+        right: 10px;
+        background-color: red;
+    }
+
     #Flag__Icon {
         font-size: 36px;
         margin: 0;
@@ -48,6 +54,10 @@ nav {
         flex-direction: row;
         align-items: center;
         color: rgba(255, 255, 255, 1);
+
+        &:last-child {
+            padding-right: 1rem;
+        }
 
         p {
             padding-inline: 1.5rem;

@@ -9,12 +9,7 @@ namespace Backend_DAL
 {
     public class ComponentDAL : IComponentDAL
     {
-        readonly Q3Context _Context;
-
-        public ComponentDAL(Q3Context context)
-        {
-            _Context = context;
-        }
+        public Q3Context _Context = new();
 
         public ComponentDTO GetComponent(int component_id)
         {
@@ -35,52 +30,48 @@ namespace Backend_DAL
                 .ToList();
         }
 
-        public List<int> GetPreviousActions(int component_id, int amountOfWeeks, string type)
+        public List<ProductionsDTO> GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
         {
             ComponentDTO component = _Context.Components.Where(c => c.Id == component_id)
                 .Include(c => c.History)
                 .FirstOrDefault();
 
-            List<ProductionsDTO> productions = new List<ProductionsDTO>();
-            foreach (ProductionLineHistoryDTO historyDTO in component.History)
+            List<ProductionsDTO> productions = new();
+
+            int monthDifference = ((beginDate.Year - endDate.Year) * 12) + (endDate.Month - beginDate.Month);
+            if (endDate.Year > beginDate.Year) monthDifference *= -1;
+
+            if (endDate < beginDate) return new List<ProductionsDTO>();
+
+            for (int i = 0; i <= monthDifference; i++)
             {
-                List<ProductionsDTO> productionsDTOs = _Context.Productions.Where(p => p.ProductionLineId == historyDTO.ProductionLineId && historyDTO.StartDate <= p.Timestamp && historyDTO.EndDate >= p.Timestamp).ToList();
-                foreach (ProductionsDTO productionsDTO in productionsDTOs)
+                DateTime currentDatetime = beginDate.AddMonths(i);
+                if (currentDatetime >= new DateTime(2020, 9, 1) && currentDatetime < new DateTime(2021, 11, 1))
                 {
-                    productions.Add(productionsDTO);
-                }
-            }
+                    _Context = new Q3Context(currentDatetime);
+                    List<ProductionsDTO> monthlyProductions =
+                    _Context.Productions.Where(
+                        p => beginDate <= p.Timestamp
+                        && endDate >= p.Timestamp)
+                    .AsNoTracking()
+                        .ToList();
 
-            List<int> actions = new List<int>();
-            for (int i = 0; i < amountOfWeeks; i++)
-            {
-                int actionsThisWeek = 0;
-                //DateTime firstDatetime = DateTime.Now.AddDays(i * -7);
-                //DateTime secondDatetime = DateTime.Now.AddDays((i + 1) * -7);
-                DateTime MockNowDate = new DateTime(2020, 9, 30);
-
-                // Default sorting is by weeks
-                DateTime firstDatetime = MockNowDate.AddDays(i * -7);
-                DateTime secondDatetime = firstDatetime.AddDays(-7);
-
-                if (type == "months")
-                {
-                    firstDatetime = MockNowDate.AddMonths(-i);
-                    secondDatetime = firstDatetime.AddMonths(-1);
-                }
-
-
-                foreach (ProductionsDTO production in productions)
-                {
-                    if (production.Timestamp < firstDatetime && production.Timestamp > secondDatetime)
+                    foreach (ProductionsDTO productionsDTO in monthlyProductions)
                     {
-                        actionsThisWeek++;
+                        foreach (ProductionLineHistoryDTO historyDTO in component.History)
+                        {
+                            if (productionsDTO.ProductionLineId == historyDTO.ProductionLineId
+                                && productionsDTO.Timestamp > historyDTO.StartDate
+                                && productionsDTO.Timestamp < historyDTO.EndDate)
+                            {
+                                productions.Add(productionsDTO);
+                            }
+                        }
                     }
                 }
-                actions.Add(actionsThisWeek);
             }
 
-            return actions;
+            return productions.OrderBy(p => p.Timestamp).ToList();
         }
 
         public void SetMaxAction(int component_id, int max_actions)
