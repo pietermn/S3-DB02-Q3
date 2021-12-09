@@ -82,26 +82,26 @@ services:
       db:
         condition: service_healthy
 
-  Q3-Sms:
-    container_name: Q3-Sms
-    image: ${DOCKER_REGISTRY-}q3sms
-    build:
-      context: Backend/telnyxApi
-      dockerfile: Dockerfile
+  # Q3-Sms:
+  #   container_name: Q3-Sms
+  #   image: ${DOCKER_REGISTRY-}q3sms
+  #   build:
+  #     context: Backend/telnyxApi
+  #     dockerfile: Dockerfile
 
-    environment:
-      - ASPNETCORE_URLS=http://+:5100
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:5100
 
-    ports:
-      - "5100:5100"
-      - "5101:5101"
+  #   ports:
+  #     - "5100:5100"
+  #     - "5101:5101"
 
-    networks:
-      - custom-network
+  #   networks:
+  #     - custom-network
 
-    depends_on:
-      db:
-        condition: service_healthy
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
   # Q3-Backend-Authentication:
   #   container_name: Q3-Backend-Authentication

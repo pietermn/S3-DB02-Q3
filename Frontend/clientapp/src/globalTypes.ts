@@ -74,4 +74,5 @@ export type ProductionDate = {
     timespanIndicator: string;
     currentTimespan: string;
     productions: number;
+    isPredicted: boolean;
 };

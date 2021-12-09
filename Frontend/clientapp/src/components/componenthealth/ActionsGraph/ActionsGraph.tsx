@@ -1,7 +1,7 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import * as d3 from "d3";
 import { useEffect, useState } from "react";
-import { GetPreviousActions } from "../../../api/requests/components";
+import { GetPredictedActions, GetPreviousActions } from "../../../api/requests/components";
 import { ProductionDate } from "../../../globalTypes";
 import "./ActionsGraph.scss";
 import ActionsGraphSkeleton from "./ActionsGraphSkeleton";
@@ -17,8 +17,9 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [myWidth] = useState((window.innerWidth / 3) * 2 * 0.75);
     const [myHeight] = useState((window.innerHeight / 2) * 0.6);
     const [isLoading, setIsLoading] = useState(false);
-    const [beginDate, setBeginDate] = useState(dateInput(new Date("2020-09-01")));
-    const [endDate, setEndDate] = useState(dateInput(new Date("2020-09-30")));
+    const [loadingPredictive, setloadingPredictive] = useState(false);
+    const [beginDate, setBeginDate] = useState(dateInput(new Date("2021-05-01")));
+    const [endDate, setEndDate] = useState(dateInput(new Date("2021-06-01")));
 
     function dateInput(date: Date) {
         const d = new Date(date);
@@ -113,7 +114,9 @@ export default function ActionsGraph(props: IActionsGraph) {
                 .on("mouseover", mouseOver)
                 .transition()
                 .duration(800)
-                .attr("fill", "#69b3a2")
+                .attr("fill", (d) => (d.isPredicted ? "#fff" : "#69b3a2"))
+                .attr("stroke", (d) => (d.isPredicted ? "#69b3a2" : ""))
+                .attr("stroke-dasharray", (d) => (d.isPredicted ? 6 : 0))
                 .attr("x", (d, i) => x(`${d.currentTimespan}`) || 0)
                 .attr("width", x.bandwidth())
                 .attr("y", (d) => y(d.productions))
@@ -125,13 +128,17 @@ export default function ActionsGraph(props: IActionsGraph) {
     useEffect(() => {
         async function AsyncGetActions() {
             setIsLoading(true);
-            setActions(await GetPreviousActions(props.componentId, beginDate, endDate));
+            let newActions = (await GetPreviousActions(props.componentId, beginDate, endDate)).reverse();
+            setActions(newActions);
             setIsLoading(false);
+            setloadingPredictive(true);
+            let newPredictedActions = (await GetPredictedActions(props.componentId, beginDate, endDate)).reverse();
+            setloadingPredictive(false);
+            setActions(newPredictedActions.concat(newActions));
         }
+
         AsyncGetActions();
     }, [props.componentId, beginDate, endDate]);
-
-    console.log(isLoading);
 
     return (
         <div className="actionsgraph-container">
@@ -144,6 +151,20 @@ export default function ActionsGraph(props: IActionsGraph) {
                     onChange={(e) => setBeginDate(e.target.value)}
                 />
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                <svg className="legend" width="3rem" height="1rem">
+                    <rect fill="#69b3a2" height="1rem" width="3rem" />
+                </svg>
+                <>Actual actions</>
+                <svg className="legend" width="3rem" height="1rem">
+                    <rect fill="#fff" strokeDasharray={6} stroke="#69b3a2" height="1rem" width="3rem" />
+                </svg>
+                <>Predicted actions</>
+                {loadingPredictive && (
+                    <>
+                        <CircularProgress className="Loading-Icon" size="1rem" />
+                        <>Loading predictive maintenance</>
+                    </>
+                )}
             </div>
             {isLoading && <ActionsGraphSkeleton isLoading={isLoading} />}
             <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>

@@ -2,9 +2,6 @@ import axios, { Canceler, CancelTokenSource } from "axios";
 import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
 
-const CancelToken = axios.CancelToken;
-let cancel: Canceler;
-
 export const GetComponents = async () => {
     let components: Component[] = [];
     await Api.get<Component[]>("component/readall").then((res) => {
@@ -17,21 +14,27 @@ export const GetComponents = async () => {
 export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
     let actions: ProductionDate[] = [];
 
-    // if (cancel != undefined) {
-    //     cancel();
-    // }
-
-    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {
-        // cancelToken: new CancelToken(function executor(c) {
-        //     cancel = c;
-        // }),
-    })
+    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {})
         .then((res) => {
             actions = res.data;
         })
         .catch(function (thrown) {
             console.log(thrown);
         });
+    return actions;
+};
+
+export const GetPredictedActions = async (component_id: number, beginDate: string, endDate: string) => {
+    let actions: ProductionDate[] = [];
+
+    await Api.get<ProductionDate[]>(`component/predictedactions/${component_id}/${beginDate}/${endDate}`, {})
+        .then((res) => {
+            actions = res.data;
+        })
+        .catch(function (thrown) {
+            console.log(thrown);
+        });
+
     return actions;
 };
 
