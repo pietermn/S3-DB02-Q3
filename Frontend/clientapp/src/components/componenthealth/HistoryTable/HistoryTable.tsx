@@ -13,7 +13,7 @@ export default function HistoryTable(props: IHistoryTableProps) {
         <div className="History-Table">
             <div className="thead">
                 <div className="row">
-                    <p>{t("machine.label")}</p>
+                    <p>{t("productionline.label")}</p>
                     <p>{t("begin.label")}</p>
                     <p>{t("end.label")}</p>
                 </div>

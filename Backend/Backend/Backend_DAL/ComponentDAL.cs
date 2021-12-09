@@ -51,7 +51,7 @@ namespace Backend_DAL
                     _Context = new Q3Context(currentDatetime);
                     List<ProductionsDTO> monthlyProductions =
                     _Context.Productions.Where(
-                        p => currentDatetime <= p.Timestamp
+                        p => beginDate <= p.Timestamp
                         && endDate >= p.Timestamp)
                     .AsNoTracking()
                         .ToList();

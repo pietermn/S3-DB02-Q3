@@ -1,4 +1,3 @@
-import CircularProgress from "@material-ui/core/CircularProgress";
 import * as d3 from "d3";
 import { useEffect, useState } from "react";
 import { GetPredictedActions, GetPreviousActions } from "../../../api/requests/components";

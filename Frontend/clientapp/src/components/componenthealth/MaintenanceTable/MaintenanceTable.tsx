@@ -10,6 +10,8 @@ interface IMaintenanceTable {
 export default function MaintenanceTable({ maintenance, finishMaintenance }: IMaintenanceTable) {
     function dateInput(date: Date) {
         const d = new Date(date);
+        console.log(d);
+
         const dayZero = d.getDate() < 10 ? true : false;
         const monthZero = d.getMonth() + 1 < 10 ? true : false;
         const hourZero = d.getHours() < 10 ? true : false;
@@ -46,6 +48,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
                 return (
                     <div key={maintenance.id} className="row">
                         <p>{maintenance.description}</p>
+                        {console.log(maintenance)}
                         {maintenance.timeDone.toLocaleString() === "0001-01-01 00:00:00" ? (
                             <p>
                                 finish now:
@@ -56,7 +59,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
                                 />
                             </p>
                         ) : (
-                            <p>{dateInput(maintenance.timeDone)}</p>
+                            <p>{maintenance.timeDone.toLocaleString()}</p>
                         )}
                     </div>
                 );
