@@ -1,4 +1,3 @@
-import axios, { Canceler, CancelTokenSource } from "axios";
 import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
 

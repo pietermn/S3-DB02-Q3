@@ -85,7 +85,7 @@ export default function LifespanPage() {
 
         if (new Date(date).toLocaleDateString() === "01/01/1") {
             setPredictedMaintenance("Cannot predict this component");
-        } else if (new Date(date).toLocaleDateString() == "01/06/2021") {
+        } else if (new Date(date).toLocaleDateString() === "01/06/2021") {
             setPredictedMaintenance("Has already hit its max actions");
         } else {
             setPredictedMaintenance(new Date(date).toLocaleDateString());
