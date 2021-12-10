@@ -51,7 +51,7 @@ def predictProductions(timestampBegin, timestampEnd, componentId, plId):
         count = []
 
         for index, row in df.iterrows():
-            if row.productions > productionMax / 50 * i * .95 and row.productions < productionMax / 50 * i * 1.05:
+            if row.productions > productionMax / 50 * i * .99 and row.productions < productionMax / 50 * i * 1.01:
                 count.append(row.productions)
 
         if (currentMost < len(count)):
