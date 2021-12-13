@@ -1,5 +1,6 @@
 ﻿using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
+using DotNetEnv;
 using Enums;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
@@ -18,7 +19,9 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new($"Server=localhost;Uid=user;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
+            Env.TraversePath().Load();
+            string connectionString = !string.IsNullOrEmpty(Env.GetString("ConnectionString")) ? Env.GetString("ConnectionString") : "Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None";
+            MySqlConnection GeneralConnection = new(connectionString);
             return GeneralConnection;
         }
     }

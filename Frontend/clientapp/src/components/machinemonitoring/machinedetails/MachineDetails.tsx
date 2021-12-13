@@ -10,6 +10,7 @@ import { UpdaterContext } from "../../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import { CancelTokenSource } from "axios";
 
 interface IMachineDetails {
     id: number;
@@ -17,6 +18,7 @@ interface IMachineDetails {
     productionLine: string;
     product: string;
     components?: Component[];
+    source: CancelTokenSource;
 }
 
 const ComponentNameTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -39,7 +41,7 @@ export default function MachineDetails(props: IMachineDetails) {
     }
 
     async function getUptime() {
-        setUptime(await getUptimesFromLastDayById(props.id));
+        setUptime(await getUptimesFromLastDayById(props.id, props.source.token));
     }
 
     useEffect(() => {

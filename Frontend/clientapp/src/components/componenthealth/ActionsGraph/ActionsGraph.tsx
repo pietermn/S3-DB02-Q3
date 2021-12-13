@@ -65,12 +65,7 @@ export default function ActionsGraph(props: IActionsGraph) {
             const x = d3
                 .scaleBand()
                 .range([60, myWidth])
-                .domain(
-                    actions
-                        .slice(0)
-                        .reverse()
-                        .map((d) => `${d.currentTimespan}`)
-                )
+                .domain(actions.slice(0).map((d) => `${d.currentTimespan}`))
 
                 .padding(0.2);
             const y = d3
@@ -128,13 +123,13 @@ export default function ActionsGraph(props: IActionsGraph) {
     useEffect(() => {
         async function AsyncGetActions() {
             setIsLoading(true);
-            let newActions = (await GetPreviousActions(props.componentId, beginDate, endDate)).reverse();
+            let newActions = await GetPreviousActions(props.componentId, beginDate, endDate);
             setActions(newActions);
             setIsLoading(false);
             setloadingPredictive(true);
-            let newPredictedActions = (await GetPredictedActions(props.componentId, beginDate, endDate)).reverse();
+            let newPredictedActions = await GetPredictedActions(props.componentId, beginDate, endDate);
             setloadingPredictive(false);
-            setActions(newPredictedActions.concat(newActions));
+            setActions(newActions.concat(newPredictedActions));
         }
 
         AsyncGetActions();
