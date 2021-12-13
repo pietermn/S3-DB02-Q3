@@ -121,9 +121,8 @@ services:
   #     - custom-network
 
   db:
-    image: mariadb:latest
+    image: mariadb:10.5
     container_name: Q3_Database
-    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
@@ -136,6 +135,12 @@ services:
 
     networks:
       - custom-network
+    command:
+      [
+        '--default-authentication-plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
 
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]

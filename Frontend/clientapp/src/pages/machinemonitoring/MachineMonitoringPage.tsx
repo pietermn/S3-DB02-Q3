@@ -5,7 +5,9 @@ import { GetProductionLines } from "../../api/requests/productionlines";
 import "./MachineMonitoringPage.scss";
 import { useTranslation } from "react-i18next";
 import { FaInfoCircle as InfoIcon } from "react-icons/fa";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 
 export default function MachineMonitoringPage() {
     const [productionLines, setProductionLines] = useState<ProductionLine[]>([]);
@@ -20,6 +22,14 @@ export default function MachineMonitoringPage() {
         AsyncGetProductionLines();
     }, []);
 
+    const StatusTooltip = styled(({ className, ...props }: TooltipProps) => (
+        <Tooltip {...props} classes={{ popper: className }} />
+    ))(({ theme }) => ({
+        [`& .${tooltipClasses.tooltip}`]: {
+            fontSize: 14,
+        },
+    }));
+
     return (
         <div className="MM-Page">
             <table className="MM-Table">
@@ -29,11 +39,11 @@ export default function MachineMonitoringPage() {
                         <th>{t("productionline.label")}</th>
                         <th>
                             {t("uptime.label")}
-                            <Tooltip title={uptimeTooltip}>
+                            <StatusTooltip title={uptimeTooltip}>
                                 <IconButton disableRipple>
                                     <InfoIcon />
                                 </IconButton>
-                            </Tooltip>
+                            </StatusTooltip>
                         </th>
                         <th>{t("components.label")}</th>
                     </tr>

@@ -142,3 +142,18 @@
         transform: rotate(360deg);
     }
 }
+
+@media screen and (max-width: 500px) {
+    .Machine-Status {
+        display: none !important;
+    }
+
+    .MM-Table th:nth-child(3) {
+        display: none !important;
+    }
+
+    .MM-Table td,
+    .MM-Table th {
+        width: 33% !important;
+    }
+}

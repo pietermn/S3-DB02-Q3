@@ -24,6 +24,10 @@ $accent-colors: (
     align-items: center;
 }
 
+.MuiDataGrid-columnHeaderTitle {
+    font-weight: 800 !important;
+}
+
 #page-container {
     min-height: 100vh;
     background-color: map-get($map: $background, $key: "white");

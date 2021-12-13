@@ -10,14 +10,23 @@ import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
-import { Tooltip } from "@material-ui/core";
 import { IconButton } from "@mui/material";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 
 interface IComponentsTable {
     components: Component[];
     setSelectedComponet: (component: Component) => void;
     getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
+
+const WarningTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        fontSize: 14,
+    },
+}));
 
 export default function ComponentsTable(props: IComponentsTable) {
     const { t } = useTranslation();
@@ -139,11 +148,11 @@ export default function ComponentsTable(props: IComponentsTable) {
             renderCell: (params) => {
                 if (params.row.maxActions === 1) {
                     return (
-                        <Tooltip title={maw}>
+                        <WarningTooltip title={maw}>
                             <IconButton>
                                 <WarningIcon className="orange" />
                             </IconButton>
-                        </Tooltip>
+                        </WarningTooltip>
                     );
                 }
             },
@@ -172,69 +181,6 @@ export default function ComponentsTable(props: IComponentsTable) {
                     },
                 }}
             />
-            {/* <div className="row">
-                <p>{t("status.label")}</p>
-                <div id="Lifespan-Search">
-                    {t("name.label")}
-                    <div id="Lifespan-Search-Spacer" />
-                    <TextField
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        label={searchLabel}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
-                <p>{t("totalactions.label")}</p>
-                <p>{t("currentactions.label")}</p>
-                <div>
-                    {t("max.label")} %
-                    <Tooltip title={maxTooltip}>
-                        <IconButton style={{ fontSize: "1rem" }} disableRipple>
-                            <InfoIcon />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            </div>
-            {props.components && search
-                ? getSearchedComponents()
-                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                      .map((component) => {
-                          return (
-                              <div
-                                  key={component.id}
-                                  onClick={() => props.setSelectedComponet(component)}
-                                  className="row"
-                              >
-                                  <div>
-                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </div>
-                                  <p>{component.description}</p>
-                                  <p>{component.totalActions}</p>
-                                  <p>{component.currentActions}</p>
-                                  <p>{component.percentageMaintenance}%</p>
-                              </div>
-                          );
-                      })
-                : props.components
-                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                      .map((component) => {
-                          return (
-                              <div
-                                  key={component.id}
-                                  onClick={() => props.setSelectedComponet(component)}
-                                  className="row"
-                              >
-                                  <div>
-                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </div>
-                                  <p>{component.description}</p>
-                                  <p>{component.totalActions}</p>
-                                  <p>{component.currentActions}</p>
-                                  <p>{component.percentageMaintenance}%</p>
-                              </div>
-                          );
-                      })}*/}
         </div>
     );
 }

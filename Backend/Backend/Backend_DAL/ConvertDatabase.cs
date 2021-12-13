@@ -18,7 +18,7 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
+            MySqlConnection GeneralConnection = new($"Server=localhost;Uid=user;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
             return GeneralConnection;
         }
     }
@@ -68,8 +68,8 @@ namespace Backend_DAL
             _connection.Open();
 
             command.ExecuteNonQuery();
-            DataSet ds = new DataSet();
-            MySqlDataAdapter da = new MySqlDataAdapter(command);
+            DataSet ds = new();
+            MySqlDataAdapter da = new(command);
             da.Fill(ds);
             _connection.Close();
 
