@@ -34,7 +34,7 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "/productionline/readall", 28 })]
+        [InlineData(new object[] { "/productionline/readall", 1 })]
         public async Task ReadAllProdcutionLines_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
@@ -42,17 +42,17 @@ namespace Backend_Test.TestClasses
 
             // Act
             var response = await client.GetAsync(url);
-            var line = JsonConvert.DeserializeObject<ProductionLineDTO[]>(await response.Content.ReadAsStringAsync());
+            var productionLines = JsonConvert.DeserializeObject<ProductionLineDTO[]>(await response.Content.ReadAsStringAsync());
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            Assert.Equal(expected, line.Length);
+            Assert.Equal(expected, productionLines.Length);
             Assert.Equal("application/json; charset=utf-8",
                 response.Content.Headers.ContentType.ToString());
         }
 
         [Theory]
-        [InlineData(new object[] { "/productionline/read?productionLine_id=363", 3 })]
+        [InlineData(new object[] { "/productionline/read?productionLine_id=363", 1 })]
         public async Task ReadProductionLine(string url, int expected)
         {
             // Arrange

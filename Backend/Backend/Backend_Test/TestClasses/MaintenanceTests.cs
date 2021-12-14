@@ -69,21 +69,20 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "/maintenance/read?component_id=173", 173, "Vervang O-ringen" })]
-        public async Task ReadMaintenance(string url,int expectedComponentId, string expectedDescription)
+        [InlineData(new object[] { "/maintenance/read?component_id=1", 2})]
+        public async Task ReadMaintenance(string url, int expected)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
             var response = await client.GetAsync(url);
-            var maintenance = JsonConvert.DeserializeObject<Maintenance>(await response.Content.ReadAsStringAsync());
+            var maintenance = JsonConvert.DeserializeObject<Maintenance[]>(await response.Content.ReadAsStringAsync());
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
             Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
-            Assert.Equal(expectedComponentId, maintenance.ComponentId);
-            Assert.Equal(expectedDescription, maintenance.Description);
+            Assert.Equal(expected, maintenance.Length);
 
         }
     }

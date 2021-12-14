@@ -12,7 +12,12 @@ namespace Backend_DAL
 {
     public class ComponentDAL : IComponentDAL
     {
-        public Q3Context _Context = new();
+        public Q3Context _Context;
+
+        public ComponentDAL(Q3Context context)
+        {
+            _Context = context;
+        }
 
         public ComponentDTO GetComponent(int component_id)
         {

@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend_DTO", "Backend_DTO\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj", "{E90B328F-42D4-4BEB-A7F7-CC43C61A5C0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend_Test", "Backend_Test\Backend_Test.csproj", "{743FF230-5B8D-4F60-A8C1-5264E6AFBE34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{E90B328F-42D4-4BEB-A7F7-CC43C61A5C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E90B328F-42D4-4BEB-A7F7-CC43C61A5C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E90B328F-42D4-4BEB-A7F7-CC43C61A5C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{743FF230-5B8D-4F60-A8C1-5264E6AFBE34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{743FF230-5B8D-4F60-A8C1-5264E6AFBE34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{743FF230-5B8D-4F60-A8C1-5264E6AFBE34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{743FF230-5B8D-4F60-A8C1-5264E6AFBE34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

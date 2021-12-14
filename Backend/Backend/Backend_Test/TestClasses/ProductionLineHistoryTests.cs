@@ -33,7 +33,7 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "/productionlinehistory/readall", 301 })]
+        [InlineData(new object[] { "/productionlinehistory/readall", 1 })]
         public async Task ReadAllProdcutionLineHistories_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
@@ -41,17 +41,17 @@ namespace Backend_Test.TestClasses
 
             // Act
             var response = await client.GetAsync(url);
-            var line = JsonConvert.DeserializeObject<ProductionLineHistoryDTO[]>(await response.Content.ReadAsStringAsync());
+            var historys = JsonConvert.DeserializeObject<ProductionLineHistoryDTO[]>(await response.Content.ReadAsStringAsync());
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            Assert.Equal(expected, line.Length);
+            Assert.Equal(expected, historys.Length);
             Assert.Equal("application/json; charset=utf-8",
                 response.Content.Headers.ContentType.ToString());
         }
 
         [Theory]
-        [InlineData(new object[] { "/productionlinehistory/read?productionLineHistory_id=1", 390 })]
+        [InlineData(new object[] { "/productionlinehistory/read?productionLineHistory_id=1", 1 })]
         public async Task ReadProductionLineHistory(string url, int expected)
         {
             // Arrange

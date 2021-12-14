@@ -17,6 +17,8 @@ namespace Backend_DAL
             ProductionDateTime = dateTime;
         }
 
+        public Q3Context(DbContextOptions<Q3Context> options): base(options) { }
+
         public DbSet<ComponentDTO> Components { get; set; }
         public DbSet<MachineDTO> Machines { get; set; }
         public DbSet<ProductionLineDTO> ProductionLines { get; set; }
@@ -26,31 +28,29 @@ namespace Backend_DAL
         public DbSet<MaintenanceDTO> Maintenance { get; set; }
         public DateTime ProductionDateTime { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            Env.TraversePath().Load();
-            string connectionString = Env.GetString("ConnectionString");
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                optionsBuilder.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db;SslMode=None");
-            }
-            else
-            {
-                optionsBuilder.UseMySQL(connectionString);
-            }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    Env.TraversePath().Load();
+        //    string connectionString = Env.GetString("ConnectionString");
+        //    if (string.IsNullOrEmpty(connectionString))
+        //    {
+        //        optionsBuilder.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db;SslMode=None");
+        //    }
+        //    else
+        //    {
+        //        optionsBuilder.UseMySQL(connectionString);
+        //    }
 
-            optionsBuilder
-                    .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
-        }
+        //    optionsBuilder
+        //            .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
+        //}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ProductionsDTO>(p =>
-            {
-                p.ToTable($"Productions-{ProductionDateTime.ToString("yyyy-MM")}");
-            });
-
-
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<ProductionsDTO>(p =>
+        //    {
+        //        p.ToTable($"Productions-{ProductionDateTime.ToString("yyyy-MM")}");
+        //    });
+        //}
     }
 }

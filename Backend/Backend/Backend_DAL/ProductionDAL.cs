@@ -11,7 +11,6 @@ namespace Backend_DAL
 {
     public class ProductionDAL : IProductionDAL
     {
-        readonly MySqlConnection _connection = Connection.GetConnection();
         public Q3Context _Context = new();
 
         public List<ProductionsDTO> GetProductionsFromLastDay()
