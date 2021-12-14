@@ -1,5 +1,8 @@
 ﻿using Backend;
 using Backend_Logic.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,17 +14,26 @@ using Xunit;
 namespace Backend_Test.TestClasses
 {
     public class MachineTests
-     : IClassFixture<CustomWebApplicationFactory<Startup>>
+     : IClassFixture<CustomWebApplicationFactory<TestStartup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<TestStartup> _factory;
 
-        public MachineTests(CustomWebApplicationFactory<Startup> factory)
+        public MachineTests(CustomWebApplicationFactory<TestStartup> factory)
         {
-            _factory = factory;
+            _factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("Backend");
+
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddMvc().AddApplicationPart(typeof(Startup).Assembly);
+                });
+
+            });
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/machine/readall", 65 })]
+        [InlineData(new object[] { "/machine/readall", 1 })]
         public async Task ReadAllMachines_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
@@ -39,7 +51,7 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/machine/read?machine_id=100", "A01", "NE 280 ton" })]
+        [InlineData(new object[] { "/machine/read?machine_id=1", "Machine", "Machine Description" })]
         public async Task ReadMachine(string url, string expectedName, string expectedDescription)
         {
             // Arrange

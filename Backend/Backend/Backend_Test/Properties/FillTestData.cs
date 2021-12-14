@@ -22,11 +22,11 @@ namespace Backend_Test.Properties
         public void fillData()
         {
             ComponentDTO c = new() { Id = 1, Name = "Matrijzen", Description = "Test Component", Type = Enums.ComponentType.Coldhalf };
+            MachineDTO m = new() { Id = 1, Description = "Machine Description", Name = "Machine" };
             _Context.Components.Add(c);
+            _Context.Machines.Add(m);
             _Context.SaveChanges();
         }
-        //var options = new DbContextOptionsBuilder<Q3Context>().UseInMemoryDatabase(databaseName: "InMemoryTestDatabase").Options;
-        //var context = new Q3Context(options);
         
     }
 }

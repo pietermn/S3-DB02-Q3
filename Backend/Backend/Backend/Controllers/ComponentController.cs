@@ -12,7 +12,6 @@ namespace Backend.Controllers
     [Route("component")]
     public class ComponentController : Controller
     {
-        public ComponentController() { }
         readonly IComponentContainer _componentContainer;
         public ComponentController(IComponentContainer componentContainer)
         {

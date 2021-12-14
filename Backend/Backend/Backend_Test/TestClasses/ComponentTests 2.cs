@@ -37,12 +37,12 @@ namespace Backend_Test.TestClasses
                 context.SaveChanges();
             }
 
-            using (var context = new Q3Context(options))
-            {
-                var controller = new ComponentController();
-                var test = controller.Read(1);
-                //Assert.Equal(1, test.);
-            }
+            //using (var context = new Q3Context(options))
+            //{
+            //    var controller = new ComponentController();
+            //    var test = controller.Read(1);
+            //    //Assert.Equal(1, test.);
+            //}
         }
     }
 }
