@@ -83,6 +83,11 @@ export default function LifespanPage() {
         setPredictedMaintenance("loading...");
         let date = await ApiPredictMaintenance(componentId);
 
+        if (selectedComponent?.maxActions === 1) {
+            setPredictedMaintenance("Cannot predict if no max actions is set");
+            return;
+        }
+
         if (new Date(date).toLocaleDateString() === "01/01/1") {
             setPredictedMaintenance("Cannot predict this component");
         } else if (new Date(date).toLocaleDateString() === "01/06/2021") {
