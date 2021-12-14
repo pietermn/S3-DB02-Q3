@@ -10,7 +10,7 @@ import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 
@@ -37,6 +37,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             sort: "desc",
         },
     ]);
+    const [searchInput, setSearchInput] = useState("");
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = innerWidth * 0.8;
 
@@ -49,7 +50,7 @@ export default function ComponentsTable(props: IComponentsTable) {
     const cols: GridColDef[] = [
         {
             field: "status",
-            headerName: t("status.label"),
+            headerName: "",
             align: "center",
             headerAlign: "center",
             renderCell: (params) => {
@@ -81,6 +82,22 @@ export default function ComponentsTable(props: IComponentsTable) {
             field: "description",
             headerName: t("name.label"),
             width: dgWidth * 0.25,
+            disableColumnMenu: true,
+            sortable: false,
+            renderHeader: () => {
+                return (
+                    <div className="LS-Header-Description">
+                        <b>{t("name.label")}</b>
+                        <TextField
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            label={t("searchtag.label")}
+                            variant="standard"
+                            size="small"
+                        />
+                    </div>
+                );
+            },
         },
         {
             field: "maintenance",
@@ -94,15 +111,11 @@ export default function ComponentsTable(props: IComponentsTable) {
                 let m = props.getComponentNotifications(params.row.id);
                 return m.length ? (
                     m.length === 1 ? (
-                        // <Tooltip title={m[0].description}>
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
                     ) : (
-                        // </Tooltip>
-                        // <Tooltip title={m[0].description}>
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">
                             <b>({m.length})</b> {m[0].description}
                         </div>
-                        // </Tooltip>
                     )
                 ) : (
                     <div></div>
@@ -115,6 +128,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
+            disableColumnMenu: true,
             width: dgWidth * 0.1,
         },
         {
@@ -123,6 +137,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
+            disableColumnMenu: true,
             width: dgWidth * 0.1,
         },
         {
@@ -131,6 +146,7 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
+            disableColumnMenu: true,
             width: dgWidth * 0.1,
             renderCell: (params) => {
                 return <div>{params.row.percentageMaintenance}%</div>;
@@ -165,7 +181,13 @@ export default function ComponentsTable(props: IComponentsTable) {
                 disableSelectionOnClick
                 className="LsDataGrid"
                 columns={cols}
-                rows={props.components}
+                rows={
+                    searchInput
+                        ? props.components.filter((c) =>
+                              c.description.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())
+                          )
+                        : props.components
+                }
                 rowsPerPageOptions={[]}
                 pageSize={100}
                 hideFooter
