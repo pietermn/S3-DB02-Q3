@@ -4,10 +4,12 @@ using Backend_Test.Properties;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +18,36 @@ namespace Backend_Test
 {
     public class CustomWebApplicationFactory<T> : WebApplicationFactory<Startup>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        private static DbContextOptions<Q3Context> Create()
+        {
+            var serviceProvider = new ServiceCollection()
+       .AddEntityFrameworkInMemoryDatabase()
+       .BuildServiceProvider();
+
+            // Create a new options instance telling the context to use an
+            // InMemory database and the new service provider.
+            var builder = new DbContextOptionsBuilder<Q3Context>();
+            builder.UseInMemoryDatabase("db")
+                   .UseInternalServiceProvider(serviceProvider);
+
+            return builder.Options;
+        }
+        
+        protected override void ConfigureWebHost( IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
             {
+
+                //services.AddScoped<IFillTestData, FillTestData>();
                 var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<Q3Context>));
+                //var context = app.ApplicationServices.GetService<Q3Context>();
+                
+                //services.AddDbContext<Q3Context>(opt => opt.UseInMemoryDatabase("db"));
+                //AddTestData(context);
+                //IFillTestData.filldata();
+                
+
+                services.AddMvc();
 
                 //if (dbContext != null)
                 //{
@@ -61,24 +88,22 @@ namespace Backend_Test
                 //    });
                 //});
 
-                //using (var scope = sp.CreateScope())
-                //{
-                //    using (var appContext = scope.ServiceProvider.GetRequiredService<Q3Context>())
-                //    {
-                //        try
-                //        {
-                //            appContext.Database.EnsureCreated();
-                //            //FillTestData fillTestData = new(appContext);
-                //            //fillTestData.fillData();
+                using (var context = new Q3Context(Create()))
+                {
+                        try
+                        {
+                            context.Database.EnsureCreated();
+                            FillTestData fillTestData = new(context);
+                            fillTestData.fillData();
 
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            //Log errors
-                //            throw;
-                //        }
-                //    }
-                //}
+                    }
+                        catch (Exception ex)
+                        {
+                            //Log errors
+                            throw;
+                        }
+                    
+                }
             });
         }
     }

@@ -22,7 +22,6 @@ namespace Backend_Test.TestClasses
         }
 
 
-
         //READALL
         [Theory]
         [InlineData(new object[] { "http://localhost:5200/component/readall", 78 })]
