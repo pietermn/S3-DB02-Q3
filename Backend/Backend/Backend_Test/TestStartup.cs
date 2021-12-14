@@ -83,13 +83,15 @@ namespace Backend_Test
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+                context.Components.RemoveRange(context.Components);
+                context.Machines.RemoveRange(context.Machines);
+                context.SaveChanges();
                 FillTestData fillTestData = new(context);
                 fillTestData.fillData();
 
             }
             catch (Exception ex)
             {
-                throw;
             }
         }
 

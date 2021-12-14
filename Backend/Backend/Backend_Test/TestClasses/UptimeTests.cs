@@ -1,5 +1,8 @@
 ﻿using Backend;
 using Backend_Logic.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,17 +14,26 @@ using Xunit;
 namespace Backend_Test.TestClasses
 {
     public class UptimeTests
-    : IClassFixture<CustomWebApplicationFactory<Startup>>
+: IClassFixture<CustomWebApplicationFactory<TestStartup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<TestStartup> _factory;
 
-        public UptimeTests(CustomWebApplicationFactory<Startup> factory)
+        public UptimeTests(CustomWebApplicationFactory<TestStartup> factory)
         {
-            _factory = factory;
+            _factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("Backend");
+
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddMvc().AddApplicationPart(typeof(Startup).Assembly);
+                });
+
+            });
         }
 
         [Theory]
-        [InlineData(new object[] { "https://localhost:5001/uptime/read?productionLine_id=363", 9 })]
+        [InlineData(new object[] { "/uptime/read?productionLine_id=363", 9 })]
         public async Task ReadUptime(string url, int expected)
         {
             // Arrange

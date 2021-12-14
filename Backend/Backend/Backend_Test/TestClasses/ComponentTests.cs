@@ -1,6 +1,8 @@
 ﻿using Backend;
+using Backend_DAL;
 using Backend_DTO.DTOs;
 using Backend_Logic.Models;
+using Backend_Test.Properties;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,9 +47,7 @@ namespace Backend_Test.TestClasses
 
             // Act.
             HttpResponseMessage response = await client.GetAsync(url);
-            string text = response.Content.ReadAsStringAsync().Result;
             var test = JsonConvert.DeserializeObject<ComponentDTO[]>(await response.Content.ReadAsStringAsync());
-            //System.Diagnostics.Debugger.Break();
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299

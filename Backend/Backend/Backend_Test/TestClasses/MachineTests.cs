@@ -1,5 +1,7 @@
 ﻿using Backend;
+using Backend_DAL;
 using Backend_Logic.Models;
+using Backend_Test.Properties;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,7 @@ using Xunit;
 
 namespace Backend_Test.TestClasses
 {
+    [CollectionDefinition("QueryCollection")]
     public class MachineTests
      : IClassFixture<CustomWebApplicationFactory<TestStartup>>
     {

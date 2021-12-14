@@ -1,6 +1,9 @@
 ﻿using Backend;
 using Backend_DTO.DTOs;
 using Backend_Logic.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,17 +15,26 @@ using Xunit;
 namespace Backend_Test.TestClasses
 {
     public class ProductionLineTests
-    : IClassFixture<CustomWebApplicationFactory<Startup>>
+: IClassFixture<CustomWebApplicationFactory<TestStartup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<TestStartup> _factory;
 
-        public ProductionLineTests(CustomWebApplicationFactory<Startup> factory)
+        public ProductionLineTests(CustomWebApplicationFactory<TestStartup> factory)
         {
-            _factory = factory;
+            _factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("Backend");
+
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddMvc().AddApplicationPart(typeof(Startup).Assembly);
+                });
+
+            });
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/productionline/readall", 28 })]
+        [InlineData(new object[] { "/productionline/readall", 28 })]
         public async Task ReadAllProdcutionLines_CorrectTypeAndAmount(string url, int expected)
         {
             // Arrange
@@ -40,7 +52,7 @@ namespace Backend_Test.TestClasses
         }
 
         [Theory]
-        [InlineData(new object[] { "http://localhost:5200/productionline/read?productionLine_id=363", 3 })]
+        [InlineData(new object[] { "/productionline/read?productionLine_id=363", 3 })]
         public async Task ReadProductionLine(string url, int expected)
         {
             // Arrange
