@@ -9,6 +9,7 @@ services:
     volumes:
       - ./:/home/node/app/src
     container_name: ts-node-docker
+    image: ${DOCKER_REGISTRY-}nodefications
 
     environment:
       - ConnectionServer=db
