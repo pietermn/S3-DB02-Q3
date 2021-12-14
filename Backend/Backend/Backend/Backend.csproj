@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="2.1.1" />
+    <PackageReference Include="DotNetEnv" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -23,4 +23,6 @@
     <ProjectReference Include="..\Backend_Logic\Backend_Logic.csproj" />
     <ProjectReference Include="..\Backend_Logic_Interface\Backend_Logic_Interface.csproj" />
   </ItemGroup>
+
+  
 </Project>

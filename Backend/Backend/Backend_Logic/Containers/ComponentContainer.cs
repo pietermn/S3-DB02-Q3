@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
+using Flurl.Http;
 
 namespace Backend_Logic.Containers
 {
-    public class ComponentContainer: IComponentContainer
+    public class ComponentContainer : IComponentContainer
     {
         readonly IComponentDAL _componentDAL;
         readonly IProductionLineDAL _productionLineDAL;
@@ -33,9 +36,125 @@ namespace Backend_Logic.Containers
 
         }
 
-        public List<int> GetPreviousActions(int component_id, int amount, string type)
+        private int GetWeekOfYear(DateTime timestamp)
         {
-            return _componentDAL.GetPreviousActions(component_id, amount, type);
+            CultureInfo cul = CultureInfo.CurrentCulture;
+            return cul.Calendar.GetWeekOfYear(timestamp, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+        }
+
+        private List<ProductionsDateDTO> FillProductionDates(int dayDifference, DateTime endDate, DateTime beginDate)
+        {
+            List<ProductionsDateDTO> productionsDateDTOs = new();
+
+            if (dayDifference <= 10)
+            {
+                for (int i = 0; i < dayDifference; i++)
+                {
+                    productionsDateDTOs.Add(new ProductionsDateDTO()
+                    {
+                        TimespanIndicator = "Day",
+                        CurrentTimespan = endDate.AddDays(-i).Day.ToString(),
+                        CurrentDateTime = endDate.AddDays(-i)
+                    });
+                }
+            }
+            else if (dayDifference > 10 && dayDifference < 7 * 10)
+            {
+                int forloopMax = dayDifference % 7 == 0 ? dayDifference / 7 : dayDifference / 7 + 1;
+                for (int i = 0; i < forloopMax; i++)
+                {
+                    productionsDateDTOs.Add(new ProductionsDateDTO()
+                    {
+                        TimespanIndicator = "Week",
+                        CurrentTimespan = GetWeekOfYear(endDate.AddDays(-i * 7)).ToString(),
+                        CurrentDateTime = endDate.AddDays(-i * 7)
+                    });
+                }
+            }
+            else if (dayDifference > 7 * 10 && dayDifference < 30 * 10)
+            {
+                int forloopMax = dayDifference % 30 == 0 ? dayDifference / 30 : dayDifference / 30 + 1;
+                for (int i = 0; i < forloopMax; i++)
+                {
+                    DateTime currentDatetime = new(endDate.AddMonths(-i).Year, endDate.AddMonths(-i).Month, i == forloopMax-1 ? beginDate.Day : 1);
+                    productionsDateDTOs.Add(new ProductionsDateDTO()
+                    {
+                        TimespanIndicator = "Month",
+                        CurrentTimespan = endDate.AddMonths(-i).ToString("MMMM"),
+                        CurrentDateTime = currentDatetime
+                    });
+                }
+            }
+            else if (dayDifference > 30 * 10 && dayDifference < 365 * 10)
+            {
+                int forloopMax = dayDifference % 365 == 0 ? dayDifference / 365 : dayDifference / 365 + 1;
+                for (int i = 0; i < forloopMax; i++)
+                {
+                    productionsDateDTOs.Add(new ProductionsDateDTO()
+                    {
+                        TimespanIndicator = "Year",
+                        CurrentTimespan = endDate.AddYears(-i).Year.ToString(),
+                        CurrentDateTime = endDate.AddYears(-i)
+                    });
+                }
+            }
+            else
+            {
+                int forloopMax = dayDifference % 3650 == 0 ? dayDifference / 3650 : dayDifference / 3650 + 1;
+
+                for (int i = 0; i < forloopMax; i++)
+                {
+                    productionsDateDTOs.Add(new ProductionsDateDTO()
+                    {
+                        TimespanIndicator = "Decenium",
+                        CurrentTimespan = (endDate.AddYears(-i * 10).Year / 10).ToString(),
+                        CurrentDateTime = endDate.AddYears(-i * 10)
+                    });
+                }
+            }
+
+            return productionsDateDTOs;
+        }
+
+        public List<ProductionsDateDTO> GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
+        {
+            DateTime mockDate = new DateTime(2021, 6, 1);
+            DateTime newEndDate = mockDate > endDate ? endDate : mockDate;
+
+            List<ProductionsDTO> productions = _componentDAL.GetPreviousActions(component_id, beginDate, newEndDate);
+
+            List<ProductionsDateDTO> ProductionDates = FillProductionDates((endDate - beginDate).Days, endDate, beginDate);
+            List<ProductionsDateDTO> newProductionDates = new();
+
+            foreach(ProductionsDateDTO productionsDateDTO in ProductionDates.OrderBy(p => p.CurrentDateTime))
+            {
+                if (mockDate > productionsDateDTO.CurrentDateTime)
+                {
+                    newProductionDates.Add(productionsDateDTO);
+                }
+            }
+
+
+            foreach (ProductionsDTO production in productions)
+            {
+                if (production.Timestamp < mockDate)
+                {
+                    foreach (ProductionsDateDTO productionsDate in newProductionDates)
+                    {
+                        string timespanIndicator = productionsDate.TimespanIndicator;
+                        if ((timespanIndicator == "Day" && productionsDate.CurrentTimespan == production.Timestamp.Day.ToString())
+                            || (timespanIndicator == "Week" && productionsDate.CurrentTimespan == GetWeekOfYear(production.Timestamp).ToString())
+                            || (timespanIndicator == "Month" && productionsDate.CurrentTimespan == production.Timestamp.ToString("MMMM"))
+                            || (timespanIndicator == "Year" && productionsDate.CurrentTimespan == production.Timestamp.Year.ToString())
+                            || (timespanIndicator == "Decenium" && productionsDate.CurrentTimespan == (production.Timestamp.Year / 10).ToString()))
+                        {
+                            productionsDate.Productions++;
+                        }
+                    }
+                }
+            }
+
+            return newProductionDates;
         }
 
         public void SetMaxActions(int component_id, int max_actions)
@@ -43,100 +162,121 @@ namespace Backend_Logic.Containers
             _componentDAL.SetMaxAction(component_id, max_actions);
         }
 
+        private static async Task<int> GetAverageProductions(DateTime begin, DateTime end, int componentId, int productionlineId)
+        {
+            long beginTimestamp = ((DateTimeOffset)begin).ToUnixTimeSeconds();
+            long endTimestamp = ((DateTimeOffset)end).ToUnixTimeSeconds();
 
-        //private Component ConvertDTOToModel(List<ComponentDTO> componentDTOs)
-        //{
-        //    List<Component> components = new List<Component>();
-        //    foreach (ComponentDTO d in componentDTOs)
-        //    {
-        //        List<ProductionLineHistory> history = new List<ProductionLineHistory>();
-                
-        //        foreach (ProductionLineHistoryDTO p in d.History)
-        //        {
-        //            ProductionLine line = new ProductionLine(p.ProductionLine.Id, p.ProductionLine.Name, p.ProductionLine.Description, p.ProductionLine.Active, p.ProductionLine.Port, p.ProductionLine.Board);
-                    
-        //            history.Add(new ProductionLineHistory(p.Id, line, p.StartDate, p.EndDate));
-        //        }
+            var data = await $"http://ml-python:5000/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
+            string value = data.GetStringAsync().Result;
+            int valueInt = Convert.ToInt32(value.Split(".")[0]);
+            return Convert.ToInt32(valueInt) / 60;
+        }
 
-        //        components.Add(new Component(d.Id, d.Name, d.Type, d.Description, d.TotalActions, d.MaxActions, d.CurrentActions, history, d.MaintenanceHistory));
-        //    }
-        //}
 
         public DateTime PredictMaxActions(int component_id)
         {
-            DateTime MockDateNow = new DateTime(2021, 6, 1);
+            DateTime MockDateNow = new(2021, 6, 1);
 
             ComponentDTO component = GetComponent(component_id);
-            List<ProductionLineHistoryDTO> productionLineHistories = component.History;
+            List<ProductionLineHistoryDTO> productionLineHistories = component.History.OrderBy(h => h.StartDate).ToList();
 
-            int tempCurrent= component.CurrentActions ;
+            int tempCurrent = component.CurrentActions;
 
-            foreach(ProductionLineHistoryDTO p in productionLineHistories) 
+            if (component.CurrentActions >= component.MaxActions)
             {
-                if (p.EndDate >= MockDateNow)
-                {
-                int difference = (int)(p.StartDate - p.EndDate).TotalMinutes;
-                int gem = CalaculateAverageProductions(p.ProductionLineId, component, MockDateNow);
-                int TotalProductionsFromProductionLine = difference * gem;
-                int minutesSpend=0;
+                return MockDateNow;
+            }
 
-                if(tempCurrent + TotalProductionsFromProductionLine >= component.MaxActions)
+            foreach (ProductionLineHistoryDTO p in productionLineHistories)
+            {
+                if (p.EndDate >= MockDateNow || p.EndDate.ToString("yyyy-MM-dd") == "0001-01-01")
                 {
-                    minutesSpend = (component.MaxActions - component.CurrentActions) / gem;
-                    return p.StartDate.AddMinutes(minutesSpend);
-                }
-                
-                tempCurrent += TotalProductionsFromProductionLine;
+                    DateTime differenceDatetime = p.StartDate > MockDateNow ? p.StartDate : MockDateNow;
+                    int difference = p.EndDate.ToString("yyyy-MM-dd") != "0001-01-01" ? (int)(p.EndDate - differenceDatetime).TotalMinutes : (int)(differenceDatetime - new DateTime(2021 - 08 - 30)).TotalMinutes;
+                    int avg = GetAverageProductions(p.StartDate, p.EndDate, component_id, p.ProductionLineId).Result;
+                    int TotalProductionsFromProductionLine = difference * avg;
+                    int minutesSpend = 0;
+
+                    if (tempCurrent + TotalProductionsFromProductionLine >= component.MaxActions)
+                    {
+                        minutesSpend = (component.MaxActions - component.CurrentActions) / avg;
+                        return differenceDatetime.AddMinutes(minutesSpend);
+                    }
+
+                    tempCurrent += TotalProductionsFromProductionLine;
 
                 }
             }
-            return new DateTime(1,1,1);
+            return new DateTime(1, 1, 1);
         }
 
-        private int CalaculateAverageProductions(int productionLineId, ComponentDTO component, DateTime mockDate) //VERLEDEN
+        public List<ProductionsDateDTO> GetPredictedActions(int component_id, DateTime beginDate, DateTime endDate)
         {
-            List<ProductionsDTO> productions = _productionDAL.GetAllProductionsFromProductionLine(productionLineId);
-            
+            DateTime mockDate = new(2021, 6, 1);
 
-            List<ProductionLineHistoryDTO> productionLineHistories = component.History.Where(p => p.EndDate < mockDate && p.ProductionLineId == productionLineId).ToList();
-
-            List<int> averages = new();
-
-            foreach(ProductionLineHistoryDTO plH in productionLineHistories)
+            if (endDate < mockDate || beginDate > endDate)
             {
-                int AmountOfProductions = 0;
-                int difference = (int)(plH.StartDate - plH.EndDate).TotalMinutes;
-                foreach (ProductionsDTO p in productions)
-                {
+                return new();
+            } 
 
-                    if(plH.StartDate <= p.Timestamp && p.Timestamp <= plH.EndDate)
+            List<ProductionsDateDTO> productionsDates = FillProductionDates((int)(endDate - beginDate).TotalDays, endDate, beginDate);
+            List<ProductionsDateDTO> newProductionDates = new();
+            List<ProductionLineHistoryDTO> historys = _componentDAL.GetComponent(component_id).History;
+
+            foreach (ProductionsDateDTO newProductionsDate in productionsDates.OrderBy(p => p.CurrentDateTime))
+            {
+                if (mockDate <= newProductionsDate.CurrentDateTime)
+                {
+                    newProductionsDate.IsPredicted = true;
+                    newProductionDates.Add(newProductionsDate);
+                }
+            }
+
+            foreach (ProductionLineHistoryDTO history in historys)
+            {
+                if (history.EndDate >= beginDate && history.StartDate <= endDate || history.EndDate.Year == 1 )
+                {
+                    DateTime newEndDate = history.EndDate.Year == 1 ? endDate : history.EndDate;
+                    int average = GetAverageProductions(history.StartDate, newEndDate, component_id, history.ProductionLineId).Result;
+
+                    for (int i = 0; i < newProductionDates.Count; i++)
                     {
-                        AmountOfProductions++;
+                        try
+                        {
+                            if (history.StartDate < newProductionDates[i + 1].CurrentDateTime && newEndDate > newProductionDates[i].CurrentDateTime)
+                            {
+                                DateTime currentBeginDate = history.StartDate < newProductionDates[i].CurrentDateTime ? newProductionDates[i].CurrentDateTime : history.StartDate;
+                                DateTime currentEndDate = newEndDate > newProductionDates[i + 1].CurrentDateTime ? newProductionDates[i + 1].CurrentDateTime : newEndDate;
+
+                                newProductionDates[i].Productions += (int)(currentEndDate - currentBeginDate).TotalMinutes * average;
+                            }
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            if (newProductionDates[i].TimespanIndicator == "Day")
+                            {
+                                if (history.StartDate < newEndDate && newEndDate > newProductionDates[i].CurrentDateTime)
+                                {
+                                    DateTime currentBeginDate = history.StartDate < newProductionDates[i].CurrentDateTime ? newProductionDates[i].CurrentDateTime : history.StartDate;
+                                    newProductionDates[i].Productions += (int)(endDate.AddDays(1) - currentBeginDate).TotalMinutes * average;
+                                }
+                            }
+                            else
+                            {
+                                if (history.StartDate < newEndDate && newEndDate > newProductionDates[i].CurrentDateTime)
+                                {
+                                    DateTime currentBeginDate = history.StartDate < newProductionDates[i].CurrentDateTime ? newProductionDates[i].CurrentDateTime : history.StartDate;
+                                    newProductionDates[i].Productions += (int)(endDate - currentBeginDate).TotalMinutes * average;
+                                }
+                            }
+                       
+                        }
                     }
                 }
-                averages.Add(AmountOfProductions / difference);
             }
-            int average = 0;
-            foreach(int a in averages)
-            {
-                average += a;
-            }
-            return average / averages.Count();
+
+            return newProductionDates;
         }
-
-
-        //private int PredictedProductions(ProductionLineHistory productionLineHistory, Component component)
-        //{
-        //    List<ProductionsDTO> productions = _productionDAL.GetAllProductionsFromProductionLine(productionLineHistory.ProductionLine.Id);
-        //    int AmountOfProductions = 0;
-        //    foreach (ProductionsDTO p in productions)
-        //    {
-        //        if (productionLineHistory.StartDate <= p.Timestamp && p.Timestamp <= productionLineHistory.EndDate)
-        //        {
-        //            AmountOfProductions++;
-        //        }
-        //    }
-        //    return 0;
-        //}
     }
 }

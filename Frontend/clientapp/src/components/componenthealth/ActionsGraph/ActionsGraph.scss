@@ -1,53 +1,84 @@
 .actionsgraph-container {
     height: 80%;
-    width: 75%;
-    margin-top: 3rem;
+    width: 90%;
+    margin-top: 1.5rem;
     position: relative;
 
-    .loading {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+    input {
+        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
+        z-index: 100;
     }
 }
 
+.legend {
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+}
+
+.Loading-Icon {
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+}
+
 #Actions-Graph {
+    z-index: 100;
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
 
-    &.invisible {
-        opacity: 0;
-    }
-
     svg {
-        margin-bottom: -1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: -2.5rem;
         height: 100%;
         width: 100%;
-    }
+        position: relative;
 
-    #amount-timespan {
-        height: 1.5rem;
-        width: 50px;
-        padding: 0;
-    }
-
-    #timespan-select {
-        height: 1.5rem;
-        margin-right: 10px;
-    }
-
-    #amount-timespan,
-    #timespan-select {
-        height: 30px;
-        border: none;
-        outline: 1px solid black;
-        margin-bottom: 1rem;
+        .tooltip-area {
+            position: absolute;
+            background-color: red;
+        }
     }
 }
 
 .invisible {
-    opacity: 0;
+    display: none !important;
+}
+
+.ActionsGraph-Skeleton {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: flex-end;
+    position: relative;
+
+    .SkeletonBar {
+        height: 80%;
+        width: 17%;
+        margin-left: 2rem;
+        margin-bottom: 10px;
+
+        &:nth-child(3) {
+            height: 65%;
+        }
+        &:nth-child(4) {
+            height: 30%;
+        }
+        &:nth-child(5) {
+            height: 45%;
+        }
+    }
+
+    .Axis {
+        position: absolute;
+        height: 90%;
+        width: 5px;
+
+        &:nth-child(2) {
+            width: 90%;
+            height: 5px;
+            margin-inline: 5px;
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 .MM-Data {
     font-size: large;
-    height: 3.5rem;
+    height: 5.5rem;
 
     &:last-child td {
         border-bottom: none;
@@ -30,10 +30,18 @@
             }
         }
 
+        &:nth-child(2) {
+            justify-content: center;
+            margin-left: -2rem;
+            margin-right: 2rem;
+        }
+
         &:last-child {
             padding-right: $padding;
-            text-align: right;
             position: relative;
+            justify-content: center !important;
+            margin-left: 1.25rem;
+            margin-right: -1.25rem;
 
             &:before {
                 right: 0;
@@ -116,5 +124,36 @@
             cursor: pointer;
             background: rgba(map-get($map: $background, $key: "blue"), 0.8);
         }
+    }
+}
+
+.IconSpin {
+    animation-name: spin;
+    animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .Machine-Status {
+        display: none !important;
+    }
+
+    .MM-Table th:nth-child(3) {
+        display: none !important;
+    }
+
+    .MM-Table td,
+    .MM-Table th {
+        width: 33% !important;
     }
 }

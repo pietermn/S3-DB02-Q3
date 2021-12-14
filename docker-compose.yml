@@ -9,6 +9,7 @@ services:
     volumes:
       - ./:/home/node/app/src
     container_name: ts-node-docker
+    image: ${DOCKER_REGISTRY-}nodefications
 
     environment:
       - ConnectionServer=db
@@ -19,6 +20,20 @@ services:
     ports:
       - '5300:5300'
     command: npm run prod
+
+    networks:
+      - custom-network
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ml-python:
+    container_name: predictive-maintenance
+    image: ${DOCKER_REGISTRY-}predictivemaintenance
+    build:
+      context: Backend/Predictive-Maintenance
+      dockerfile: Dockerfile
 
     networks:
       - custom-network
@@ -55,7 +70,7 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://+:5200
-      - ConnectionString=server=db;port=3306;user=root;password=root;database=db
+      - ConnectionString=server=db;port=3306;user=root;password=root;database=db;SslMode=None
 
     ports:
       - "5200:5200"
@@ -68,26 +83,26 @@ services:
       db:
         condition: service_healthy
 
-  Q3-Sms:
-    container_name: Q3-Sms
-    image: ${DOCKER_REGISTRY-}q3sms
-    build:
-      context: Backend/telnyxApi
-      dockerfile: Dockerfile
+  # Q3-Sms:
+  #   container_name: Q3-Sms
+  #   image: ${DOCKER_REGISTRY-}q3sms
+  #   build:
+  #     context: Backend/telnyxApi
+  #     dockerfile: Dockerfile
 
-    environment:
-      - ASPNETCORE_URLS=http://+:5100
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:5100
 
-    ports:
-      - "5100:5100"
-      - "5101:5101"
+  #   ports:
+  #     - "5100:5100"
+  #     - "5101:5101"
 
-    networks:
-      - custom-network
+  #   networks:
+  #     - custom-network
 
-    depends_on:
-      db:
-        condition: service_healthy
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
   # Q3-Backend-Authentication:
   #   container_name: Q3-Backend-Authentication
@@ -107,10 +122,9 @@ services:
   #     - custom-network
 
   db:
-    image: mysql:latest
+    image: mariadb:10.5
     container_name: Q3_Database
-    command: --default-authentication-plugin=mysql_native_password
-    volumes: 
+    volumes:
       - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_USER: 'user'
@@ -122,9 +136,15 @@ services:
 
     networks:
       - custom-network
+    command:
+      [
+        '--default-authentication-plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 5s
       retries: 10
 
@@ -158,46 +178,7 @@ services:
 
     networks:
       - custom-network
-      
 
-  sonarqube:
-    image: sonarqube:9.1.0-community
-    expose:
-      - 9000
-    ports:
-      - "9000:9000"
-    networks:
-      - sonarnet
-    environment:
-      - sonar.jdbc.url=jdbc:postgresql://sonardb:5432/sonar
-      - sonar.jdbc.username=sonar
-      - sonar.jdbc.password=sonar
-    volumes:
-      - sonarqube_conf:/opt/sonarqube/conf
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-          
-  sonardb:
-    image: postgres
-    networks:
-      - sonarnet
-    environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-    volumes:
-      - postgresql:/var/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
-
-networks: 
+networks:
   custom-network:
     driver: bridge
-  sonarnet:
-
-volumes:
-  sonarqube_conf:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_bundled-plugins:
-  postgresql:
-  postgresql_data:
