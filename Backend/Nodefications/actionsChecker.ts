@@ -18,17 +18,17 @@ export default class ActionsChecker {
         const components = await sql.getAllComponents();
 
         components.forEach(async (c) => {
-            // if (!(await this.componentNeedsNotification(n.componentId))) {
-            //     sql.removeNotification(n.id);
-            // }
-
             if (c.currentActions >= c.maxActions && c.maxActions != 1) {
                 if (await sql.componentHasNoNotification(c.id)) {
                     sql.addNotification(c.id, "");
-                    axios.post(`http://q3-sms:5100/telnyx/create`, {
-                        to: "+31638458923",
-                        text: `Component: ${c.description} (Id: ${c.id}) reached its max uses`,
-                    });
+                    axios
+                        .post(`http://q3-sms:5100/telnyx/create`, {
+                            to: "+31638458923",
+                            text: `Component: ${c.description} (Id: ${c.id}) reached its max uses`,
+                        })
+                        .catch(() => {
+                            console.log("Sms backend down");
+                        });
                 }
             } else {
                 sql.removeNotificationFromComponent(c.id);

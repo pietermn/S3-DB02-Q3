@@ -17,8 +17,12 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [myWidth] = useState((window.innerWidth / 3) * 2 * 0.75);
     const [myHeight] = useState((window.innerHeight / 2) * 0.6);
     const [isLoading, setIsLoading] = useState(false);
-    const [beginDate, setBeginDate] = useState(dateInput(new Date("2020-09-01")));
-    const [endDate, setEndDate] = useState(dateInput(new Date("2020-09-30")));
+    const [loadingPredictive, setloadingPredictive] = useState(false);
+    const [beginDate, setBeginDate] = useState(dateInput(new Date("2021-05-01")));
+    const [endDate, setEndDate] = useState(dateInput(new Date("2021-06-01")));
+    const [xKey, setXKey] = useState("first");
+    const { t } = useTranslation();
+    const [cancelToken, setCancelToken] = useState<CancelTokenSource>(axios.CancelToken.source());
 
     function dateInput(date: Date) {
         const d = new Date(date);
@@ -123,11 +127,32 @@ export default function ActionsGraph(props: IActionsGraph) {
     );
 
     useEffect(() => {
-        async function AsyncGetActions() {
-            setIsLoading(true);
-            setActions(await GetPreviousActions(props.componentId, beginDate, endDate));
-            setIsLoading(false);
+        async function CancelToken(cancel: CancelTokenSource) {
+            if (typeof cancelToken != typeof undefined && cancelToken) {
+                cancelToken.cancel("Operation canceled due to new request.");
+            }
+            //Save the cancel token for the current request
+            setCancelToken(cancel);
         }
+
+        async function AsyncGetActions() {
+            let cancelToken = axios.CancelToken.source();
+            setIsLoading(true);
+            await CancelToken(cancelToken);
+            let newActions = await GetPreviousActions(props.componentId, beginDate, endDate, cancelToken.token);
+            setActions(newActions);
+            setIsLoading(false);
+            setloadingPredictive(true);
+            let newPredictedActions = await GetPredictedActions(
+                props.componentId,
+                beginDate,
+                endDate,
+                cancelToken.token
+            );
+            setloadingPredictive(false);
+            setActions(newActions.concat(newPredictedActions));
+        }
+        setIsLoading(false);
         AsyncGetActions();
     }, [props.componentId, beginDate, endDate]);
 
