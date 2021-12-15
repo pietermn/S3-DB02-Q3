@@ -1,6 +1,9 @@
 import { CircularProgress } from "@mui/material";
+import { FaArrowUp as ArrowUpIcon, FaArrowRight as ArrowRightIcon } from "react-icons/fa";
 import * as d3 from "d3";
 import { useEffect, useState } from "react";
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 import { GetPredictedActions, GetPreviousActions } from "../../../api/requests/components";
 import { ProductionDate } from "../../../globalTypes";
 import "./ActionsGraph.scss";
@@ -20,6 +23,8 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [loadingPredictive, setloadingPredictive] = useState(false);
     const [beginDate, setBeginDate] = useState(dateInput(new Date("2021-05-01")));
     const [endDate, setEndDate] = useState(dateInput(new Date("2021-06-01")));
+    const [xKey, setXKey] = useState("first");
+    const { t } = useTranslation();
 
     function dateInput(date: Date) {
         const d = new Date(date);
@@ -58,6 +63,13 @@ export default function ActionsGraph(props: IActionsGraph) {
         tooltip.attr("transform", `translate(${x}, ${y - 10})`);
     }
 
+    function getTimespan(currentTimespan: string, timespanIndicator: string) {
+        if (timespanIndicator === "Month") {
+            return t(currentTimespan.toLowerCase() + ".label");
+        }
+        return currentTimespan;
+    }
+
     ref = useD3(
         (svg: d3.Selection<SVGElement, {}, HTMLElement, any>) => {
             const margin = { top: 20, right: 30, bottom: 30, left: 40 };
@@ -65,16 +77,16 @@ export default function ActionsGraph(props: IActionsGraph) {
             const x = d3
                 .scaleBand()
                 .range([60, myWidth])
-                .domain(actions.slice(0).map((d) => `${d.currentTimespan}`))
-
+                .domain(actions.slice(0).map((d) => `${getTimespan(d.currentTimespan, d.timespanIndicator)}`))
                 .padding(0.2);
+
             const y = d3
                 .scaleLinear()
                 .domain(maxValue ? [0, maxValue] : [0, 1, 0])
                 .range([myHeight, 0]);
 
             const xAxis = (g: any) => {
-                g.attr("transform", `translate(0,${myHeight})`)
+                g.attr("transform", `translate(0,${myHeight + 5})`)
                     .call(d3.axisBottom(x))
                     .selectAll("text")
                     .attr("transform", "translate(-10,0)rotate(-45)")
@@ -82,21 +94,28 @@ export default function ActionsGraph(props: IActionsGraph) {
             };
 
             const yAxis = (g: any) => {
-                g.attr("transform", `translate(${margin.left + 20},-10)`).call(d3.axisLeft(y));
+                g.attr("transform", `translate(${margin.left + 20}, 5)`).call(d3.axisLeft(y));
             };
 
             svg.select(".x-axis-label")
-                .attr("transform", "translate(" + (myWidth - 10) + " ," + (myHeight + margin.top + 20) + ")")
-                .style("text-anchor", "middle");
+                .attr("display", "absolute")
+                .attr("transform", "translate(" + (myWidth - 13) + " ," + (myHeight + margin.top + 20) + ")")
+                .style("text-anchor", "end");
 
             svg.select(".y-axis-label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -5)
-                .attr("x", -50)
-                .attr("dy", "1em")
-                .style("text-anchor", "middle");
+                .attr("display", "absolute")
+                .attr("transform", "translate(13, 20)rotate(-90)")
+                .style("text-anchor", "end");
 
-            svg.select(".x-axis").transition().duration(800).call(xAxis);
+            svg.select(".arrow-right")
+                .attr("display", "absolute")
+                .attr("transform", "translate(" + (myWidth - 10) + " ," + (myHeight + margin.top + 8) + ")")
+                .attr("fontSize", "1rem");
+
+            svg.select(".x-axis")
+                .transition()
+                .duration(xKey === "first" ? 800 : 0)
+                .call(xAxis);
             svg.select(".y-axis").transition().duration(800).call(yAxis);
 
             svg.select(".plot-area")
@@ -112,12 +131,14 @@ export default function ActionsGraph(props: IActionsGraph) {
                 .attr("fill", (d) => (d.isPredicted ? "#fff" : "#69b3a2"))
                 .attr("stroke", (d) => (d.isPredicted ? "#69b3a2" : ""))
                 .attr("stroke-dasharray", (d) => (d.isPredicted ? 6 : 0))
-                .attr("x", (d, i) => x(`${d.currentTimespan}`) || 0)
+                .attr("x", (d, i) => x(`${getTimespan(d.currentTimespan, d.timespanIndicator)}`) || 0)
                 .attr("width", x.bandwidth())
                 .attr("y", (d) => y(d.productions))
-                .attr("height", (d) => y(0) - y(d.productions));
+                .attr("height", (d) => y(0) - y(d.productions))
+                .style("transform", "translateY(5px)");
+            console.log("drawing graph");
         },
-        [actions.length, JSON.stringify(actions)]
+        [actions.length, JSON.stringify(actions), xKey]
     );
 
     useEffect(() => {
@@ -134,6 +155,10 @@ export default function ActionsGraph(props: IActionsGraph) {
 
         AsyncGetActions();
     }, [props.componentId, beginDate, endDate]);
+
+    useEffect(() => {
+        setXKey(i18n.language);
+    }, [t]);
 
     return (
         <div className="actionsgraph-container">
@@ -165,11 +190,16 @@ export default function ActionsGraph(props: IActionsGraph) {
             <div id="Actions-Graph" className={isLoading ? "invisible" : ""}>
                 <svg ref={ref}>
                     <text className="x-axis-label">
-                        Time ({actions.length ? actions[0].timespanIndicator + "s" : ""}) {"->"}
+                        {t("time.label")} (
+                        {actions.length ? t(actions[0].timespanIndicator.toLowerCase() + "s.label") : ""})
                     </text>
-                    <text className="y-axis-label">Actions {"->"}</text>
+                    <text className="y-axis-label">{t("actions.label")}</text>
+                    <ArrowUpIcon />
+                    <g className="arrow-right">
+                        <ArrowRightIcon />
+                    </g>
                     <g className="plot-area" />
-                    <g className="x-axis"></g>
+                    <g className="x-axis" key={xKey}></g>
                     <g className="y-axis"></g>
                     <g className="tooltip-area">
                         <text className="tooltip-area__text"></text>

@@ -38,5 +38,22 @@
   "maxactionswarning.label": "Geen maximale handelingen ingesteld",
   "resetactions.label": "Wilt u de huidige handelingen terug naar 0 zetten?",
   "yes.label": "Ja",
-  "no.label": "Nee"
+  "no.label": "Nee",
+  "actions.label": "Handelingen",
+  "days.label": "Dagen",
+  "years.label": "Jaren",
+  "deceniums.label": "Decenia",
+  "time.label": "Tijd",
+  "january.label": "Januari",
+  "february.label": "Februari",
+  "march.label": "Maart",
+  "april.label": "April",
+  "may.label": "Mei",
+  "june.label": "Juni",
+  "july.label": "Juli",
+  "august.label": "Augustus",
+  "september.label": "September",
+  "october.label": "Oktober",
+  "november.label": "November",
+  "december.label": "December"
 }
