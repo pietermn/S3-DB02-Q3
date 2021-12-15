@@ -6,43 +6,13 @@ import numpy as np
 from sql import GetAllProductions, GetAlternateProductions
 
 
-def aggreratePerHour(data):
-    hours = []
-    hour = data.iloc[0].Timestamp.timestamp() / 3600
-    productions = 0
-    shottimes = 0
-    prevProduction = ""
-    index = 0
-
-    for index, row in data.iterrows():
-        productions += 1
-        shottimes += row.ShotTime
-
-        if index == 0:
-            prevProduction = row
-
-        if row.Timestamp.hour != prevProduction.Timestamp.hour:
-            hours.append(Hour(hour, productions, shottimes / productions))
-            productions = 0
-            shottimes = 0
-            hour += 1
-
-        prevProduction = row
-
-    return hours
-
-
 def predictProductions(timestampBegin, timestampEnd, componentId, plId):
-    dfProductions = GetAllProductions(componentId, plId)
+    data = GetAllProductions(componentId, plId)
 
-    if dfProductions.empty:
-        dfProductions = GetAlternateProductions(plId)
+    if data.empty:
+        data = GetAlternateProductions(plId)
 
-    data = aggreratePerHour(dfProductions)
-
-    df = pd.DataFrame.from_records([hour.to_dict() for hour in data])
-
-    productionMax = df["productions"].max()
+    productionMax = data["productions"].max()
 
     currentMost = 0
     currentMostProductions = 0
@@ -50,7 +20,7 @@ def predictProductions(timestampBegin, timestampEnd, componentId, plId):
     for i in range(0, 50):
         count = []
 
-        for index, row in df.iterrows():
+        for index, row in data.iterrows():
             if row.productions > productionMax / 50 * i * .99 and row.productions < productionMax / 50 * i * 1.01:
                 count.append(row.productions)
 
@@ -58,14 +28,14 @@ def predictProductions(timestampBegin, timestampEnd, componentId, plId):
             currentMost = len(count)
             currentMostProductions = np.mean(count)
 
-    temp = df.copy()
+    temp = data.copy()
 
     for index, row in temp.iterrows():
         if row.productions < currentMostProductions * .99 or row.productions > currentMostProductions * 1.01:
-            df.drop(index, inplace=True)
+            data.drop(index, inplace=True)
 
-    x = df.iloc[:, :1].values
-    y = df.iloc[:, 1:2].values
+    x = data.iloc[:, :1].values
+    y = data.iloc[:, 1:2].values
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1/3)
 
@@ -74,6 +44,8 @@ def predictProductions(timestampBegin, timestampEnd, componentId, plId):
     lr.score(x_test, y_test)
     y_predBegin = lr.predict([[int(timestampBegin) / 3600]])
     y_predEnd = lr.predict([[int(timestampEnd) / 3600]])
+
+    print(y_predBegin, y_predEnd)
 
     average = np.mean([y_predBegin[0][0], y_predEnd[0][0]])
 
