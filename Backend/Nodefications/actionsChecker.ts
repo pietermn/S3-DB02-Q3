@@ -30,8 +30,6 @@ export default class ActionsChecker {
                             console.log("Sms backend down");
                         });
                 }
-            } catch {
-                console.log("Sms backend is down");
             }
         });
     };

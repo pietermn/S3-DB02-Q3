@@ -58,11 +58,7 @@ export default class SQL {
 
     static addNotification = (componentId: number, message: string) => {
         sqlConnection.query(
-            "INSERT INTO `Notifications` (`Id`, `ComponentId`, `Message`) VALUES (NULL, " +
-                componentId +
-                ', "' +
-                message +
-                '")'
+            "INSERT INTO `Notifications` (`ComponentId`, `Message`) VALUES (" + componentId + ', "' + message + '")'
         );
     };
 
