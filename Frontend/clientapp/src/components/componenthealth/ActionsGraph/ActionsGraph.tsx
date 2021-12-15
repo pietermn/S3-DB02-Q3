@@ -88,9 +88,7 @@ export default function ActionsGraph(props: IActionsGraph) {
             const xAxis = (g: any) => {
                 g.attr("transform", `translate(0,${myHeight + 5})`)
                     .call(d3.axisBottom(x))
-                    .selectAll("text")
-                    .attr("transform", "translate(-10,0)rotate(-45)")
-                    .style("text-anchor", "end");
+                    .selectAll("text");
             };
 
             const yAxis = (g: any) => {

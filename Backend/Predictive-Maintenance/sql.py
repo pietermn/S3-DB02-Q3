@@ -7,35 +7,43 @@ credentials = "mysql+mysqlconnector://root:root@db:3306/db"
 
 def getProductions(table, plid, start, end):
     return pd.read_sql("""
-            SELECT Timestamp, ShotTime
+            SELECT
+                unix_timestamp(Timestamp) / 3600 AS hour,
+                COUNT(*) AS productions,
+                ShotTime as ast
             FROM `{}`
             WHERE ProductionLineId = {}
-            AND Timestamp >= '{}'
-            AND Timestamp <= '{}'
-            ORDER BY Timestamp
+            AND Timestamp > '{}'
+            AND Timestamp < '{}'
+            GROUP BY CAST(Timestamp as date),
+                HOUR(Timestamp)
             """.format(table, plid, start, end), con=credentials)
 
 
 def getAllProductionsFromProductionLine(table, plid):
     return pd.read_sql("""
-            SELECT Timestamp, ShotTime
+            SELECT
+                unix_timestamp(Timestamp) / 3600 AS hour,
+                COUNT(*) AS productions,
+                ShotTime as ast
             FROM `{}`
             WHERE ProductionLineId = {}
-            ORDER BY Timestamp
+            GROUP BY CAST(Timestamp as date),
+                HOUR(Timestamp)
             """.format(table, plid), con=credentials)
 
 
 def GetAlternateProductions(productionLineId):
-    dfProductions = pd.DataFrame()
+    productionsPerHour = pd.DataFrame()
     tableDate = datetime.strptime('2020-09', '%Y-%m').date()
     for i in range(0, 14):
         if tableDate > datetime.strptime('2020-09', '%Y-%m').date() and tableDate < datetime.strptime('2021-06', '%Y-%m').date():
-            dfProductions = dfProductions.append(getAllProductionsFromProductionLine(
-                "Productions-{}".format(str(tableDate)[:-3]), productionLineId))
+            productionsPerHour = productionsPerHour.append(getAllProductionsFromProductionLine(
+                "Productions-{}".format(str(tableDate)[:-3]), productionLineId), ignore_index=True)
 
         tableDate = tableDate + relativedelta(months=1)
 
-    return dfProductions
+    return productionsPerHour
 
 
 def GetAllProductions(componentId, productionlineId) -> pd.DataFrame:
@@ -47,7 +55,7 @@ def GetAllProductions(componentId, productionlineId) -> pd.DataFrame:
         ORDER BY StartDate
         """.format(componentId, productionlineId), con=credentials)
 
-    dfProductions = pd.DataFrame()
+    productionsPerHour = pd.DataFrame()
 
     for index, row in history.iterrows():
         endDate = ""
@@ -61,9 +69,9 @@ def GetAllProductions(componentId, productionlineId) -> pd.DataFrame:
 
         for i in range(0, differenceMonths + 1):
             if tableDate > datetime.strptime('2020-09', '%Y-%m').date() and tableDate < datetime.strptime('2021-06', '%Y-%m').date():
-                dfProductions = dfProductions.append(getProductions(
-                    "Productions-{}".format(str(tableDate)[:-3]), row.ProductionLineId, row.StartDate, row.EndDate))
+                productionsPerHour = productionsPerHour.append(getProductions(
+                    "Productions-{}".format(str(tableDate)[:-3]), row.ProductionLineId, row.StartDate, row.EndDate), ignore_index=True)
 
             tableDate = tableDate + relativedelta(months=1)
 
-    return dfProductions
+    return productionsPerHour
