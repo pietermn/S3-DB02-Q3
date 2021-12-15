@@ -1,3 +1,4 @@
+import { CancelToken } from "axios";
 import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
 
@@ -10,10 +11,17 @@ export const GetComponents = async () => {
     return components;
 };
 
-export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
+export const GetPreviousActions = async (
+    component_id: number,
+    beginDate: string,
+    endDate: string,
+    cancelToken: CancelToken
+) => {
     let actions: ProductionDate[] = [];
 
-    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {})
+    await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {
+        cancelToken,
+    })
         .then((res) => {
             actions = res.data;
         })
@@ -23,10 +31,17 @@ export const GetPreviousActions = async (component_id: number, beginDate: string
     return actions;
 };
 
-export const GetPredictedActions = async (component_id: number, beginDate: string, endDate: string) => {
+export const GetPredictedActions = async (
+    component_id: number,
+    beginDate: string,
+    endDate: string,
+    cancelToken: CancelToken
+) => {
     let actions: ProductionDate[] = [];
 
-    await Api.get<ProductionDate[]>(`component/predictedactions/${component_id}/${beginDate}/${endDate}`, {})
+    await Api.get<ProductionDate[]>(`component/predictedactions/${component_id}/${beginDate}/${endDate}`, {
+        cancelToken,
+    })
         .then((res) => {
             actions = res.data;
         })
