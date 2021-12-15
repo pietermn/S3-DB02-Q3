@@ -28,6 +28,20 @@ services:
       db:
         condition: service_healthy
 
+  ml-python:
+    container_name: predictive-maintenance
+    image: ${DOCKER_REGISTRY-}predictivemaintenance
+    build:
+      context: Backend/Predictive-Maintenance
+      dockerfile: Dockerfile
+
+    networks:
+      - custom-network
+
+    depends_on:
+      db:
+        condition: service_healthy
+
   # Q3-Frontend:
   #   container_name: Q3-Frontend
   #   image: ${DOCKER_REGISTRY-}q3frontend
@@ -69,26 +83,26 @@ services:
       db:
         condition: service_healthy
 
-  Q3-Sms:
-    container_name: Q3-Sms
-    image: ${DOCKER_REGISTRY-}q3sms
-    build:
-      context: Backend/telnyxApi
-      dockerfile: Dockerfile
+  # Q3-Sms:
+  #   container_name: Q3-Sms
+  #   image: ${DOCKER_REGISTRY-}q3sms
+  #   build:
+  #     context: Backend/telnyxApi
+  #     dockerfile: Dockerfile
 
-    environment:
-      - ASPNETCORE_URLS=http://+:5100
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:5100
 
-    ports:
-      - "5100:5100"
-      - "5101:5101"
+  #   ports:
+  #     - "5100:5100"
+  #     - "5101:5101"
 
-    networks:
-      - custom-network
+  #   networks:
+  #     - custom-network
 
-    depends_on:
-      db:
-        condition: service_healthy
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
   # Q3-Backend-Authentication:
   #   container_name: Q3-Backend-Authentication
@@ -108,9 +122,8 @@ services:
   #     - custom-network
 
   db:
-    image: mariadb:latest
+    image: mariadb:10.5
     container_name: Q3_Database
-    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./Databases/Q3_Data/data:/docker-entrypoint-initdb.d
     environment:
@@ -123,6 +136,12 @@ services:
 
     networks:
       - custom-network
+    command:
+      [
+        '--default-authentication-plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
 
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]

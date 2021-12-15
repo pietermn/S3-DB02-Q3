@@ -1,5 +1,6 @@
 ﻿using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
+using DotNetEnv;
 using Enums;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
@@ -18,7 +19,9 @@ namespace Backend_DAL
     {
         public static MySqlConnection GetConnection()
         {
-            MySqlConnection GeneralConnection = new($"Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None");
+            Env.TraversePath().Load();
+            string connectionString = !string.IsNullOrEmpty(Env.GetString("ConnectionString")) ? Env.GetString("ConnectionString") : "Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None";
+            MySqlConnection GeneralConnection = new(connectionString);
             return GeneralConnection;
         }
     }
@@ -68,8 +71,8 @@ namespace Backend_DAL
             _connection.Open();
 
             command.ExecuteNonQuery();
-            DataSet ds = new DataSet();
-            MySqlDataAdapter da = new MySqlDataAdapter(command);
+            DataSet ds = new();
+            MySqlDataAdapter da = new(command);
             da.Fill(ds);
             _connection.Close();
 
@@ -139,7 +142,7 @@ namespace Backend_DAL
         {
             using var command = _connection.CreateCommand();
 
-            command.CommandText = "SELECT treeview.id AS 'ProductionLineId', start_date AS 'StartDate', end_date AS 'EndDate' FROM `production_data`  INNER JOIN `machine_monitoring_poorten` ON machine_monitoring_poorten.port = production_data.port AND machine_monitoring_poorten.board = production_data.board INNER JOIN `treeview` ON treeview.naam LIKE machine_monitoring_poorten.name WHERE treeview_id=@ComponentId;";
+            command.CommandText = "SELECT treeview.id AS 'ProductionLineId', start_date AS 'StartDate', end_date AS 'EndDate', start_time as 'StartTime', end_time as 'EndTime' FROM `production_data`  INNER JOIN `machine_monitoring_poorten` ON machine_monitoring_poorten.port = production_data.port AND machine_monitoring_poorten.board = production_data.board INNER JOIN `treeview` ON treeview.naam LIKE machine_monitoring_poorten.name WHERE treeview_id=@ComponentId;";
             command.Parameters.AddWithValue("@ComponentId", componentId);
 
             _connection.Open();
@@ -157,11 +160,19 @@ namespace Backend_DAL
                 int id = Convert.ToInt32(row["ProductionLineId"]);
 
                 DateTime startDate = Convert.ToDateTime(row["StartDate"]);
+                string startTimeStr = Convert.ToString(row["StartTime"]);
+                string[] starttimes = startTimeStr.Split(":");
+
+                startDate = new(startDate.Year, startDate.Month, startDate.Month, Convert.ToInt32(starttimes[0]), Convert.ToInt32(starttimes[1]), Convert.ToInt32(starttimes[2]));
 
                 DateTime endDate = new DateTime(1, 1, 1);
                 try
                 {
                     endDate = Convert.ToDateTime(row["EndDate"]);
+                    string endTimeStr = Convert.ToString(row["EndTime"]);
+                    string[] endtimes = endTimeStr.Split(":");
+
+                    endDate = new(endDate.Year, endDate.Month, endDate.Day, Convert.ToInt32(endtimes[0]), Convert.ToInt32(endtimes[1]), Convert.ToInt32(endtimes[2]));
                 }
                 catch (MySqlConversionException)
                 {
@@ -237,7 +248,7 @@ namespace Backend_DAL
 
             _connection.Open();
 
-            List<ProductionsDTO> Productions = new List<ProductionsDTO>();
+            List<ProductionsDTO> Productions = new();
 
             using (MySqlDataReader reader = command.ExecuteReader())
             {
@@ -247,7 +258,7 @@ namespace Backend_DAL
                     DateTime timestamp = Convert.ToDateTime(reader["Timestamp"]);
                     double shottime = Convert.ToDouble(reader["ShotTime"]);
 
-                    Productions.Add(new ProductionsDTO() { Id = id, Timestamp = timestamp, ShotTime = shottime }) ;
+                    Productions.Add(new ProductionsDTO() { Id = id, Timestamp = timestamp, ShotTime = shottime, ProductionLineId = productionLineId }) ;
                 }
             }
 
@@ -270,6 +281,15 @@ namespace Backend_DAL
 
         public void ConvertAll()
         {
+            List<ComponentDTO> Components = _Context.Components.Include(c => c.History).ToList();
+
+            foreach(ComponentDTO component in Components)
+            {
+                component.History = GetHistory(component.Id);
+            }
+
+            _Context.SaveChanges();
+
             //List<ProductionSideDTO> ProductionSides = GetProductionSides();
 
             //foreach (ProductionSideDTO productionSideDTO in ProductionSides)
@@ -329,28 +349,28 @@ namespace Backend_DAL
 
             //_Context.SaveChanges();
             //_Context.Database.SetCommandTimeout(100000);
-            Q3Context context = new(new DateTime(2020, 10, 1));
+            //Q3Context context = new(new DateTime(2020, 10, 1));
 
-            List<ProductionLineDTO> ProductionLines = context.ProductionLines.Include(pl => pl.Productions).ToList();
+            //List<ProductionLineDTO> ProductionLines = context.ProductionLines.Include(pl => pl.Productions).ToList();
 
-            foreach (ProductionLineDTO productionLineDTO in ProductionLines)
-            {
-                context.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202010"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202012"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202101"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202102"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202103"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202104"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202105"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202106"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202107"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202108"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202109"));
-                //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202110"));
-            }
+            //foreach (ProductionLineDTO productionLineDTO in ProductionLines)
+            //{
+            //    context.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202010"));
+            //    context.SaveChanges();
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202012"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202101"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202102"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202103"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202104"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202105"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202106"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202107"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202108"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202109"));
+            //    //productionLineDTO.Productions.AddRange(GetProductionsFromProductionLine(productionLineDTO.Id, "monitoring_data_202110"));
+            //}
 
-            context.SaveChanges();
-            bool done = true;
+            //bool done = true;
 
             //using var command = _connection.CreateCommand();
 
@@ -376,6 +396,33 @@ namespace Backend_DAL
             //context.Productions.AddRange(Productions);
             //context.SaveChanges();
 
+            //Q3Context context = new(new DateTime(2020, 9, 1));
+            //List<ComponentDTO> Components = context.Components.Include(c => c.History).ToList();
+
+            //foreach (ComponentDTO component in Components)
+            //{
+            //    int totalActions = 0;
+            //    DateTime startDate = new(2020, 9, 1);
+
+            //    foreach (ProductionLineHistoryDTO plH in component.History)
+            //    {
+            //        startDate = new(2020, 9, 1);
+            //        context = new(startDate);
+
+            //        for (int i = 0; i < 10; i++)
+            //        {
+            //            totalActions += context.Productions.Where(p => p.Timestamp >= plH.StartDate && p.Timestamp <= plH.EndDate && p.ProductionLineId == plH.ProductionLineId).AsNoTracking().Count();
+            //            startDate = startDate.AddMonths(1);
+            //            context = new(startDate);
+
+            //        }
+            //    }
+            //    context = new();
+            //    ComponentDTO newComponent = context.Components.Where(c => c.Id == component.Id).FirstOrDefault();
+            //    newComponent.CurrentActions = totalActions;
+            //    newComponent.TotalActions = totalActions;
+            //    context.SaveChanges();
+            //}
         }
     }
 }

@@ -127,3 +127,18 @@
 .LsDataGrid :focus {
     outline: none !important;
 }
+
+.LS-Header-Description {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    z-index: 10;
+
+    > b {
+        margin-right: 1rem;
+    }
+
+    > input {
+        margin-right: auto;
+    }
+}

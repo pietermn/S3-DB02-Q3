@@ -46,12 +46,29 @@ namespace Backend.Controllers
             return Ok(Productions);
         }
 
+        [Route("predictedactions/{componentId}/{beginDate}/{endDate}"), HttpGet]
+        public IActionResult GetPredictedActions(int componentId, DateTime beginDate, DateTime endDate)
+        {
+            List<ProductionsDateDTO> Productions = _componentContainer.GetPredictedActions(componentId, beginDate, endDate);
+
+            return Ok(Productions);
+        }
+
+
         [Route("maxactions"), HttpPut]
         public IActionResult SetMaxActions(int component_id, int max_actions)
         {
             _componentContainer.SetMaxActions(component_id, max_actions);
 
             return Ok();
+        }
+
+        [Route("predictmaxactions/{component_id}"), HttpGet]
+        public IActionResult GetPredictMaxAction(int component_id)
+        {
+            DateTime date = _componentContainer.PredictMaxActions(component_id);
+
+            return Ok(date);
         }
     }
 }

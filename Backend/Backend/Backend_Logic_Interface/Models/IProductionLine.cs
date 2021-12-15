@@ -12,6 +12,8 @@ namespace Backend_Logic_Interface.Models
         public bool Active { get; }
         public int Port { get; }
         public int Board { get; }
+        List<IMachine> Machines { get; }
+        List<IComponent> Components { get; }
 
     }
 }

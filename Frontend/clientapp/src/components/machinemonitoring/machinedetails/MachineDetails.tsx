@@ -8,7 +8,9 @@ import { useHistory } from "react-router-dom";
 import { getUptimesFromLastDayById } from "../../../api/requests/uptime";
 import { UpdaterContext } from "../../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
-import { Tooltip } from "@material-ui/core";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import { CancelTokenSource } from "axios";
 
 interface IMachineDetails {
     id: number;
@@ -16,7 +18,16 @@ interface IMachineDetails {
     productionLine: string;
     product: string;
     components?: Component[];
+    source: CancelTokenSource;
 }
+
+const ComponentNameTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        fontSize: 14,
+    },
+}));
 
 export default function MachineDetails(props: IMachineDetails) {
     const { bool } = useContext(UpdaterContext);
@@ -30,7 +41,7 @@ export default function MachineDetails(props: IMachineDetails) {
     }
 
     async function getUptime() {
-        setUptime(await getUptimesFromLastDayById(props.id));
+        setUptime(await getUptimesFromLastDayById(props.id, props.source.token));
     }
 
     useEffect(() => {
@@ -93,26 +104,28 @@ export default function MachineDetails(props: IMachineDetails) {
                     )}
                 </td>
                 <td>{props.productionLine}</td>
-                <td>
+                <td className="Machine-Status">
                     <MachineStatus name={props.productionLine} uptime={uptime} />
                 </td>
                 <td>
                     {props.components?.length ? (
                         props.components.length === 1 ? (
                             props.components[0].description.length > 10 ? (
-                                <Tooltip title={props.components[0].description}>
+                                <ComponentNameTooltip title={props.components[0].description}>
                                     <div>{props.components[0].description.substr(0, 9)}...</div>
-                                </Tooltip>
+                                </ComponentNameTooltip>
                             ) : (
                                 props.components[0].description
                             )
                         ) : (
-                            <Tooltip title={props.components?.length ? props.components[0].description : ""}>
+                            <ComponentNameTooltip
+                                title={props.components?.length ? props.components[0].description : ""}
+                            >
                                 <div>
                                     <b>({props.components.length})</b>{" "}
                                     {props.components?.length ? props.components[0].description.substr(0, 6) : null}...
                                 </div>
-                            </Tooltip>
+                            </ComponentNameTooltip>
                         )
                     ) : (
                         <i>{t("none.label")}</i>

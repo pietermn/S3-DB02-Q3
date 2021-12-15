@@ -8,16 +8,25 @@ import {
 } from "react-icons/fa";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
-import { Tooltip } from "@material-ui/core";
-import { IconButton } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 
 interface IComponentsTable {
     components: Component[];
     setSelectedComponet: (component: Component) => void;
     getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
+
+const WarningTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        fontSize: 14,
+    },
+}));
 
 export default function ComponentsTable(props: IComponentsTable) {
     const { t } = useTranslation();
@@ -28,11 +37,20 @@ export default function ComponentsTable(props: IComponentsTable) {
             sort: "desc",
         },
     ]);
+    const [searchInput, setSearchInput] = useState("");
+    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+    let dgWidth = innerWidth * 0.8;
+
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setInnerWidth(window.innerWidth);
+        });
+    }, []);
 
     const cols: GridColDef[] = [
         {
             field: "status",
-            headerName: t("status.label"),
+            headerName: "",
             align: "center",
             headerAlign: "center",
             renderCell: (params) => {
@@ -58,16 +76,33 @@ export default function ComponentsTable(props: IComponentsTable) {
             filterable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
+            width: dgWidth * 0.05,
         },
         {
             field: "description",
             headerName: t("name.label"),
-            width: 300,
+            width: dgWidth * 0.25,
+            disableColumnMenu: true,
+            sortable: false,
+            renderHeader: () => {
+                return (
+                    <div className="LS-Header-Description">
+                        <b>{t("name.label")}</b>
+                        <TextField
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            label={t("searchtag.label")}
+                            variant="standard"
+                            size="small"
+                        />
+                    </div>
+                );
+            },
         },
         {
             field: "maintenance",
             headerName: t("maintenance.label"),
-            width: 300,
+            width: dgWidth * 0.25,
             sortable: false,
             filterable: false,
             hideSortIcons: true,
@@ -76,15 +111,11 @@ export default function ComponentsTable(props: IComponentsTable) {
                 let m = props.getComponentNotifications(params.row.id);
                 return m.length ? (
                     m.length === 1 ? (
-                        // <Tooltip title={m[0].description}>
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
                     ) : (
-                        // </Tooltip>
-                        // <Tooltip title={m[0].description}>
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">
                             <b>({m.length})</b> {m[0].description}
                         </div>
-                        // </Tooltip>
                     )
                 ) : (
                     <div></div>
@@ -97,7 +128,8 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            disableColumnMenu: true,
+            width: dgWidth * 0.1,
         },
         {
             field: "currentActions",
@@ -105,7 +137,8 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            disableColumnMenu: true,
+            width: dgWidth * 0.1,
         },
         {
             field: "percentageMaintenance",
@@ -113,7 +146,8 @@ export default function ComponentsTable(props: IComponentsTable) {
             align: "right",
             headerAlign: "right",
             filterable: false,
-            width: 150,
+            disableColumnMenu: true,
+            width: dgWidth * 0.1,
             renderCell: (params) => {
                 return <div>{params.row.percentageMaintenance}%</div>;
             },
@@ -126,14 +160,15 @@ export default function ComponentsTable(props: IComponentsTable) {
             disableColumnMenu: true,
             align: "center",
             headerAlign: "center",
+            width: dgWidth * 0.05,
             renderCell: (params) => {
                 if (params.row.maxActions === 1) {
                     return (
-                        <Tooltip title={maw}>
+                        <WarningTooltip title={maw}>
                             <IconButton>
                                 <WarningIcon className="orange" />
                             </IconButton>
-                        </Tooltip>
+                        </WarningTooltip>
                     );
                 }
             },
@@ -146,7 +181,13 @@ export default function ComponentsTable(props: IComponentsTable) {
                 disableSelectionOnClick
                 className="LsDataGrid"
                 columns={cols}
-                rows={props.components}
+                rows={
+                    searchInput
+                        ? props.components.filter((c) =>
+                              c.description.toLocaleLowerCase().includes(searchInput.toLocaleLowerCase())
+                          )
+                        : props.components
+                }
                 rowsPerPageOptions={[]}
                 pageSize={100}
                 hideFooter
@@ -162,69 +203,6 @@ export default function ComponentsTable(props: IComponentsTable) {
                     },
                 }}
             />
-            {/* <div className="row">
-                <p>{t("status.label")}</p>
-                <div id="Lifespan-Search">
-                    {t("name.label")}
-                    <div id="Lifespan-Search-Spacer" />
-                    <TextField
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        label={searchLabel}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
-                <p>{t("totalactions.label")}</p>
-                <p>{t("currentactions.label")}</p>
-                <div>
-                    {t("max.label")} %
-                    <Tooltip title={maxTooltip}>
-                        <IconButton style={{ fontSize: "1rem" }} disableRipple>
-                            <InfoIcon />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            </div>
-            {props.components && search
-                ? getSearchedComponents()
-                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                      .map((component) => {
-                          return (
-                              <div
-                                  key={component.id}
-                                  onClick={() => props.setSelectedComponet(component)}
-                                  className="row"
-                              >
-                                  <div>
-                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </div>
-                                  <p>{component.description}</p>
-                                  <p>{component.totalActions}</p>
-                                  <p>{component.currentActions}</p>
-                                  <p>{component.percentageMaintenance}%</p>
-                              </div>
-                          );
-                      })
-                : props.components
-                      .sort((a, b) => b.percentageMaintenance - a.percentageMaintenance)
-                      .map((component) => {
-                          return (
-                              <div
-                                  key={component.id}
-                                  onClick={() => props.setSelectedComponet(component)}
-                                  className="row"
-                              >
-                                  <div>
-                                      <StatusDot className={GetStatusColor(component.percentageMaintenance)} />
-                                  </div>
-                                  <p>{component.description}</p>
-                                  <p>{component.totalActions}</p>
-                                  <p>{component.currentActions}</p>
-                                  <p>{component.percentageMaintenance}%</p>
-                              </div>
-                          );
-                      })}*/}
         </div>
     );
 }

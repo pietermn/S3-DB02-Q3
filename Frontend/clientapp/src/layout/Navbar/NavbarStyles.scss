@@ -61,7 +61,7 @@ nav {
 
         p {
             padding-inline: 1.5rem;
-            font-size: 20px;
+            font-size: 1rem;
             cursor: pointer;
 
             &:hover {
@@ -171,4 +171,21 @@ nav {
 
 .bold-text {
     font-weight: bold;
+}
+
+@media screen and (max-width: 500px) {
+    nav {
+        img {
+            display: none;
+        }
+        section {
+            p {
+                padding-inline: 0.25rem;
+            }
+
+            &:nth-child(2) {
+                display: none;
+            }
+        }
+    }
 }

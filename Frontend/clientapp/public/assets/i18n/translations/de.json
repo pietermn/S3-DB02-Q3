@@ -38,5 +38,22 @@
   "maxactionswarning.label": "Kein maximale actionen eingeführt",
   "resetactions.label": "Möchten Sie die aktuellen Aktionen auf 0 setzen?",
   "yes.label": "Ja",
-  "no.label": "Nein"
+  "no.label": "Nein",
+  "actions.label": "Aktionen",
+  "days.label": "Tage",
+  "years.label": "Jahre",
+  "deceniums.label": "Jahrzehnte",
+  "time.label": "Zeit",
+  "january.label": "Januar",
+  "february.label": "Februar",
+  "march.label": "März",
+  "april.label": "April",
+  "may.label": "Mai",
+  "june.label": "Juni",
+  "july.label": "Juli",
+  "august.label": "Augustus",
+  "september.label": "September",
+  "october.label": "Oktober",
+  "november.label": "November",
+  "december.label": "Dezember"
 }

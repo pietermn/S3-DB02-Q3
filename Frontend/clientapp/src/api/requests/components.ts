@@ -1,9 +1,6 @@
-import axios, { Canceler, CancelTokenSource } from "axios";
+import { CancelToken } from "axios";
 import { Component, Maintenance, ProductionDate } from "../../globalTypes";
 import Api from "../Instance";
-
-const CancelToken = axios.CancelToken;
-let cancel: Canceler;
 
 export const GetComponents = async () => {
     let components: Component[] = [];
@@ -14,17 +11,16 @@ export const GetComponents = async () => {
     return components;
 };
 
-export const GetPreviousActions = async (component_id: number, beginDate: string, endDate: string) => {
+export const GetPreviousActions = async (
+    component_id: number,
+    beginDate: string,
+    endDate: string,
+    cancelToken: CancelToken
+) => {
     let actions: ProductionDate[] = [];
 
-    if (cancel != undefined) {
-        cancel();
-    }
-
     await Api.get<ProductionDate[]>(`component/previousactions/${component_id}/${beginDate}/${endDate}`, {
-        cancelToken: new CancelToken(function executor(c) {
-            cancel = c;
-        }),
+        cancelToken,
     })
         .then((res) => {
             actions = res.data;
@@ -33,6 +29,31 @@ export const GetPreviousActions = async (component_id: number, beginDate: string
             console.log(thrown);
         });
     return actions;
+};
+
+export const GetPredictedActions = async (
+    component_id: number,
+    beginDate: string,
+    endDate: string,
+    cancelToken: CancelToken
+) => {
+    let actions: ProductionDate[] = [];
+
+    await Api.get<ProductionDate[]>(`component/predictedactions/${component_id}/${beginDate}/${endDate}`, {
+        cancelToken,
+    })
+        .then((res) => {
+            actions = res.data;
+        })
+        .catch(function (thrown) {
+            console.log(thrown);
+        });
+
+    return actions;
+};
+
+export const PredictMaintenance = async (component_id: number) => {
+    return (await Api.get<Date>(`component/predictmaxactions/${component_id}`)).data;
 };
 
 export const GetAllMaintenance = async (component_id: number) => {

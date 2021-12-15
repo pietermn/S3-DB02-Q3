@@ -44,5 +44,20 @@ namespace Backend_DAL
 
             return new List<ProductionsDTO>();
         }
+
+        public List<ProductionsDTO> GetAllProductionsFromProductionLine(int productionLine_id)
+        {
+            DateTime startDate = new(2020, 9, 1);
+            List<ProductionsDTO> productions = new();
+            Q3Context context = new(startDate);
+            for(int i = 0; i < 14; i++)
+            {
+                productions.AddRange(context.Productions.Where(p => p.ProductionLineId == productionLine_id).ToList());
+                startDate = startDate.AddMonths(1);
+                context = new(startDate);
+            }
+
+            return productions;
+        }
     }
 }

@@ -30,8 +30,8 @@ export default class ActionsChecker {
                             console.log("Sms backend down");
                         });
                 }
-            } else {
-                sql.removeNotificationFromComponent(c.id);
+            } catch {
+                console.log("Sms backend is down");
             }
         });
     };
