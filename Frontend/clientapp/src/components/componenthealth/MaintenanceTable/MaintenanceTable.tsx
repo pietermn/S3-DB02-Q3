@@ -12,12 +12,6 @@ interface IMaintenanceTable {
 
 export default function MaintenanceTable({ maintenance, finishMaintenance }: IMaintenanceTable) {
     const { t } = useTranslation();
-    const [sortModel, setSortModel] = useState<GridSortModel>([
-        {
-            field: "timeDone",
-            sort: "desc",
-        },
-    ]);
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = (innerWidth / 3) * 0.8;
 
@@ -26,6 +20,16 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
             setInnerWidth(window.innerWidth);
         });
     }, []);
+
+    function rows(): Maintenance[] {
+        let rows = [...maintenance].sort((a, b) => new Date(b.timeDone).getTime() - new Date(a.timeDone).getTime());
+        let first = rows.find((r) => new Date(r.timeDone).getFullYear() === 1);
+        if (first) {
+            rows.splice(rows.indexOf(first), 1);
+            return [first, ...rows];
+        }
+        return rows;
+    }
 
     const cols: GridColDef[] = [
         {
@@ -73,12 +77,10 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
             disableSelectionOnClick
             className="Maintenance-Table"
             columns={cols}
-            rows={maintenance}
+            rows={rows()}
             rowsPerPageOptions={[]}
             pageSize={100}
             hideFooter
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
         />
     );
 }

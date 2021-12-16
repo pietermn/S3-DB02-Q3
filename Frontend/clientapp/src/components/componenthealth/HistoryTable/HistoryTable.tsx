@@ -75,12 +75,14 @@ export default function HistoryTable(props: IHistoryTableProps) {
             disableSelectionOnClick
             className="History-Table"
             columns={cols}
-            rows={props.HistoryMachines}
+            rows={[...props.HistoryMachines].sort(
+                (a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+            )}
             rowsPerPageOptions={[]}
             pageSize={100}
             hideFooter
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
+            // sortModel={sortModel}
+            // onSortModelChange={setSortModel}
         />
     );
 }
