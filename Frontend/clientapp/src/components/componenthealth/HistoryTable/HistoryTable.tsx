@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ProductLineHistory } from "../../../globalTypes";
-import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import "./HistoryTable.scss";
 import { useEffect, useState } from "react";
 
@@ -9,12 +9,6 @@ interface IHistoryTableProps {
 }
 
 export default function HistoryTable(props: IHistoryTableProps) {
-    const [sortModel, setSortModel] = useState<GridSortModel>([
-        {
-            field: "endDate",
-            sort: "desc",
-        },
-    ]);
     const { t } = useTranslation();
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = innerWidth / 3;

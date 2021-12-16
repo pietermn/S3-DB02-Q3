@@ -169,6 +169,7 @@ export default function ActionsGraph(props: IActionsGraph) {
         }
         setIsLoading(false);
         AsyncGetActions();
+        // eslint-disable-next-line
     }, [props.componentId, beginDate, endDate]);
 
     useEffect(() => {

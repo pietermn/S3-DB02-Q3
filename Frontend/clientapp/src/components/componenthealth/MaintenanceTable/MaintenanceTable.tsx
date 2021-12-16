@@ -1,7 +1,7 @@
 import { Maintenance } from "../../../globalTypes";
 import "./MaintenanceTableStyle.scss";
 import { FaCheck as CheckmarkIcon } from "react-icons/fa";
-import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Component } from "../../../globalTypes";
 import "../HistoryTable/HistoryTable.scss";
 import "./ComponentsTable.scss";
-import { DataGrid, GridColDef, GridSelectionModel, GridSortModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { TextField } from "@material-ui/core";
 

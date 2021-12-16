@@ -42,6 +42,7 @@ function ComponentsTable(props: IComponentsTable) {
         return () => {
             cancelSource.cancel();
         };
+        // eslint-disable-next-line
     }, []);
 
     function PredictMaintenance(props: IPredictMaintenance) {
@@ -55,9 +56,10 @@ function ComponentsTable(props: IComponentsTable) {
 
         useEffect(() => {
             asyncGetPrediction();
+            // eslint-disable-next-line
         }, []);
 
-        if (props.component.maxActions == 1) {
+        if (props.component.maxActions === 1) {
             return (
                 <div className="Predict-Text">
                     <i>Cannot predict if no max actions is set</i>

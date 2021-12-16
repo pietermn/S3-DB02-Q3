@@ -12,7 +12,7 @@ import axios from "axios";
 
 export default function MachineMonitoringPage() {
     const [productionLines, setProductionLines] = useState<ProductionLine[]>([]);
-    const [source, setSource] = useState(axios.CancelToken.source());
+    const [source] = useState(axios.CancelToken.source());
     const { t } = useTranslation();
     const uptimeTooltip = t("uptimetooltip.label");
 
@@ -26,6 +26,7 @@ export default function MachineMonitoringPage() {
         return () => {
             source.cancel("Left MM page");
         };
+        // eslint-disable-next-line
     }, []);
 
     const StatusTooltip = styled(({ className, ...props }: TooltipProps) => (

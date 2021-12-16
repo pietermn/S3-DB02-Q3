@@ -10,7 +10,7 @@ import PageLoader from "../PageLoader";
 import "./NavbarStyles.scss";
 import { Badge } from "@material-ui/core";
 import i18n from "../../i18n";
-import { Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Stack } from "@mui/material";
+import { MenuItem, MenuList, Stack } from "@mui/material";
 //@ts-ignore
 import ReactCountryFlag from "react-country-flag";
 

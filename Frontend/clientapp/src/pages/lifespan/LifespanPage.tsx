@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import "./LifespanPage.scss";
 import RemoveYesNo from "../../components/popover/RemoveYesNo";
 import { Component } from "../../globalTypes";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents, PredictMaintenance as ApiPredictMaintenance } from "../../api/requests/components";
@@ -11,7 +11,7 @@ import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import axios, { CancelTokenSource } from "axios";
 
 type IComponentId = {
