@@ -8,9 +8,9 @@ import {
 } from "react-icons/fa";
 import { Component, MaintenanceNotification } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
-import { IconButton, LinearProgress, TextField } from "@mui/material";
+import { CircularProgress, IconButton, LinearProgress, TextField } from "@mui/material";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { PredictMaintenance as ApiPredictMaintenance } from "../../../api/requests/components";
@@ -33,61 +33,50 @@ interface IPredictMaintenance {
     component: Component;
 }
 
-export default function ComponentsTable(props: IComponentsTable) {
+function ComponentsTable(props: IComponentsTable) {
     function PredictMaintenance(props: IPredictMaintenance) {
         const [date, setDate] = useState(new Date());
+        const [loading, setLoading] = useState(true);
 
         async function asyncGetPrediction() {
             setDate(await ApiPredictMaintenance(props.component.id));
+            setLoading(false);
         }
 
         useEffect(() => {
             asyncGetPrediction();
         }, []);
 
-        if (props.component.maxActions === 1) {
-            return <div>Cannot predict if no max actions is set</div>;
+        if (props.component.maxActions == 1) {
+            return (
+                <div className="Predict-Text">
+                    <i>Cannot predict if no max actions is set</i>
+                </div>
+            );
         }
 
         if (new Date(date).toLocaleDateString() === "01/01/1") {
-            return <div>Cannot predict this component</div>;
+            return (
+                <div className="Predict-Text">
+                    <i>Cannot predict this component</i>
+                </div>
+            );
         } else if (props.component.currentActions >= props.component.maxActions) {
-            return <div>Has already hit its max actions</div>;
+            return (
+                <div className="Predict-Text">
+                    <i>Predicted: Has already hit its max actions</i>
+                </div>
+            );
+        } else if (loading) {
+            return <CircularProgress size={20} className="CircularProgress" />;
         } else {
-            return <div>{new Date(date).toLocaleDateString()}</div>;
+            return (
+                <div className="Predict-Text">
+                    <i>Predicted: {new Date(date).toLocaleDateString()}</i>
+                </div>
+            );
         }
     }
-
-    // function GetMaintenanceRow(component: Component) {
-    //     let m = props.getComponentNotifications(component.id);
-    //     const [predictedMaintenance, setPredictedMaintenance] = useState("loading...");
-    //     const ref = useRef(false);
-    //     if (component.percentageMaintenance > 95 && component.percentageMaintenance < 100 && ref.current === false) {
-    //         console.log(component);
-
-    //         ref.current = true;
-    //         PredictMaintenance(component, setPredictedMaintenance);
-    //     }
-    //     return m.length ? (
-    //         m.length === 1 ? (
-    //             <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
-    //         ) : (
-    //             <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">
-    //                 <b>({m.length})</b> {m[0].description}
-    //             </div>
-    //         )
-    //     ) : component.percentageMaintenance > 95 && component.percentageMaintenance < 100 ? (
-    //         <div>
-    //             {predictedMaintenance === "loading..." ? (
-    //                 <LinearProgress color="primary" className="LS-LinearProgress" />
-    //             ) : (
-    //                 predictedMaintenance
-    //             )}
-    //         </div>
-    //     ) : (
-    //         <div></div>
-    //     );
-    // }
 
     const { t } = useTranslation();
     const maw = t("maxactionswarning.label");
@@ -169,6 +158,8 @@ export default function ComponentsTable(props: IComponentsTable) {
             disableColumnMenu: true,
             renderCell: (params) => {
                 let m = props.getComponentNotifications(params.row.id);
+                console.log(params.row.description, m);
+
                 return m.length ? (
                     m.length === 1 ? (
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
@@ -177,7 +168,7 @@ export default function ComponentsTable(props: IComponentsTable) {
                             <b>({m.length})</b> {m[0].description}
                         </div>
                     )
-                ) : params.row.percentageMaintenance > 95 && params.row.percentageMaintenance < 100 ? (
+                ) : params.row.percentageMaintenance > 70 && params.row.percentageMaintenance < 100 ? (
                     <PredictMaintenance component={params.row} />
                 ) : (
                     <div></div>
@@ -239,6 +230,8 @@ export default function ComponentsTable(props: IComponentsTable) {
     return (
         <div className="lifespan-table">
             <DataGrid
+                rowBuffer={100}
+                rowThreshold={100}
                 disableColumnSelector
                 disableSelectionOnClick
                 className="LsDataGrid"
@@ -268,3 +261,12 @@ export default function ComponentsTable(props: IComponentsTable) {
         </div>
     );
 }
+
+function compareProps(prevProps: IComponentsTable, nextProps: IComponentsTable) {
+    return (
+        JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components) &&
+        prevProps.getComponentNotifications === prevProps.getComponentNotifications
+    );
+}
+
+export default memo(ComponentsTable);

@@ -142,3 +142,16 @@
         margin-right: auto;
     }
 }
+
+.CircularProgress {
+    color: map-get($map: $background, $key: "blue") !important;
+}
+
+.Predict-Text {
+    color: rgba($color: #000000, $alpha: 0.5);
+}
+
+.Predict-Text,
+.CircularProgress {
+    padding: 0 10px;
+}
