@@ -44,11 +44,14 @@
 }
 
 .History-Table {
-    margin-top: 5rem;
-
-    main {
-        grid-template-rows: repeat(3, 1fr);
+    &-Last-Header {
+        svg.MuiDataGrid-iconSeparator {
+            display: none;
+        }
     }
+}
+.History-Table :focus {
+    outline: none !important;
 }
 
 .Components-Table main {
