@@ -9,12 +9,6 @@ interface IHistoryTableProps {
 }
 
 export default function HistoryTable(props: IHistoryTableProps) {
-    const [sortModel, setSortModel] = useState<GridSortModel>([
-        {
-            field: "endDate",
-            sort: "desc",
-        },
-    ]);
     const { t } = useTranslation();
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = innerWidth / 3;
