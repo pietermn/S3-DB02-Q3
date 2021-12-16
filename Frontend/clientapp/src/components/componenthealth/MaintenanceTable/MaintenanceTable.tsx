@@ -51,7 +51,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
                     <>
                         {params.row.timeDone.toLocaleString() === "0001-01-01 00:00:00" ? (
                             <p>
-                                finish now:
+                                {t("finish.label")}
                                 <CheckmarkIcon
                                     onClick={() => {
                                         finishMaintenance(params.row.id);
