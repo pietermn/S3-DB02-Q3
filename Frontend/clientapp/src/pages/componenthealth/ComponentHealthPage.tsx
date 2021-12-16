@@ -48,7 +48,13 @@ export default function ComponentHealthPage() {
                     }
                 }
             } else {
-                HandleSelectedComponent(components[0]);
+                let mostActions = Math.max.apply(
+                    Math,
+                    components.map((c) => {
+                        return c.totalActions;
+                    })
+                );
+                HandleSelectedComponent(components.find((c) => c.totalActions === mostActions) || components[0]);
             }
         }
     }
