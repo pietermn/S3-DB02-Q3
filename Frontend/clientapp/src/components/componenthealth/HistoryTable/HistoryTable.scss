@@ -1,54 +1,18 @@
 @import "../../../variables";
 
-.History-Table,
 .Components-Table {
     width: 55%;
-    height: 200px;
-
-    .thead {
-        height: 50px;
-        display: grid;
-        align-items: center;
-
-        p {
-            margin: 0;
-            font-weight: bold;
-        }
-        border-bottom: 1px solid black;
-
-        .row {
-            border: none;
-        }
-    }
-
-    main {
-        height: 90%;
-        overflow-y: auto;
-        display: grid;
-        justify-items: center;
-    }
-
-    .row {
-        width: 95%;
-        height: 60px;
-        display: grid;
-        grid-template-columns: auto 175px 175px;
-        border-bottom: 1px solid black;
-
-        p {
-            &:first-child {
-                padding-left: 1rem;
-            }
-        }
-    }
 }
 
 .History-Table {
-    margin-top: 5rem;
-
-    main {
-        grid-template-rows: repeat(3, 1fr);
+    &-Last-Header {
+        svg.MuiDataGrid-iconSeparator {
+            display: none;
+        }
     }
+}
+.History-Table :focus {
+    outline: none !important;
 }
 
 .Components-Table main {

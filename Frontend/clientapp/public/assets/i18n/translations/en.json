@@ -57,5 +57,6 @@
   "november.label": "November",
   "december.label": "December",
   "predictedto.label": "Predicted to require maintenance on:",
-  "loading.label": "Loading"
+  "loading.label": "Loading",
+  "performed.label": "Perfomed on:"
 }

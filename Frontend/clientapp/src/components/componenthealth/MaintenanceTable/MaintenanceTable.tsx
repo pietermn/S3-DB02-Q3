@@ -1,6 +1,9 @@
 import { Maintenance } from "../../../globalTypes";
 import "./MaintenanceTableStyle.scss";
 import { FaCheck as CheckmarkIcon } from "react-icons/fa";
+import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 interface IMaintenanceTable {
     maintenance: Maintenance[];
@@ -8,62 +11,74 @@ interface IMaintenanceTable {
 }
 
 export default function MaintenanceTable({ maintenance, finishMaintenance }: IMaintenanceTable) {
-    // function dateInput(date: Date) {
-    //     const d = new Date(date);
-    //     console.log(d);
+    const { t } = useTranslation();
+    const [sortModel, setSortModel] = useState<GridSortModel>([
+        {
+            field: "timeDone",
+            sort: "desc",
+        },
+    ]);
+    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+    let dgWidth = (innerWidth / 3) * 0.8;
 
-    //     const dayZero = d.getDate() < 10 ? true : false;
-    //     const monthZero = d.getMonth() + 1 < 10 ? true : false;
-    //     const hourZero = d.getHours() < 10 ? true : false;
-    //     const minuteZero = d.getMinutes() < 10 ? true : false;
-    //     const secondZero = d.getSeconds() < 10 ? true : false;
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setInnerWidth(window.innerWidth);
+        });
+    }, []);
 
-    //     return (
-    //         d.getFullYear() +
-    //         "-" +
-    //         (monthZero ? "0" : "") +
-    //         (d.getMonth() + 1) +
-    //         "-" +
-    //         (dayZero ? "0" : "") +
-    //         d.getDate() +
-    //         " " +
-    //         (hourZero ? "0" : "") +
-    //         d.getHours() +
-    //         ":" +
-    //         (minuteZero ? "0" : "") +
-    //         d.getMinutes() +
-    //         ":" +
-    //         (secondZero ? "0" : "") +
-    //         d.getSeconds()
-    //     );
-    // }
-
-    return (
-        <div className="MaintenanceTable">
-            <div className="row">
-                <p>Maintenance description</p>
-                <p>Time finished</p>
-            </div>
-            {maintenance.map((maintenance) => {
+    const cols: GridColDef[] = [
+        {
+            field: "description",
+            renderHeader: () => {
+                return <b>{t("maintenance.label")}</b>;
+            },
+            sortable: false,
+            width: dgWidth * 0.45,
+            disableColumnMenu: true,
+        },
+        {
+            field: "timeDone",
+            headerClassName: "Maintenance-Table-Last-Header",
+            renderHeader: () => {
+                return <b>{t("performed.label")}</b>;
+            },
+            sortable: false,
+            width: dgWidth * 0.45,
+            disableColumnMenu: true,
+            renderCell: (params) => {
                 return (
-                    <div key={maintenance.id} className="row">
-                        <p>{maintenance.description}</p>
-                        {console.log(maintenance)}
-                        {maintenance.timeDone.toLocaleString() === "0001-01-01 00:00:00" ? (
+                    <>
+                        {params.row.timeDone.toLocaleString() === "0001-01-01 00:00:00" ? (
                             <p>
                                 finish now:
                                 <CheckmarkIcon
                                     onClick={() => {
-                                        finishMaintenance(maintenance.id);
+                                        finishMaintenance(params.row.id);
                                     }}
                                 />
                             </p>
                         ) : (
-                            <p>{maintenance.timeDone.toLocaleString()}</p>
+                            <p>{params.row.timeDone.toLocaleString()}</p>
                         )}
-                    </div>
+                    </>
                 );
-            })}
-        </div>
+            },
+        },
+    ];
+
+    return (
+        <DataGrid
+            disableColumnSelector
+            disableSelectionOnClick
+            className="Maintenance-Table"
+            columns={cols}
+            rows={maintenance}
+            rowsPerPageOptions={[]}
+            pageSize={100}
+            hideFooter
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+        />
     );
 }

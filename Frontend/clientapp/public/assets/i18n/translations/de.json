@@ -57,5 +57,6 @@
   "november.label": "November",
   "december.label": "Dezember",
   "predictedto.label": "Voruassichtlicher instandhaltung auf:",
-  "loading.label": "Wird geladen"
+  "loading.label": "Wird geladen",
+  "performed.label": "Durchgeführt am:"
 }

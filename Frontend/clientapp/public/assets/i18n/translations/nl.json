@@ -57,5 +57,6 @@
   "november.label": "November",
   "december.label": "December",
   "predictedto.label": "Voorspeld onderhoud op:",
-  "loading.label": "Aan het laden"
+  "loading.label": "Aan het laden",
+  "performed.label": "Uitgevoerd op:"
 }

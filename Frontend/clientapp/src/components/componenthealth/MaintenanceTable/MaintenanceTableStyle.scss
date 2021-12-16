@@ -1,47 +1,12 @@
 @import "../../../variables";
 
-.MaintenanceTable {
-    width: 55%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    .row {
-        display: flex;
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        border-bottom: 1px solid black;
-
-        &:first-child {
-            font-weight: bold;
-        }
-
-        p {
-            display: flex;
-            align-items: center;
-
-            svg {
-                margin-left: 0.3rem;
-            }
-        }
-
-        p:first-child {
-            padding-left: 1rem;
-        }
-
-        &:not(:first-child) {
-            width: 95%;
-            padding-block: 0.25rem;
-
-            p:first-child {
-                padding-left: 1rem;
-            }
-
-            p:last-child {
-                padding-right: 0.25rem;
-            }
+.Maintenance-Table {
+    &-Last-Header {
+        svg.MuiDataGrid-iconSeparator {
+            display: none;
         }
     }
+}
+.Maintenance-Table :focus {
+    outline: none !important;
 }
