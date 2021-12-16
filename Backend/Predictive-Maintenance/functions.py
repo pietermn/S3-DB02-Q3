@@ -37,7 +37,12 @@ def predictProductions(timestampBegin, timestampEnd, componentId, plId):
     x = data.iloc[:, :1].values
     y = data.iloc[:, 1:2].values
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1/3)
+    try:
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=1/3)
+
+    except:
+        return 0
 
     lr = LinearRegression()
     lr.fit(x_train, y_train)
