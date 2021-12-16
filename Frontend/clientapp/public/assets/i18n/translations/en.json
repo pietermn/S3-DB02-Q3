@@ -55,5 +55,7 @@
   "september.label": "September",
   "october.label": "October",
   "november.label": "November",
-  "december.label": "December"
+  "december.label": "December",
+  "predictedto.label": "Predicted to require maintenance on:",
+  "loading.label": "Loading"
 }

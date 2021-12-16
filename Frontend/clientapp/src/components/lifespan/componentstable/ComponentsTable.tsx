@@ -36,7 +36,6 @@ interface IPredictMaintenance {
 export default function ComponentsTable(props: IComponentsTable) {
     function PredictMaintenance(props: IPredictMaintenance) {
         const [date, setDate] = useState(new Date());
-        console.log("Test");
 
         async function asyncGetPrediction() {
             setDate(await ApiPredictMaintenance(props.component.id));
