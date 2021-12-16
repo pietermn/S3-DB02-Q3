@@ -6,20 +6,20 @@ import {
     FaWrench as MaintenanceIcon,
     FaCheck as GoodIcon,
 } from "react-icons/fa";
-import { Component, MaintenanceNotification } from "../../../globalTypes";
+import { Component } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
-import { CircularProgress, IconButton, LinearProgress, TextField } from "@mui/material";
+import { CircularProgress, IconButton, TextField } from "@mui/material";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { PredictMaintenance as ApiPredictMaintenance } from "../../../api/requests/components";
 import axios from "axios";
+import { MaintenanceContext } from "../../../context/MaintenanceContext";
 
 interface IComponentsTable {
     components: Component[];
     setSelectedComponent: (component: Component) => void;
-    getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
 
 const WarningTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -36,6 +36,7 @@ interface IPredictMaintenance {
 
 function ComponentsTable(props: IComponentsTable) {
     const [cancelSource] = useState(axios.CancelToken.source());
+    const { getComponentMaintenance } = useContext(MaintenanceContext);
 
     useEffect(() => {
         return () => {
@@ -97,7 +98,7 @@ function ComponentsTable(props: IComponentsTable) {
     ]);
     const [searchInput, setSearchInput] = useState("");
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-    let dgWidth = innerWidth * 0.8;
+    let dgWidth = innerWidth * 0.933;
 
     useEffect(() => {
         window.addEventListener("resize", () => {
@@ -113,18 +114,17 @@ function ComponentsTable(props: IComponentsTable) {
             headerAlign: "center",
             renderCell: (params) => {
                 switch (true) {
-                    case params.row.percentageMaintenance >= 100 &&
-                        props.getComponentNotifications(params.row.id).length > 0:
+                    case params.row.percentageMaintenance >= 100 && getComponentMaintenance(params.row.id).length > 0:
                         return <MaintenanceIcon className="red" />;
                     case params.row.percentageMaintenance >= 100:
                         return <ErrorIcon className="red" />;
                     case params.row.percentageMaintenance >= 95 &&
                         params.row.percentageMaintenance < 100 &&
-                        props.getComponentNotifications(params.row.id).length > 0:
+                        getComponentMaintenance(params.row.id).length > 0:
                         return <MaintenanceIcon className="orange" />;
                     case params.row.percentageMaintenance >= 95 && params.row.percentageMaintenance < 100:
                         return <WarnIcon className="orange" />;
-                    case props.getComponentNotifications(params.row.id).length > 0:
+                    case getComponentMaintenance(params.row.id).length > 0:
                         return <MaintenanceIcon className="green" />;
                     default:
                         return <GoodIcon className="green" />;
@@ -166,7 +166,7 @@ function ComponentsTable(props: IComponentsTable) {
             hideSortIcons: true,
             disableColumnMenu: true,
             renderCell: (params) => {
-                let m = props.getComponentNotifications(params.row.id);
+                let m = getComponentMaintenance(params.row.id);
                 return m.length ? (
                     m.length === 1 ? (
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
@@ -273,4 +273,4 @@ function compareProps(prevProps: IComponentsTable, nextProps: IComponentsTable) 
     return JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components);
 }
 
-export default memo(ComponentsTable);
+export default memo(ComponentsTable, compareProps);
