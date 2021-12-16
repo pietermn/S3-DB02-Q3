@@ -109,18 +109,20 @@ export default function ComponentHealthPage() {
                         <ActionsGraph componentId={selectedComponent.id} />
                     </section>
 
-                    <section className="Component-History-Overview">
-                        <HistoryTable HistoryMachines={selectedComponent.history} />
-                    </section>
-
-                    {selectedMaintenance.length && selectedMaintenance ? (
-                        <section className="Component-Maintenance-Table">
-                            <MaintenanceTable
-                                finishMaintenance={handleFinshMaintenace}
-                                maintenance={selectedMaintenance}
-                            />
+                    <section className="Component-History-Maintenance">
+                        <section className="Component-History-Overview">
+                            <HistoryTable HistoryMachines={selectedComponent.history} />
                         </section>
-                    ) : null}
+
+                        {selectedMaintenance.length && selectedMaintenance ? (
+                            <section className="Component-Maintenance-Table">
+                                <MaintenanceTable
+                                    finishMaintenance={handleFinshMaintenace}
+                                    maintenance={selectedMaintenance}
+                                />
+                            </section>
+                        ) : null}
+                    </section>
                 </section>
             )}
         </div>

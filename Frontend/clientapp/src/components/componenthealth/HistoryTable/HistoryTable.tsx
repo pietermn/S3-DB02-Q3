@@ -40,7 +40,7 @@ export default function HistoryTable(props: IHistoryTableProps) {
         },
         {
             field: "startDate",
-            width: dgWidth * 0.35,
+            width: dgWidth * 0.3,
             renderHeader: () => {
                 return <b>{t("begin.label")}</b>;
             },
@@ -52,7 +52,7 @@ export default function HistoryTable(props: IHistoryTableProps) {
         },
         {
             field: "endDate",
-            width: dgWidth * 0.35,
+            width: dgWidth * 0.3,
             headerClassName: "History-Table-Last-Header",
             renderHeader: () => {
                 return <b>{t("end.label")}</b>;
@@ -72,6 +72,7 @@ export default function HistoryTable(props: IHistoryTableProps) {
     return (
         <DataGrid
             disableColumnSelector
+            disableSelectionOnClick
             className="History-Table"
             columns={cols}
             rows={props.HistoryMachines}
@@ -81,31 +82,5 @@ export default function HistoryTable(props: IHistoryTableProps) {
             sortModel={sortModel}
             onSortModelChange={setSortModel}
         />
-        // <div className="History-Table">
-        //     <div className="thead">
-        //         <div className="row">
-        //             <p>{t("productionline.label")}</p>
-        //             <p>{t("begin.label")}</p>
-        //             <p>{t("end.label")}</p>
-        //         </div>
-        //     </div>
-        //     <main>
-        //         {props.HistoryMachines.sort(
-        //             (a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-        //         ).map((historyMachine: ProductLineHistory, index: number) => {
-        //             return (
-        //                 <div key={index} className="row">
-        //                     <p>{historyMachine.productionLine.name}</p>
-        //                     <p>{historyMachine.startDate.toLocaleString()}</p>
-        //                     {historyMachine.endDate.toLocaleString() !== "0001-01-01 00:00:00" ? (
-        //                         <p>{historyMachine.endDate.toLocaleString()}</p>
-        //                     ) : (
-        //                         <p>{t("componentstatus.label")}</p>
-        //                     )}
-        //                 </div>
-        //             );
-        //         })}
-        //     </main>
-        // </div>
     );
 }

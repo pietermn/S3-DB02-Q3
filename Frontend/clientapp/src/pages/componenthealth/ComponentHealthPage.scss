@@ -45,11 +45,21 @@
     height: 50%;
 }
 
-.Component-History-Overview {
-    height: 20%;
+.Component-History-Maintenance {
     padding-top: 2.5rem;
+    display: flex;
+    flex-direction: row;
+    height: 36%;
+    width: 100%;
+}
+
+.Component-History-Overview {
+    height: 100%;
+    width: 50%;
+    margin-right: 1rem;
 }
 
 .Component-Maintenance-Table {
-    height: 20%;
+    height: 100%;
+    width: 40%;
 }
