@@ -17,7 +17,7 @@ import { PredictMaintenance as ApiPredictMaintenance } from "../../../api/reques
 
 interface IComponentsTable {
     components: Component[];
-    setSelectedComponet: (component: Component) => void;
+    setSelectedComponent: (component: Component) => void;
     getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
 
@@ -256,7 +256,7 @@ export default function ComponentsTable(props: IComponentsTable) {
                 sortModel={sortModel}
                 onSortModelChange={setSortModel}
                 onRowClick={(data) => {
-                    props.setSelectedComponet(data.row as Component);
+                    props.setSelectedComponent(data.row as Component);
                 }}
                 loading={props.components.length === 0}
                 components={{
