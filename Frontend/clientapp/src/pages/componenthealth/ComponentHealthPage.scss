@@ -4,10 +4,6 @@
     height: 100%;
     width: 100%;
     display: grid;
-    // grid-template-areas:
-    //     "component-overview component-graph"
-    //     "component-overview history-overview"
-    //     "component-overview component-maintenance";
 
     grid-template-columns: 1fr 2fr;
 
@@ -42,21 +38,18 @@
 
 .Component-History-Side {
     height: 100%;
-    columns: 2;
-    display: grid;
-    grid-template-rows: 50% 40% 30%;
     overflow-y: auto;
 }
 
 .Component-Graph {
-    grid-row: 1;
+    height: 50%;
 }
 
 .Component-History-Overview {
-    grid-row: 2;
+    height: 20%;
     padding-top: 2.5rem;
 }
 
 .Component-Maintenance-Table {
-    grid-row: 3;
+    height: 20%;
 }

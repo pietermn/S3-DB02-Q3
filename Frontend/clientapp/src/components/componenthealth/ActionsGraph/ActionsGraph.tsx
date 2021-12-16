@@ -9,6 +9,7 @@ import { ProductionDate } from "../../../globalTypes";
 import "./ActionsGraph.scss";
 import ActionsGraphSkeleton from "./ActionsGraphSkeleton";
 import { useD3 } from "./useD3Hook";
+import axios, { CancelTokenSource } from "axios";
 
 interface IActionsGraph {
     componentId: number;
@@ -25,6 +26,7 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [endDate, setEndDate] = useState(dateInput(new Date("2021-06-01")));
     const [xKey, setXKey] = useState("first");
     const { t } = useTranslation();
+    const [cancelToken, setCancelToken] = useState<CancelTokenSource>(axios.CancelToken.source());
 
     function dateInput(date: Date) {
         const d = new Date(date);
@@ -140,17 +142,32 @@ export default function ActionsGraph(props: IActionsGraph) {
     );
 
     useEffect(() => {
+        async function CancelToken(cancel: CancelTokenSource) {
+            if (typeof cancelToken != typeof undefined && cancelToken) {
+                cancelToken.cancel("Operation canceled due to new request.");
+            }
+            //Save the cancel token for the current request
+            setCancelToken(cancel);
+        }
+
         async function AsyncGetActions() {
+            let cancelToken = axios.CancelToken.source();
             setIsLoading(true);
-            let newActions = await GetPreviousActions(props.componentId, beginDate, endDate);
+            await CancelToken(cancelToken);
+            let newActions = await GetPreviousActions(props.componentId, beginDate, endDate, cancelToken.token);
             setActions(newActions);
             setIsLoading(false);
             setloadingPredictive(true);
-            let newPredictedActions = await GetPredictedActions(props.componentId, beginDate, endDate);
+            let newPredictedActions = await GetPredictedActions(
+                props.componentId,
+                beginDate,
+                endDate,
+                cancelToken.token
+            );
             setloadingPredictive(false);
             setActions(newActions.concat(newPredictedActions));
         }
-
+        setIsLoading(false);
         AsyncGetActions();
     }, [props.componentId, beginDate, endDate]);
 

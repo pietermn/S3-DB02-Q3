@@ -2,14 +2,15 @@ version: '3.9'
 
 services:
   ts-node-docker:
+    container_name: nodefications
+    image: ${DOCKER_REGISTRY-}nodefications
     build:
       context: Backend/Nodefications
       dockerfile: Dockerfile
       target: base
+
     volumes:
       - ./:/home/node/app/src
-    container_name: ts-node-docker
-    image: ${DOCKER_REGISTRY-}nodefications
 
     environment:
       - ConnectionServer=db

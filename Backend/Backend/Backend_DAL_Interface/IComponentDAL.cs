@@ -10,5 +10,6 @@ namespace Backend_DAL_Interface
         public ComponentDTO GetComponent(int component_id);
         public List<ProductionsDTO> GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate);
         public void SetMaxAction(int component_id, int max_actions);
+        public int GetPreviousActionsPerDate(List<ProductionsDateTimespanDTO> timespans);
     }
 }

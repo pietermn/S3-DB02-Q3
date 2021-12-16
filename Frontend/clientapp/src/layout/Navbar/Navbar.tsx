@@ -10,6 +10,7 @@ import PageLoader from "../PageLoader";
 import "./NavbarStyles.scss";
 import { Badge } from "@material-ui/core";
 import i18n from "../../i18n";
+import { Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Stack } from "@mui/material";
 //@ts-ignore
 import ReactCountryFlag from "react-country-flag";
 
@@ -66,28 +67,29 @@ function NotificationDropdown({ title, icon, notifications }: INotifictionDropdo
             >
                 {icon}
             </Badge>
-            <div className="Notification-Dropdown-Content">
-                <h3>{title}</h3>
-                {notifications && notifications.length ? (
-                    notifications.map((n, i) => {
-                        return (
-                            <div
-                                onClick={() => {
-                                    history.push({
-                                        pathname: "/lifespan",
-                                    });
-                                    history.replace({ state: { componentId: n.componentId } });
-                                }}
-                            >
-                                {n.component}
-                                <br />
-                            </div>
-                        );
-                    })
-                ) : (
-                    <i>{t("everythinglooksgood.label")}</i>
-                )}
-            </div>
+            <Stack className="Notification-Dropdown-Stack" direction="row" spacing={2}>
+                <MenuList className="Notification-Dropdown-MenuList">
+                    {notifications && notifications.length ? (
+                        notifications.map((n, i) => {
+                            return (
+                                <MenuItem
+                                    key={n.id}
+                                    onClick={() => {
+                                        history.push({
+                                            pathname: "/lifespan",
+                                        });
+                                        history.replace({ state: { componentId: n.componentId } });
+                                    }}
+                                >
+                                    {n.component}
+                                </MenuItem>
+                            );
+                        })
+                    ) : (
+                        <i>{t("everythinglooksgood.label")}</i>
+                    )}
+                </MenuList>
+            </Stack>
         </div>
     );
 }
