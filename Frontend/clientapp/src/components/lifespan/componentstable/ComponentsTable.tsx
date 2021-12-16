@@ -16,7 +16,7 @@ import { styled } from "@mui/material/styles";
 
 interface IComponentsTable {
     components: Component[];
-    setSelectedComponet: (component: Component) => void;
+    setSelectedComponent: (component: Component) => void;
     getComponentNotifications: (componentId: number) => MaintenanceNotification[];
 }
 
@@ -117,9 +117,7 @@ export default function ComponentsTable(props: IComponentsTable) {
                             <b>({m.length})</b> {m[0].description}
                         </div>
                     )
-                ) : (
-                    <div></div>
-                );
+                ) : null;
             },
         },
         {
@@ -194,7 +192,7 @@ export default function ComponentsTable(props: IComponentsTable) {
                 sortModel={sortModel}
                 onSortModelChange={setSortModel}
                 onRowClick={(data) => {
-                    props.setSelectedComponet(data.row as Component);
+                    props.setSelectedComponent(data.row as Component);
                 }}
                 loading={props.components.length === 0}
                 components={{

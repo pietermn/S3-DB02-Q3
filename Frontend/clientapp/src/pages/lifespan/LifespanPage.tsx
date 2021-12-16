@@ -11,6 +11,7 @@ import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
+import { LinearProgress } from "@mui/material";
 
 type IComponentId = {
     componentId: number;
@@ -80,7 +81,7 @@ export default function LifespanPage() {
     }
 
     async function PredictMaintenance(componentId: number) {
-        setPredictedMaintenance("loading...");
+        setPredictedMaintenance("loading");
         let date = await ApiPredictMaintenance(componentId);
 
         if (selectedComponent?.maxActions === 1) {
@@ -134,9 +135,13 @@ export default function LifespanPage() {
                             />
                             <div className="MaxActions-Container">
                                 <p>
-                                    <b>Predicted to require maintenance on:</b>
+                                    <b>{t("predictedto.label")}</b>
                                     <br />
-                                    {predictedMaintenance}
+                                    {predictedMaintenance === "loading" ? (
+                                        <LinearProgress color="primary" className="LS-LinearProgress" />
+                                    ) : (
+                                        predictedMaintenance
+                                    )}
                                 </p>
                                 <button type="submit">
                                     <ImCheckmark />
@@ -215,7 +220,7 @@ export default function LifespanPage() {
                 {components && (
                     <ComponentsTable
                         components={components}
-                        setSelectedComponet={handleSelectedComponent}
+                        setSelectedComponent={handleSelectedComponent}
                         getComponentNotifications={getComponentMaintenance}
                     />
                 )}

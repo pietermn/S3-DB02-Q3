@@ -139,3 +139,10 @@
         height: 80%;
     }
 }
+
+.LS-LinearProgress {
+    background-color: rgba(map-get($map: $background, $key: "blue"), 0.4) !important;
+    > span {
+        background-color: map-get($map: $background, $key: "blue") !important;
+    }
+}
