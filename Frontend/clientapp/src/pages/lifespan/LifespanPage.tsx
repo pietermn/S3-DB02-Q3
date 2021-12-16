@@ -227,11 +227,7 @@ export default function LifespanPage() {
             )}
             <div className="center-table">
                 {components && (
-                    <ComponentsTable
-                        components={components}
-                        setSelectedComponent={handleSelectedComponent}
-                        getComponentNotifications={getComponentMaintenance}
-                    />
+                    <ComponentsTable components={components} setSelectedComponent={handleSelectedComponent} />
                 )}
             </div>
         </div>
