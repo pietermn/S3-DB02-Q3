@@ -16,9 +16,7 @@ namespace Backend_DTO.DTOs
         public int ProductionLineId { get; set; }
         public ProductionLineDTO ProductionLine { get; set; }
         public ComponentDTO Component { get; set; }
-        [JsonConverter(typeof(DateConverter))]
         public DateTime StartDate { get; set; }
-        [JsonConverter(typeof(DateConverter))]
         public DateTime EndDate { get; set; }
     }
 }

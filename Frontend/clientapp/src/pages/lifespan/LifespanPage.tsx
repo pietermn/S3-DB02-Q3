@@ -12,6 +12,7 @@ import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
 import { CircularProgress, LinearProgress } from "@mui/material";
+import axios, { CancelTokenSource } from "axios";
 
 type IComponentId = {
     componentId: number;
@@ -33,6 +34,7 @@ export default function LifespanPage() {
     const { t } = useTranslation();
     const { bool } = useContext(UpdaterContext);
     const [predictedMaintenance, setPredictedMaintenance] = useState("");
+    const [cancelSource, setCancelSource] = useState(axios.CancelToken.source());
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {
@@ -80,9 +82,19 @@ export default function LifespanPage() {
         setDescription("");
     }
 
+    async function CancelToken(cancel: CancelTokenSource) {
+        if (typeof cancelSource != typeof undefined && cancelSource) {
+            cancelSource.cancel("Operation canceled due to new request.");
+        }
+        //Save the cancel token for the current request
+        setCancelSource(cancel);
+    }
+
     async function PredictMaintenance(componentId: number) {
         setPredictedMaintenance("loading");
-        let date = await ApiPredictMaintenance(componentId);
+        let cancelToken = axios.CancelToken.source();
+        await CancelToken(cancelToken);
+        let date = await ApiPredictMaintenance(componentId, cancelToken.token);
 
         if (selectedComponent?.maxActions === 1) {
             setPredictedMaintenance("Cannot predict if no max actions is set");

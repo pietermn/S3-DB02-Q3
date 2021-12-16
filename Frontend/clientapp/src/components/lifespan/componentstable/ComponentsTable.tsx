@@ -14,6 +14,7 @@ import { CircularProgress, IconButton, LinearProgress, TextField } from "@mui/ma
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { PredictMaintenance as ApiPredictMaintenance } from "../../../api/requests/components";
+import axios from "axios";
 
 interface IComponentsTable {
     components: Component[];
@@ -34,12 +35,20 @@ interface IPredictMaintenance {
 }
 
 function ComponentsTable(props: IComponentsTable) {
+    const [cancelSource] = useState(axios.CancelToken.source());
+
+    useEffect(() => {
+        return () => {
+            cancelSource.cancel();
+        };
+    }, []);
+
     function PredictMaintenance(props: IPredictMaintenance) {
         const [date, setDate] = useState(new Date());
         const [loading, setLoading] = useState(true);
 
         async function asyncGetPrediction() {
-            setDate(await ApiPredictMaintenance(props.component.id));
+            setDate(await ApiPredictMaintenance(props.component.id, cancelSource.token));
             setLoading(false);
         }
 
@@ -158,8 +167,6 @@ function ComponentsTable(props: IComponentsTable) {
             disableColumnMenu: true,
             renderCell: (params) => {
                 let m = props.getComponentNotifications(params.row.id);
-                console.log(params.row.description, m);
-
                 return m.length ? (
                     m.length === 1 ? (
                         <div className="MuiDataGrid-cell MuiDataGrid-cell--textLeft">{m[0].description}</div>
@@ -263,10 +270,7 @@ function ComponentsTable(props: IComponentsTable) {
 }
 
 function compareProps(prevProps: IComponentsTable, nextProps: IComponentsTable) {
-    return (
-        JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components) &&
-        prevProps.getComponentNotifications === prevProps.getComponentNotifications
-    );
+    return JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components);
 }
 
 export default memo(ComponentsTable);

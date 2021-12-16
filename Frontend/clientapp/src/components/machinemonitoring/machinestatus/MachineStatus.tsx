@@ -87,7 +87,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .data(tagHours)
                 .join("g")
                 .attr("key", (h) => `HourTag ${h}`)
-                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale - 14}, 50)`)
+                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale}, 50)`)
                 .attr("font-size", 12)
                 .append("text")
                 .text((h) => {

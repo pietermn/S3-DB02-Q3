@@ -60,8 +60,8 @@ export default function HistoryTable(props: IHistoryTableProps) {
             disableColumnMenu: true,
             sortable: false,
             renderCell: (params) => {
-                return params.row.endDate.toLocaleString() !== "0001-01-01 00:00:00" ? (
-                    <p>{params.row.endDate.toLocaleString()}</p>
+                return new Date(params.row.endDate).getFullYear() !== 1 ? (
+                    <p>{new Date(params.row.endDate).toLocaleString()}</p>
                 ) : (
                     <p>{t("componentstatus.label")}</p>
                 );

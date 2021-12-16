@@ -49,7 +49,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
             renderCell: (params) => {
                 return (
                     <>
-                        {params.row.timeDone.toLocaleString() === "0001-01-01 00:00:00" ? (
+                        {new Date(params.row.timeDone).getFullYear() === 1 ? (
                             <p>
                                 {t("finish.label")}
                                 <CheckmarkIcon
@@ -59,7 +59,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
                                 />
                             </p>
                         ) : (
-                            <p>{params.row.timeDone.toLocaleString()}</p>
+                            <p>{new Date(params.row.timeDone).toLocaleString()}</p>
                         )}
                     </>
                 );
