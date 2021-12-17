@@ -128,7 +128,7 @@ namespace Backend_Logic.Containers
 
             foreach (ProductionsDateDTO productionsDateDTO in ProductionDates.OrderBy(p => p.CurrentDateTime))
             {
-                if (mockDate >= productionsDateDTO.CurrentDateTime && productionsDateDTO.CurrentDateTime >= new DateTime(2020, 9, 1))
+                if (mockDate > productionsDateDTO.CurrentDateTime && productionsDateDTO.CurrentDateTime >= new DateTime(2020, 9, 1))
                 {
                     newProductionDates.Add(productionsDateDTO);
                 }

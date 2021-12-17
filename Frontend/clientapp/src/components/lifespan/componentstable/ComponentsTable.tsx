@@ -39,8 +39,6 @@ function ComponentsTable(props: IComponentsTable) {
     const [cancelSource] = useState(axios.CancelToken.source());
     const { getComponentMaintenance } = useContext(MaintenanceContext);
 
-    console.log(props.predictedMaintenances);
-
     useEffect(() => {
         return () => {
             cancelSource.cancel();
@@ -100,12 +98,6 @@ function ComponentsTable(props: IComponentsTable) {
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = innerWidth * 0.975;
 
-    useEffect(() => {
-        window.addEventListener("resize", () => {
-            setInnerWidth(window.innerWidth);
-        });
-    }, []);
-
     const cols: GridColDef[] = [
         {
             field: "status",
@@ -139,7 +131,7 @@ function ComponentsTable(props: IComponentsTable) {
         {
             field: "description",
             headerName: t("name.label"),
-            width: dgWidth * 0.275,
+            width: dgWidth * 0.25,
             disableColumnMenu: true,
             sortable: false,
             renderHeader: () => {
@@ -258,6 +250,9 @@ function ComponentsTable(props: IComponentsTable) {
                     NoRowsOverlay: () => {
                         return null;
                     },
+                }}
+                onResize={() => {
+                    setInnerWidth(window.innerWidth);
                 }}
             />
         </div>
