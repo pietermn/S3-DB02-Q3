@@ -6,20 +6,20 @@ import {
     FaWrench as MaintenanceIcon,
     FaCheck as GoodIcon,
 } from "react-icons/fa";
-import { Component } from "../../../globalTypes";
+import { Component, ComponentPredictedMaintenance } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
 import { memo, useContext, useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
 import { CircularProgress, IconButton, TextField } from "@mui/material";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import { PredictMaintenance as ApiPredictMaintenance } from "../../../api/requests/components";
 import axios from "axios";
 import { MaintenanceContext } from "../../../context/MaintenanceContext";
 
 interface IComponentsTable {
     components: Component[];
     setSelectedComponent: (component: Component) => void;
+    predictedMaintenances: ComponentPredictedMaintenance[];
 }
 
 const WarningTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -32,32 +32,32 @@ const WarningTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 interface IPredictMaintenance {
     component: Component;
+    maintenance: Date;
 }
 
 function ComponentsTable(props: IComponentsTable) {
     const [cancelSource] = useState(axios.CancelToken.source());
     const { getComponentMaintenance } = useContext(MaintenanceContext);
 
+    console.log(props.predictedMaintenances);
+
     useEffect(() => {
         return () => {
             cancelSource.cancel();
         };
+        // eslint-disable-next-line
     }, []);
 
     function PredictMaintenance(props: IPredictMaintenance) {
-        const [date, setDate] = useState(new Date());
         const [loading, setLoading] = useState(true);
 
-        async function asyncGetPrediction() {
-            setDate(await ApiPredictMaintenance(props.component.id, cancelSource.token));
-            setLoading(false);
-        }
-
         useEffect(() => {
-            asyncGetPrediction();
+            if (new Date(props.maintenance).toLocaleString() !== new Date().toLocaleString()) {
+                setLoading(false);
+            }
         }, []);
 
-        if (props.component.maxActions == 1) {
+        if (props.component.maxActions === 1) {
             return (
                 <div className="Predict-Text">
                     <i>Cannot predict if no max actions is set</i>
@@ -65,7 +65,7 @@ function ComponentsTable(props: IComponentsTable) {
             );
         }
 
-        if (new Date(date).toLocaleDateString() === "01/01/1") {
+        if (new Date(props.maintenance).toLocaleDateString() === "01/01/1") {
             return (
                 <div className="Predict-Text">
                     <i>Cannot predict this component</i>
@@ -82,7 +82,7 @@ function ComponentsTable(props: IComponentsTable) {
         } else {
             return (
                 <div className="Predict-Text">
-                    <i>Predicted: {new Date(date).toLocaleDateString()}</i>
+                    <i>Predicted: {new Date(props.maintenance).toLocaleDateString()}</i>
                 </div>
             );
         }
@@ -98,7 +98,7 @@ function ComponentsTable(props: IComponentsTable) {
     ]);
     const [searchInput, setSearchInput] = useState("");
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-    let dgWidth = innerWidth * 0.933;
+    let dgWidth = innerWidth * 0.975;
 
     useEffect(() => {
         window.addEventListener("resize", () => {
@@ -139,7 +139,7 @@ function ComponentsTable(props: IComponentsTable) {
         {
             field: "description",
             headerName: t("name.label"),
-            width: dgWidth * 0.25,
+            width: dgWidth * 0.275,
             disableColumnMenu: true,
             sortable: false,
             renderHeader: () => {
@@ -176,7 +176,13 @@ function ComponentsTable(props: IComponentsTable) {
                         </div>
                     )
                 ) : params.row.percentageMaintenance > 70 && params.row.percentageMaintenance < 100 ? (
-                    <PredictMaintenance component={params.row} />
+                    <PredictMaintenance
+                        component={params.row}
+                        maintenance={
+                            props.predictedMaintenances.find((p) => p.componentId === params.row.id)?.maintenance ||
+                            new Date()
+                        }
+                    />
                 ) : (
                     <div></div>
                 );
@@ -209,19 +215,6 @@ function ComponentsTable(props: IComponentsTable) {
             disableColumnMenu: true,
             width: dgWidth * 0.1,
             renderCell: (params) => {
-                return <div>{params.row.percentageMaintenance}%</div>;
-            },
-        },
-        {
-            field: "warning",
-            headerName: "",
-            sortable: false,
-            filterable: false,
-            disableColumnMenu: true,
-            align: "center",
-            headerAlign: "center",
-            width: dgWidth * 0.05,
-            renderCell: (params) => {
                 if (params.row.maxActions === 1) {
                     return (
                         <WarningTooltip title={maw}>
@@ -230,6 +223,8 @@ function ComponentsTable(props: IComponentsTable) {
                             </IconButton>
                         </WarningTooltip>
                     );
+                } else {
+                    return <div>{params.row.percentageMaintenance}%</div>;
                 }
             },
         },
@@ -270,7 +265,10 @@ function ComponentsTable(props: IComponentsTable) {
 }
 
 function compareProps(prevProps: IComponentsTable, nextProps: IComponentsTable) {
-    return JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components);
+    return (
+        JSON.stringify(prevProps.components) === JSON.stringify(nextProps.components) &&
+        JSON.stringify(prevProps.predictedMaintenances) === JSON.stringify(nextProps.predictedMaintenances)
+    );
 }
 
 export default memo(ComponentsTable, compareProps);

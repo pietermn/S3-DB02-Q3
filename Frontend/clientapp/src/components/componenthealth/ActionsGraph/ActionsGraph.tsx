@@ -129,7 +129,7 @@ export default function ActionsGraph(props: IActionsGraph) {
                 .transition()
                 .duration(800)
                 .attr("fill", (d) => (d.isPredicted ? "#fff" : "#69b3a2"))
-                .attr("stroke", (d) => (d.isPredicted ? "#69b3a2" : ""))
+                .attr("stroke", "#69b3a2")
                 .attr("stroke-dasharray", (d) => (d.isPredicted ? 6 : 0))
                 .attr("x", (d, i) => x(`${getTimespan(d.currentTimespan, d.timespanIndicator)}`) || 0)
                 .attr("width", x.bandwidth())
@@ -169,6 +169,7 @@ export default function ActionsGraph(props: IActionsGraph) {
         }
         setIsLoading(false);
         AsyncGetActions();
+        // eslint-disable-next-line
     }, [props.componentId, beginDate, endDate]);
 
     useEffect(() => {

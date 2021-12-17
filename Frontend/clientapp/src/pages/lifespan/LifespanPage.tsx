@@ -2,8 +2,8 @@ import ComponentsTable from "../../components/lifespan/componentstable/Component
 import Modal from "react-modal";
 import "./LifespanPage.scss";
 import RemoveYesNo from "../../components/popover/RemoveYesNo";
-import { Component } from "../../globalTypes";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { Component, ComponentPredictedMaintenance } from "../../globalTypes";
+import { useContext, useEffect, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { NotificationContext } from "../../context/NotificationContext";
 import { GetComponents, PredictMaintenance as ApiPredictMaintenance } from "../../api/requests/components";
@@ -11,7 +11,7 @@ import { MaintenanceContext } from "../../context/MaintenanceContext";
 import { useHistory, useLocation } from "react-router";
 import { UpdaterContext } from "../../context/UpdaterContext";
 import { useTranslation } from "react-i18next";
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import axios, { CancelTokenSource } from "axios";
 
 type IComponentId = {
@@ -35,6 +35,7 @@ export default function LifespanPage() {
     const { bool } = useContext(UpdaterContext);
     const [predictedMaintenance, setPredictedMaintenance] = useState("");
     const [cancelSource, setCancelSource] = useState(axios.CancelToken.source());
+    const [predictedMaintenences, setPredictedMaintenences] = useState<ComponentPredictedMaintenance[]>([]);
 
     function findSelectedComponent(components: Component[]) {
         if (state && state.componentId && components) {
@@ -58,6 +59,20 @@ export default function LifespanPage() {
         GetComponentsAsync();
     }
 
+    async function GetAllPredictedMaintenances() {
+        let canceltoken = axios.CancelToken.source();
+        let maintenances: ComponentPredictedMaintenance[] = [];
+        let componentsPredicted: number = 0;
+        for (const c of components) {
+            if (c.percentageMaintenance > 70 && c.percentageMaintenance < 100) {
+                let date = await ApiPredictMaintenance(c.id, canceltoken.token);
+                componentsPredicted++;
+                maintenances.push({ componentId: c.id, maintenance: date });
+            }
+        }
+        setPredictedMaintenences(maintenances);
+    }
+
     useEffect(() => {
         if (state) {
             let c = components.find((c) => c.id === state.componentId);
@@ -70,6 +85,10 @@ export default function LifespanPage() {
 
     useEffect(() => {
         GetComponentsAsync();
+
+        if (components) {
+            GetAllPredictedMaintenances();
+        }
 
         return () => {
             history.replace({ state: undefined });
@@ -227,7 +246,11 @@ export default function LifespanPage() {
             )}
             <div className="center-table">
                 {components && (
-                    <ComponentsTable components={components} setSelectedComponent={handleSelectedComponent} />
+                    <ComponentsTable
+                        predictedMaintenances={predictedMaintenences}
+                        components={components}
+                        setSelectedComponent={handleSelectedComponent}
+                    />
                 )}
             </div>
         </div>

@@ -121,7 +121,6 @@ namespace Backend_Logic.Containers
             DateTime mockDate = new(2021, 6, 1);
             DateTime newEndDate = mockDate > endDate ? endDate : mockDate;
 
-            //List<ProductionsDTO> productions = _componentDAL.GetPreviousActions(component_id, beginDate, newEndDate);
             ComponentDTO component = _componentDAL.GetComponent(component_id);
 
             List<ProductionsDateDTO> ProductionDates = FillProductionDates((endDate - beginDate).Days, endDate, beginDate).OrderBy(pd => pd.CurrentDateTime).ToList();
@@ -129,7 +128,7 @@ namespace Backend_Logic.Containers
 
             foreach (ProductionsDateDTO productionsDateDTO in ProductionDates.OrderBy(p => p.CurrentDateTime))
             {
-                if (mockDate > productionsDateDTO.CurrentDateTime)
+                if (mockDate >= productionsDateDTO.CurrentDateTime && productionsDateDTO.CurrentDateTime >= new DateTime(2020, 9, 1))
                 {
                     newProductionDates.Add(productionsDateDTO);
                 }
@@ -173,27 +172,6 @@ namespace Backend_Logic.Containers
                     ProductionDates[i].Productions = _componentDAL.GetPreviousActionsPerDate(timespans);
                 }
             }
-
-
-
-            //foreach (ProductionsDTO production in productions)
-            //{
-            //    if (production.Timestamp < mockDate)
-            //    {
-            //        foreach (ProductionsDateDTO productionsDate in newProductionDates)
-            //        {
-            //            string timespanIndicator = productionsDate.TimespanIndicator;
-            //            if ((timespanIndicator == "Day" && productionsDate.CurrentTimespan == production.Timestamp.Day.ToString())
-            //                || (timespanIndicator == "Week" && productionsDate.CurrentTimespan == GetWeekOfYear(production.Timestamp).ToString())
-            //                || (timespanIndicator == "Month" && productionsDate.CurrentTimespan == production.Timestamp.ToString("MMMM"))
-            //                || (timespanIndicator == "Year" && productionsDate.CurrentTimespan == production.Timestamp.Year.ToString())
-            //                || (timespanIndicator == "Decenium" && productionsDate.CurrentTimespan == (production.Timestamp.Year / 10).ToString()))
-            //            {
-            //                productionsDate.Productions++;
-            //            }
-            //        }
-            //    }
-            //}
 
             return newProductionDates;
         }

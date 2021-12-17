@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ProductLineHistory } from "../../../globalTypes";
-import { DataGrid, GridColDef, GridSortModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import "./HistoryTable.scss";
 import { useEffect, useState } from "react";
 

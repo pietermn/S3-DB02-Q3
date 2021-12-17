@@ -82,6 +82,7 @@ export default function ComponentsTable(props: ITableProps) {
                 onRowClick={(data) => {
                     props.SetComponent(data.row as Component);
                 }}
+                selectionModel={props.selectedComponentId}
             />
         </div>
     );
