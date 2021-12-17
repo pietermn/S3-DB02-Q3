@@ -5,6 +5,7 @@
     align-items: center;
     text-align: left;
     padding-top: 1rem;
+    box-sizing: border-box;
 }
 
 .MM-Table {
@@ -58,7 +59,7 @@
     }
 
     tbody {
-        height: 85vh;
+        height: 80vh;
         overflow-y: auto;
         overflow-x: hidden;
 

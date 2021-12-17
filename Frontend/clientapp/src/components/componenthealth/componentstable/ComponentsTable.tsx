@@ -24,12 +24,6 @@ export default function ComponentsTable(props: ITableProps) {
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = (innerWidth / 3 - 96) * 0.8;
 
-    useEffect(() => {
-        window.addEventListener("resize", () => {
-            setInnerWidth(window.innerWidth);
-        });
-    }, []);
-
     const cols: GridColDef[] = [
         {
             field: "description",
@@ -83,6 +77,9 @@ export default function ComponentsTable(props: ITableProps) {
                     props.SetComponent(data.row as Component);
                 }}
                 selectionModel={props.selectedComponentId}
+                onResize={() => {
+                    setInnerWidth(window.innerWidth);
+                }}
             />
         </div>
     );

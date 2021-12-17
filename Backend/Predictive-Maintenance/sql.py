@@ -3,6 +3,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 credentials = "mysql+mysqlconnector://root:root@db:3306/db"
+# credentials = "mysql+mysqlconnector://root:root@localhost:3307/db"
 
 
 def getProductions(table, plid, start, end):
