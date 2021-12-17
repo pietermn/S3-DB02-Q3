@@ -76,3 +76,8 @@ export type ProductionDate = {
     productions: number;
     isPredicted: boolean;
 };
+
+export type ComponentPredictedMaintenance = {
+    componentId: number;
+    maintenance: Date;
+};

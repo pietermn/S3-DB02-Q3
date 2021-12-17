@@ -39,6 +39,12 @@ services:
     networks:
       - custom-network
 
+    volumes:
+      - ./Backend/Predictive-Maintenance:/app
+
+    ports:
+      - '6000:5000'
+
     depends_on:
       db:
         condition: service_healthy
