@@ -3,7 +3,8 @@ import "./MaintenanceTableStyle.scss";
 import { FaCheck as CheckmarkIcon } from "react-icons/fa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import i18n from "../../../i18n";
 
 interface IMaintenanceTable {
     maintenance: Maintenance[];
@@ -11,15 +12,9 @@ interface IMaintenanceTable {
 }
 
 export default function MaintenanceTable({ maintenance, finishMaintenance }: IMaintenanceTable) {
-    const { t } = useTranslation();
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
     let dgWidth = (innerWidth / 3) * 0.8;
-
-    useEffect(() => {
-        window.addEventListener("resize", () => {
-            setInnerWidth(window.innerWidth);
-        });
-    }, []);
+    const { t } = useTranslation();
 
     function rows(): Maintenance[] {
         let rows = [...maintenance].sort((a, b) => new Date(b.timeDone).getTime() - new Date(a.timeDone).getTime());
@@ -35,7 +30,7 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
         {
             field: "description",
             renderHeader: () => {
-                return <b>{t("maintenance.label")}</b>;
+                return <b key={i18n.language}>{t("maintenance.label")}</b>;
             },
             sortable: false,
             width: dgWidth * 0.45,
@@ -43,10 +38,11 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
         },
         {
             field: "timeDone",
-            headerClassName: "Maintenance-Table-Last-Header",
+            headerName: t("performed.label"),
             renderHeader: () => {
-                return <b>{t("performed.label")}</b>;
+                return <b key={i18n.language}>{t("performed.label")}</b>;
             },
+            headerClassName: "Maintenance-Table-Last-Header",
             sortable: false,
             width: dgWidth * 0.45,
             disableColumnMenu: true,
@@ -81,6 +77,9 @@ export default function MaintenanceTable({ maintenance, finishMaintenance }: IMa
             rowsPerPageOptions={[]}
             pageSize={100}
             hideFooter
+            onResize={() => {
+                setInnerWidth(window.innerWidth);
+            }}
         />
     );
 }
