@@ -48,6 +48,7 @@ export default function LifespanPage() {
         PredictMaintenance(component.id);
         setMaxActionsInput(component.maxActions);
     }
+
     async function GetComponentsAsync() {
         let components: Component[] = await GetComponents();
 
