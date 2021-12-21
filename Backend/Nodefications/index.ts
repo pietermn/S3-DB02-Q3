@@ -53,6 +53,7 @@ io.on("connection", async (socket) => {
             );
             if (await ActionsChecker.componentNeedsNotification(data.componentId)) {
                 if (await sql.componentHasNoNotification(data.componentId)) {
+                    await ActionsChecker.allComponentsNeedNotification();
                     sql.addNotification(data.componentId, "");
                 }
             } else {
@@ -60,7 +61,6 @@ io.on("connection", async (socket) => {
             }
         }
 
-        await ActionsChecker.allComponentsNeedNotification();
         io.emit("Add Notification List", await sql.getNotifications());
     });
 
