@@ -113,7 +113,7 @@ namespace Backend_DAL
                     int counter = 0;
                     foreach (ProductionsDateTimespanDTO timespan in timespans)
                     {
-                        cmdText += $"(Timestamp >= '{timespan.Begin:yyyy-MM-dd}' AND Timestamp <= '{timespan.End:yyyy-MM-dd}' AND ProductionLineId = {timespan.ProductionLineId})";
+                        cmdText += $"(Timestamp >= '{timespan.Begin:yyyy-MM-dd HH:mm:ss}' AND Timestamp <= '{timespan.End:yyyy-MM-dd HH:mm:ss}' AND ProductionLineId = {timespan.ProductionLineId})";
                         if (counter != timespans.Count - 1)
                         {
                             cmdText += " OR ";

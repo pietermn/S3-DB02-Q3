@@ -43,7 +43,7 @@ services:
       - ./Backend/Predictive-Maintenance:/app
 
     ports:
-      - '6000:5000'
+      - '5900:5000'
 
     depends_on:
       db:

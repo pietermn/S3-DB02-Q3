@@ -48,61 +48,62 @@ namespace Backend_Logic.Containers
 
             if (dayDifference <= 10)
             {
-                for (int i = 0; i < dayDifference; i++)
+                int dayDifferences = (int)(endDate - beginDate).TotalDays;
+                for (int i = 0; i < dayDifferences + 1; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Day",
-                        CurrentTimespan = endDate.AddDays(-i).Day.ToString(),
-                        CurrentDateTime = endDate.AddDays(-i)
+                        CurrentTimespan = beginDate.AddDays(i).Day.ToString(),
+                        CurrentDateTime = beginDate.AddDays(i)
                     });
                 }
             }
             else if (dayDifference > 10 && dayDifference < 7 * 10)
             {
-                int forloopMax = dayDifference % 7 == 0 ? dayDifference / 7 : dayDifference / 7 + 1;
-                for (int i = 0; i < forloopMax; i++)
+                int weekDifferences = (int)(endDate - beginDate).TotalDays / 7 + 1;
+                for (int i = 0; i < weekDifferences; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Week",
-                        CurrentTimespan = GetWeekOfYear(endDate.AddDays(-i * 7)).ToString(),
-                        CurrentDateTime = endDate.AddDays(-i * 7)
+                        CurrentTimespan = GetWeekOfYear(beginDate.AddDays(i * 7)).ToString(),
+                        CurrentDateTime = beginDate.AddDays(i * 7)
                     });
                 }
             }
             else if (dayDifference > 7 * 10 && dayDifference < 30 * 10)
             {
-                int forloopMax = dayDifference % 30 == 0 ? dayDifference / 30 : dayDifference / 30 + 1;
-                for (int i = 0; i < forloopMax; i++)
+                int monthDifferences = ((endDate.Year - beginDate.Year) * 12) + endDate.Month - beginDate.Month + 1;
+                for (int i = 0; i < monthDifferences; i++)
                 {
-                    DateTime currentDatetime = new(endDate.AddMonths(-i).Year, endDate.AddMonths(-i).Month, i == forloopMax - 1 ? beginDate.Day : 1);
+                    DateTime currentDatetime = new(beginDate.AddMonths(i).Year, beginDate.AddMonths(i).Month, i == 0 ? beginDate.Day : 1);
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Month",
-                        CurrentTimespan = endDate.AddMonths(-i).ToString("MMMM"),
+                        CurrentTimespan = beginDate.AddMonths(i).ToString("MMMM"),
                         CurrentDateTime = currentDatetime
                     });
                 }
             }
             else if (dayDifference > 30 * 10 && dayDifference < 365 * 10)
             {
-                int forloopMax = dayDifference % 365 == 0 ? dayDifference / 365 : dayDifference / 365 + 1;
-                for (int i = 0; i < forloopMax; i++)
+                int yearDifferences = endDate.Year - beginDate.Year + 1;
+                for (int i = 0; i < yearDifferences; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
                         TimespanIndicator = "Year",
-                        CurrentTimespan = endDate.AddYears(-i).Year.ToString(),
-                        CurrentDateTime = endDate.AddYears(-i)
+                        CurrentTimespan = beginDate.AddYears(i).Year.ToString(),
+                        CurrentDateTime = new(beginDate.AddYears(i).Year, i == 0 ? beginDate.AddYears(i).Month : 1, i == 0 ? beginDate.AddYears(i).Day : 1)
                     });
                 }
             }
             else
             {
-                int forloopMax = dayDifference % 3650 == 0 ? dayDifference / 3650 : dayDifference / 3650 + 1;
+                int yearDifferences = endDate.Year / 10 - beginDate.Year / 10 + 1;
 
-                for (int i = 0; i < forloopMax; i++)
+                for (int i = 0; i < yearDifferences; i++)
                 {
                     productionsDateDTOs.Add(new ProductionsDateDTO()
                     {
@@ -114,6 +115,15 @@ namespace Backend_Logic.Containers
             }
 
             return productionsDateDTOs;
+        }
+
+        public static DateTime CalculateLastProductionsDate(DateTime dateTime, DateTime endDate, string timespanIndicator)
+        {
+            return timespanIndicator switch
+            {
+                "Day" => dateTime.AddDays(1),
+                _ => endDate.AddDays(1)
+            };
         }
 
         public List<ProductionsDateDTO> GetPreviousActions(int component_id, DateTime beginDate, DateTime endDate)
@@ -161,7 +171,7 @@ namespace Backend_Logic.Containers
                             {
                                 ProductionLineId = history.ProductionLineId,
                                 Begin = history.StartDate > ProductionDates[i].CurrentDateTime ? history.StartDate : ProductionDates[i].CurrentDateTime,
-                                End = newHistoryEndDate
+                                End = CalculateLastProductionsDate(ProductionDates[i].CurrentDateTime, endDate, ProductionDates[i].TimespanIndicator)
                             };
                             timespans.Add(timespan);
                         }
@@ -186,12 +196,12 @@ namespace Backend_Logic.Containers
             long beginTimestamp = ((DateTimeOffset)begin).ToUnixTimeSeconds();
             long endTimestamp = ((DateTimeOffset)end).ToUnixTimeSeconds();
 
-            var data = await $"http://ml-python:5000/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
+            //var data = await $"http://ml-python:5000/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
+            var data = await $"http://localhost:5900/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
             string value = data.GetStringAsync().Result;
             int valueInt = Convert.ToInt32(value.Split(".")[0]);
             return Convert.ToInt32(valueInt) / 60;
         }
-
 
         public DateTime PredictMaxActions(int component_id)
         {
@@ -239,7 +249,7 @@ namespace Backend_Logic.Containers
                 return new();
             }
 
-            List<ProductionsDateDTO> productionsDates = FillProductionDates((int)(endDate - beginDate).TotalDays, endDate, beginDate);
+            List<ProductionsDateDTO> productionsDates = FillProductionDates((int)(endDate - beginDate).TotalDays, endDate, beginDate > mockDate ? beginDate : mockDate);
             List<ProductionsDateDTO> newProductionDates = new();
             List<ProductionLineHistoryDTO> historys = _componentDAL.GetComponent(component_id).History;
 
@@ -286,7 +296,8 @@ namespace Backend_Logic.Containers
                                 if (history.StartDate < newEndDate && newEndDate > newProductionDates[i].CurrentDateTime)
                                 {
                                     DateTime currentBeginDate = history.StartDate < newProductionDates[i].CurrentDateTime ? newProductionDates[i].CurrentDateTime : history.StartDate;
-                                    newProductionDates[i].Productions += (int)(endDate - currentBeginDate).TotalMinutes * average;
+                                    DateTime currentEndDate = history.EndDate > endDate || history.EndDate.Year == 1 ? endDate : history.EndDate;
+                                    newProductionDates[i].Productions += (int)(currentEndDate - currentBeginDate).TotalMinutes * average;
                                 }
                             }
 

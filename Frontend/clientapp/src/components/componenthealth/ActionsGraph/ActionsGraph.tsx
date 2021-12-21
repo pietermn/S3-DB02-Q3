@@ -17,7 +17,7 @@ interface IActionsGraph {
 
 export default function ActionsGraph(props: IActionsGraph) {
     const [actions, setActions] = useState<ProductionDate[]>([]);
-    let maxValue = Math.max(...actions.map((w) => w.productions), 0);
+    let maxValue = calculateMaxValue();
     const [myWidth] = useState((window.innerWidth / 3) * 2 * 0.75);
     const [myHeight] = useState((window.innerHeight / 2) * 0.6);
     const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +27,21 @@ export default function ActionsGraph(props: IActionsGraph) {
     const [xKey, setXKey] = useState("first");
     const { t } = useTranslation();
     const [cancelToken, setCancelToken] = useState<CancelTokenSource>(axios.CancelToken.source());
+
+    function calculateMaxValue() {
+        let productions: number[] = [];
+        let foundFirstPredicted = false;
+
+        for (let i = 0; i < actions.length; i++) {
+            if (actions[i].isPredicted && i != 0 && !foundFirstPredicted) {
+                foundFirstPredicted = true;
+                productions.push(actions[i].productions + actions[i - 1].productions);
+            } else {
+                productions.push(actions[i].productions);
+            }
+        }
+        return Math.max(...productions.map((w) => w), 0);
+    }
 
     function dateInput(date: Date) {
         const d = new Date(date);
@@ -70,6 +85,16 @@ export default function ActionsGraph(props: IActionsGraph) {
             return t(currentTimespan.toLowerCase() + ".label");
         }
         return currentTimespan;
+    }
+
+    function calculateOverlap(d: ProductionDate) {
+        if (d.isPredicted) {
+            let overlap = [...actions].find((a) => !a.isPredicted && a.currentTimespan == d.currentTimespan);
+            if (overlap) {
+                return overlap.productions;
+            }
+        }
+        return 0;
     }
 
     ref = useD3(
@@ -133,7 +158,7 @@ export default function ActionsGraph(props: IActionsGraph) {
                 .attr("stroke-dasharray", (d) => (d.isPredicted ? 6 : 0))
                 .attr("x", (d, i) => x(`${getTimespan(d.currentTimespan, d.timespanIndicator)}`) || 0)
                 .attr("width", x.bandwidth())
-                .attr("y", (d) => y(d.productions))
+                .attr("y", (d) => y(d.productions + calculateOverlap(d)))
                 .attr("height", (d) => y(0) - y(d.productions))
                 .style("transform", "translateY(5px)");
             console.log("drawing graph");
