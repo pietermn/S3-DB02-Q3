@@ -30,14 +30,9 @@ namespace Backend_DAL
         {
             Env.TraversePath().Load();
             string connectionString = Env.GetString("ConnectionString");
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                optionsBuilder.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db;SslMode=None");
-            }
-            else
-            {
-                optionsBuilder.UseMySQL(connectionString);
-            }
+            string connectionServer = Env.GetString("ConnectionServer");
+            string connectionPort = Env.GetString("ConnectionPort");
+            optionsBuilder.UseMySQL($"Server={connectionServer};Port={connectionPort};{connectionString}");
 
             optionsBuilder
                     .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();

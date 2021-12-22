@@ -65,19 +65,25 @@ io.on("connection", async (socket) => {
     });
 
     socket.on("Add Maintenance", async (data: { componentId: number; description: string }) => {
-        await axios.post(`${connectionString}/maintenance`, data);
+        await axios.post(`${connectionString}/maintenance`, data).catch(() => {
+            console.log("Backend is down");
+        });
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
 
     socket.on("Finish Maintenance", async (data: { maintenanceId: number }) => {
-        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`);
+        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`).catch(() => {
+            console.log("Backend is down");
+        });
         sql.resetComponentUses(data.maintenanceId);
         io.emit("Update Components");
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
 
     socket.on("Remove Maintenance", async (data: { maintenanceId: number }) => {
-        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`);
+        await axios.put(`${connectionString}/maintenance?maintenanceId=${data.maintenanceId}`).catch(() => {
+            console.log("Backend is down");
+        });
         io.emit("Update Components");
         io.emit("Add Maintenance List", await GetMaintenanceNotifcations());
     });
@@ -141,14 +147,18 @@ server.listen(port, () => {
 
 async function GetMaintenanceNotifcations() {
     const data = (
-        await axios.get<
-            {
-                id: number;
-                component: { description: string };
-                componentId: number;
-                description: string;
-            }[]
-        >(`${connectionString}/maintenance/readall?done=false`)
+        await axios
+            .get<
+                {
+                    id: number;
+                    component: { description: string };
+                    componentId: number;
+                    description: string;
+                }[]
+            >(`${connectionString}/maintenance/readall?done=false`)
+            .catch(() => {
+                throw new Error("Backend is down");
+            })
     ).data;
     let maintenanceNotifications: NotificationType[] = [];
 

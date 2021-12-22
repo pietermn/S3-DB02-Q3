@@ -4,6 +4,7 @@
     "description": "Notifications service for Q3 school project",
     "dependencies": {
         "axios": "^0.24.0",
+        "dotenv": "^10.0.0",
         "express": "^4.17.1",
         "mysql": "^2.18.1",
         "socket.io": "^4.2.0"

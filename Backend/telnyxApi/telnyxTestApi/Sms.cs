@@ -2,6 +2,7 @@
 using Flurl;
 using Flurl.Http;
 using System.Threading.Tasks;
+using DotNetEnv;
 
 namespace telnyxApi
 {
@@ -14,7 +15,7 @@ namespace telnyxApi
 
         public Sms(string To, string Text)
         {
-            from = "+15802031449";
+            from = Env.GetString("Telynx_Phonenumber");
             to = To;
             text = Text;
         }

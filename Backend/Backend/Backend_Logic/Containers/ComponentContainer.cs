@@ -7,6 +7,7 @@ using Backend_DAL_Interface;
 using Backend_DTO.DTOs;
 using Backend_Logic.Models;
 using Backend_Logic_Interface.Containers;
+using DotNetEnv;
 using Flurl.Http;
 
 namespace Backend_Logic.Containers
@@ -193,11 +194,11 @@ namespace Backend_Logic.Containers
 
         private static async Task<int> GetAverageProductions(DateTime begin, DateTime end, int componentId, int productionlineId)
         {
+            
             long beginTimestamp = ((DateTimeOffset)begin).ToUnixTimeSeconds();
             long endTimestamp = ((DateTimeOffset)end).ToUnixTimeSeconds();
 
-            //var data = await $"http://ml-python:5000/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
-            var data = await $"http://localhost:5900/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
+            var data = await $"{Env.GetString("mlbackend_api_url")}/averageactions/{beginTimestamp}/{endTimestamp}/{componentId}/{productionlineId}".GetAsync();
             string value = data.GetStringAsync().Result;
             int valueInt = Convert.ToInt32(value.Split(".")[0]);
             return Convert.ToInt32(valueInt) / 60;

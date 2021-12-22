@@ -35,7 +35,9 @@ export default function ActionsGraph(props: IActionsGraph) {
         for (let i = 0; i < actions.length; i++) {
             if (actions[i].isPredicted && i != 0 && !foundFirstPredicted) {
                 foundFirstPredicted = true;
-                productions.push(actions[i].productions + actions[i - 1].productions);
+                if (actions[i].currentTimespan === actions[i - 1].currentTimespan) {
+                    productions.push(actions[i].productions + actions[i - 1].productions);
+                }
             } else {
                 productions.push(actions[i].productions);
             }

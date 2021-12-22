@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetEnv;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,7 +39,9 @@ namespace telnyxApi
                 app.UseDeveloperExceptionPage();
             }
 
-            TelnyxConfiguration.SetApiKey("KEY017DDC6FBD4A3415357E9E9FEE190F7D_b6DLYXTS59mA3LdIiCc7NF");
+            Env.TraversePath().Load();
+
+            TelnyxConfiguration.SetApiKey(Env.GetString("Telnyx_SMS_KEY"));
 
             app.UseHttpsRedirection();
 

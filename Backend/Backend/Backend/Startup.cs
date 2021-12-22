@@ -36,13 +36,9 @@ namespace Backend
         {
             Env.TraversePath().Load();
             string connectionString = Env.GetString("ConnectionString");
-            if (string.IsNullOrEmpty(connectionString))
-            {
-            services.AddDbContext<Q3Context>(options => options.UseMySQL("server=localhost;port=3307;user=root;password=root;database=db;SslMode=None"));
-            } else
-            {
-                services.AddDbContext<Q3Context>(options => options.UseMySQL(connectionString));
-            }
+            string connectionServer = Env.GetString("ConnectionServer");
+            string connectionPort = Env.GetString("ConnectionPort");
+            services.AddDbContext<Q3Context>(options => options.UseMySQL($"Server={connectionServer};Port={connectionPort};{connectionString}"));
 
             services.AddScoped<IComponentContainer, ComponentContainer>();
             services.AddScoped<IMachineContainer, MachineContainer>();

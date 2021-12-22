@@ -1,9 +1,14 @@
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+import os
 
-credentials = "mysql+mysqlconnector://root:root@db:3306/db"
-# credentials = "mysql+mysqlconnector://root:root@localhost:3307/db"
+credentials = "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(
+    os.getenv('ConnectionUser'),
+    os.getenv('ConnectionPassword'),
+    os.getenv('ConnectionServer'),
+    os.getenv("ConnectionPort"),
+    os.getenv("ConnectionDB"))
 
 
 def getProductions(table, plid, start, end):

@@ -16,6 +16,7 @@ services:
       - ConnectionServer=db
       - ConnectionPort=3306
       - api_url=http://q3-backend:5200
+      - telnyx_api_url=http://q3-sms:5100
     expose:
       - '5300'
     ports:
@@ -77,7 +78,10 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://+:5200
-      - ConnectionString=server=db;port=3306;user=root;password=root;database=db;SslMode=None
+      - ConnectionString=${ConnectionString}
+      - ConnectionServer=db
+      - ConnectionPort=3306
+      - mlbackend_api_url=http://ml-python:5000
 
     ports:
       - "5200:5200"
@@ -102,6 +106,9 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://+:5100
+      - Telnyx_SMS_KEY=${Telnyx_SMS_KEY}
+      - Telynx_Phonenumber=${Telynx_Phonenumber}
+      - Phonenumber_Receiver=${Phonenumber_Receiver}
 
     ports:
       - "5400:5100"
@@ -111,22 +118,22 @@ services:
       db:
         condition: service_healthy
 
-  Q3-Backend-Authentication:
-    container_name: Q3-Backend-Authentication
-    image: ${DOCKER_REGISTRY-}q3backendauthentication
-    build:
-      context: Backend/Authentication
-      dockerfile: Authentication/Dockerfile
+  # Q3-Backend-Authentication:
+  #   container_name: Q3-Backend-Authentication
+  #   image: ${DOCKER_REGISTRY-}q3backendauthentication
+  #   build:
+  #     context: Backend/Authentication
+  #     dockerfile: Authentication/Dockerfile
 
-    environment:
-      - ASPNETCORE_URLS=http://+:5100
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:5100
 
-    ports:
-      - "5100:5100"
-      - "5101:5101"
+  #   ports:
+  #     - "5100:5100"
+  #     - "5101:5101"
 
-    networks:
-      - custom-network
+  #   networks:
+  #     - custom-network
 
   db:
     image: mariadb:10.5

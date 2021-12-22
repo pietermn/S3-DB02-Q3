@@ -20,8 +20,10 @@ namespace Backend_DAL
         public static MySqlConnection GetConnection()
         {
             Env.TraversePath().Load();
-            string connectionString = !string.IsNullOrEmpty(Env.GetString("ConnectionString")) ? Env.GetString("ConnectionString") : "Server=localhost;Uid=root;Database=db;Pwd=root;Port=3307;Allow Zero Datetime=True;SslMode=None";
-            MySqlConnection GeneralConnection = new(connectionString);
+            string connectionString = Env.GetString("ConnectionString");
+            string connectionServer = Env.GetString("ConnectionServer");
+            string connectionPort = Env.GetString("ConnectionPort");
+            MySqlConnection GeneralConnection = new($"Server={connectionServer};Port={connectionPort};{connectionString}");
             return GeneralConnection;
         }
     }
