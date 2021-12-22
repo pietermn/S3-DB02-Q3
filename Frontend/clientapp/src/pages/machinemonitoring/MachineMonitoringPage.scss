@@ -10,7 +10,7 @@
 
 .MM-Table {
     width: 100%;
-    max-width: 75vw;
+    max-width: 90vw;
     border-spacing: 0;
     overflow-x: hidden;
 
@@ -25,9 +25,15 @@
         display: flex;
         align-items: center;
 
-        &:last-child {
-            justify-content: flex-end;
+        &:last-child,
+        &:nth-child(2) {
+            justify-content: center;
         }
+    }
+
+    th:nth-child(3) {
+        padding-left: 2rem;
+        box-sizing: border-box;
     }
 
     tr {
@@ -41,11 +47,11 @@
         box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.25);
 
         th {
-            width: 10%;
+            width: 7.5%;
             font-size: x-large;
 
             &:nth-child(2) {
-                width: 15%;
+                width: 10%;
             }
 
             &:nth-child(3) {
@@ -53,7 +59,8 @@
             }
 
             &:last-child {
-                text-align: right;
+                width: 20%;
+                text-align: center;
             }
         }
     }
@@ -64,10 +71,10 @@
         overflow-x: hidden;
 
         td {
-            width: 10%;
+            width: 7.5%;
 
             &:nth-child(2) {
-                width: 15%;
+                width: 10%;
             }
 
             &:nth-child(3) {
@@ -76,6 +83,7 @@
 
             &:last-child {
                 text-align: right;
+                width: 20%;
             }
         }
     }

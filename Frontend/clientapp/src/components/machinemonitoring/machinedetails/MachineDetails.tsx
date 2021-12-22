@@ -95,7 +95,7 @@ export default function MachineDetails(props: IMachineDetails) {
                 >
                     {uptime && uptime.length ? (
                         uptime[uptime.length - 1].active ? (
-                            <OnlineIcon className="IconSpin" />
+                            <OnlineIcon />
                         ) : (
                             <OfflineIcon />
                         )
@@ -110,9 +110,9 @@ export default function MachineDetails(props: IMachineDetails) {
                 <td>
                     {props.components?.length ? (
                         props.components.length === 1 ? (
-                            props.components[0].description.length > 10 ? (
+                            props.components[0].description.length > 30 ? (
                                 <ComponentNameTooltip title={props.components[0].description}>
-                                    <div>{props.components[0].description.substr(0, 9)}...</div>
+                                    <div>{props.components[0].description.substr(0, 29)}...</div>
                                 </ComponentNameTooltip>
                             ) : (
                                 props.components[0].description
@@ -123,7 +123,7 @@ export default function MachineDetails(props: IMachineDetails) {
                             >
                                 <div>
                                     <b>({props.components.length})</b>{" "}
-                                    {props.components?.length ? props.components[0].description.substr(0, 6) : null}...
+                                    {props.components?.length ? props.components[0].description.substr(0, 26) : null}...
                                 </div>
                             </ComponentNameTooltip>
                         )
