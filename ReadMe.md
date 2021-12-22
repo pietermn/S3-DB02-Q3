@@ -8,7 +8,7 @@
  - Go in to the Frontend folder and open `clientapp` in powershell
  - Type `npm i` and press enter
  - Type `npm run start` and press enter
- - Open localhost:3000 in your browser
+ - Open `localhost:3000` in your browser
 
 ### MacOS
  - Add database file to `/Databases/Q3_Data/data`
@@ -17,4 +17,4 @@
  - Go in to the Frontend folder and open `clientapp` in terminal
  - Type `npm i` and press enter
  - Type `npm run start` and press enter
- - Open localhost:3000 in your browser
+ - Open `localhost:3000` in your browser
