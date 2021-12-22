@@ -129,12 +129,17 @@ export default function ActionsGraph(props: IActionsGraph) {
 
             svg.select(".y-axis-label")
                 .attr("display", "absolute")
-                .attr("transform", "translate(13, 20)rotate(-90)")
+                .attr("transform", "translate(0, 20)rotate(-90)")
                 .style("text-anchor", "end");
 
             svg.select(".arrow-right")
                 .attr("display", "absolute")
                 .attr("transform", "translate(" + (myWidth - 10) + " ," + (myHeight + margin.top + 8) + ")")
+                .attr("fontSize", "1rem");
+
+            svg.select(".arrow-up")
+                .attr("display", "absolute")
+                .attr("transform", "translate(-12, 0)")
                 .attr("fontSize", "1rem");
 
             svg.select(".x-axis")
@@ -235,7 +240,9 @@ export default function ActionsGraph(props: IActionsGraph) {
                         {actions.length ? t(actions[0].timespanIndicator.toLowerCase() + "s.label") : ""})
                     </text>
                     <text className="y-axis-label">{t("actions.label")}</text>
-                    <ArrowUpIcon />
+                    <g className="arrow-up">
+                        <ArrowUpIcon />
+                    </g>
                     <g className="arrow-right">
                         <ArrowRightIcon />
                     </g>
