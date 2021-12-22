@@ -43,9 +43,8 @@
         &:last-child {
             padding-right: $padding;
             position: relative;
-            justify-content: center !important;
-            margin-left: 1.25rem;
-            margin-right: -1.25rem;
+            margin-left: 2.25rem;
+            margin-right: -2.25rem;
 
             &:before {
                 right: 0;
