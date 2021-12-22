@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { CancelTokenSource } from "axios";
+import { FaArrowRight as RightArrowIcon, FaBan as BanIcon } from "react-icons/fa";
 
 interface IMachineDetails {
     id: number;
@@ -69,9 +70,8 @@ export default function MachineDetails(props: IMachineDetails) {
                 {props.components && props.components.length ? (
                     props.components.map((component, index) => {
                         return (
-                            <h2
-                                className="redirect-component"
-                                key={index}
+                            <div
+                                className="redirect-component-container"
                                 onClick={() =>
                                     history.push({
                                         pathname: "/chealth",
@@ -79,8 +79,11 @@ export default function MachineDetails(props: IMachineDetails) {
                                     })
                                 }
                             >
-                                {component.description}
-                            </h2>
+                                <h2 className="redirect-component" key={index}>
+                                    {component.description}
+                                </h2>
+                                <RightArrowIcon />
+                            </div>
                         );
                     })
                 ) : (
@@ -96,6 +99,8 @@ export default function MachineDetails(props: IMachineDetails) {
                     {uptime && uptime.length ? (
                         uptime[uptime.length - 1].active ? (
                             <OnlineIcon className="IconSpin" />
+                        ) : props.components && props.components.length === 0 ? (
+                            <BanIcon className="grey" />
                         ) : (
                             <OfflineIcon />
                         )

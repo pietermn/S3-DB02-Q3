@@ -14,6 +14,10 @@
         background-color: rgba(0, 0, 0, 0.15);
     }
 
+    .grey {
+        color: grey;
+    }
+
     td {
         height: calc(100% - 1rem);
         $padding: 1.5rem;
@@ -105,8 +109,24 @@
         margin: 0.25rem 1rem;
     }
 
-    & .redirect-component {
+    & .redirect-component-container {
         cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-block: 0.5rem;
+        transition: 0.5s ease;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        svg {
+            margin-right: 2rem;
+            font-size: 24px;
+            color: map-get($map: $background, $key: "blue");
+        }
     }
 
     & button {

@@ -5,6 +5,7 @@ import {
     FaTimes as ErrorIcon,
     FaWrench as MaintenanceIcon,
     FaCheck as GoodIcon,
+    FaBan as BanIcon,
 } from "react-icons/fa";
 import { Component, ComponentPredictedMaintenance } from "../../../globalTypes";
 import "./ComponentsTableStyle.scss";
@@ -15,6 +16,7 @@ import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { MaintenanceContext } from "../../../context/MaintenanceContext";
+import { FaBan } from "react-icons/fa";
 
 interface IComponentsTable {
     components: Component[];
@@ -106,6 +108,8 @@ function ComponentsTable(props: IComponentsTable) {
             headerAlign: "center",
             renderCell: (params) => {
                 switch (true) {
+                    case params.row.maxActions === 1:
+                        return <BanIcon className="grey" />;
                     case params.row.percentageMaintenance >= 100 && getComponentMaintenance(params.row.id).length > 0:
                         return <MaintenanceIcon className="red" />;
                     case params.row.percentageMaintenance >= 100:
