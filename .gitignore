@@ -294,3 +294,5 @@ sketch
 Databases/Q3_Data/data/db.sql.txt
 Backend/Predictive-Maintenance/SklearnComponentModels
 Backend/Predictive-Maintenance/SklearnProductionlineModels
+
+*.env
