@@ -26,6 +26,7 @@
 
         &:first-child {
             padding-left: $padding;
+            margin-right: -$padding;
             position: relative;
 
             &:before {
@@ -36,7 +37,6 @@
 
         &:nth-child(2) {
             justify-content: center;
-            margin-left: -2rem;
             margin-right: 2rem;
         }
 
@@ -144,22 +144,6 @@
             cursor: pointer;
             background: rgba(map-get($map: $background, $key: "blue"), 0.8);
         }
-    }
-}
-
-.IconSpin {
-    animation-name: spin;
-    animation-duration: 5000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
     }
 }
 
