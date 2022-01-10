@@ -28,11 +28,11 @@ namespace Backend_Logic.Containers
             int hour = DateTime.Now.Hour;
             int minute = DateTime.Now.Minute;
             int second = DateTime.Now.Second;
-            DateTime fakeNow = new(2020, 9, 26, hour, minute, second);
+            DateTime fakeNow = new DateTime(2020, 9, 26, hour, minute, second).AddHours(1);
 
             if (productions.Count == 0)
             {
-                return new() { new Uptime(0, productionLine_id, DateTime.Now.AddDays(-1), System.DateTime.Now, false) };
+                return new() { new Uptime(0, productionLine_id, DateTime.Now.AddDays(-1).AddHours(1), DateTime.Now.AddHours(1), false) };
             }
 
             Uptime firstUptime = new(count, productionLine_id, fakeNow.AddDays(-1), productions[0].Timestamp, false);

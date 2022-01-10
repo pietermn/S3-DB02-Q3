@@ -22,8 +22,6 @@ export default function MachineStatus(props: IMachineStatus) {
 
     function drawUptime() {
         if (props.uptime && props.uptime.length) {
-            // props.uptime.forEach((u) => (u.begin = new Date(new Date(u.begin).getTime() + 3600000)));
-            // props.uptime.forEach((u) => (u.end = new Date(new Date(u.end).getTime() + 3600000)));
             const svgDocument = document.querySelector(`#${props.name}`)?.clientWidth;
             const svgWidth = svgDocument || 0;
             const xDiff =
@@ -37,7 +35,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .select(`#${props.name}`)
                 .append("svg")
                 .attr("height", 64)
-                .attr("width", "110%")
+                .attr("width", "100%")
                 .attr("margin", 0);
 
             let scaleBand: number[] = [];
@@ -87,7 +85,7 @@ export default function MachineStatus(props: IMachineStatus) {
                 .data(tagHours)
                 .join("g")
                 .attr("key", (h) => `HourTag ${h}`)
-                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale}, 50)`)
+                .attr("transform", (h) => `translate(${h * hourScale - diffTotalH * hourScale - 43}, 50)`)
                 .attr("font-size", 12)
                 .append("text")
                 .text((h) => {
