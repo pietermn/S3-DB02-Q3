@@ -53,7 +53,12 @@ export const GetPredictedActions = async (
 };
 
 export const PredictMaintenance = async (component_id: number, cancelToken: CancelToken) => {
-    return (await Api.get<Date>(`component/predictmaxactions/${component_id}`, { cancelToken })).data;
+    let maintenance: Date = new Date();
+    await Api.get<Date>(`component/predictmaxactions/${component_id}`, { cancelToken }).then((res) => {
+        maintenance = res.data;
+    });
+
+    return maintenance;
 };
 
 export const GetAllMaintenance = async (component_id: number) => {

@@ -37,6 +37,13 @@ services:
       context: Backend/Predictive-Maintenance
       dockerfile: Dockerfile
 
+    environment:
+      - ConnectionServer=db
+      - ConnectionPort=3306
+      - ConnectionPassword=${ConnectionPassword}
+      - ConnectionUser=${ConnectionUser}
+      - ConnectionDB=${ConnectionDB}
+
     networks:
       - custom-network
 

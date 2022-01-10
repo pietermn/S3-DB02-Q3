@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { ProductLineHistory } from "../../../globalTypes";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import "./HistoryTable.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import i18n from "i18next";
 
 interface IHistoryTableProps {
