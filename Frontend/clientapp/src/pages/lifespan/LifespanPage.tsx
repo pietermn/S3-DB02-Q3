@@ -63,11 +63,9 @@ export default function LifespanPage() {
     async function GetAllPredictedMaintenances() {
         let canceltoken = axios.CancelToken.source();
         let maintenances: ComponentPredictedMaintenance[] = [];
-        let componentsPredicted: number = 0;
         for (const c of components) {
             if (c.percentageMaintenance > 70 && c.percentageMaintenance < 100) {
                 let date = await ApiPredictMaintenance(c.id, canceltoken.token);
-                componentsPredicted++;
                 maintenances.push({ componentId: c.id, maintenance: date });
             }
         }

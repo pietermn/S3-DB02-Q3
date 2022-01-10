@@ -16,7 +16,6 @@ import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { MaintenanceContext } from "../../../context/MaintenanceContext";
-import { FaBan } from "react-icons/fa";
 
 interface IComponentsTable {
     components: Component[];
@@ -55,6 +54,8 @@ function ComponentsTable(props: IComponentsTable) {
             if (new Date(props.maintenance).toLocaleString() !== new Date().toLocaleString()) {
                 setLoading(false);
             }
+
+            // eslint-disable-next-line
         }, []);
 
         if (props.component.maxActions === 1) {

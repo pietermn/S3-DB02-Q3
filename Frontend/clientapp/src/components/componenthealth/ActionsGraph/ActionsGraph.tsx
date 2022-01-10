@@ -33,7 +33,7 @@ export default function ActionsGraph(props: IActionsGraph) {
         let foundFirstPredicted = false;
 
         for (let i = 0; i < actions.length; i++) {
-            if (actions[i].isPredicted && i != 0 && !foundFirstPredicted) {
+            if (actions[i].isPredicted && i !== 0 && !foundFirstPredicted) {
                 foundFirstPredicted = true;
                 if (actions[i].currentTimespan === actions[i - 1].currentTimespan) {
                     productions.push(actions[i].productions + actions[i - 1].productions);
@@ -91,7 +91,7 @@ export default function ActionsGraph(props: IActionsGraph) {
 
     function calculateOverlap(d: ProductionDate) {
         if (d.isPredicted) {
-            let overlap = [...actions].find((a) => !a.isPredicted && a.currentTimespan == d.currentTimespan);
+            let overlap = [...actions].find((a) => !a.isPredicted && a.currentTimespan === d.currentTimespan);
             if (overlap) {
                 return overlap.productions;
             }
