@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { FaTimes as OfflineIcon, FaCog as OnlineIcon } from "react-icons/fa";
 import MachineStatus from "../machinestatus/MachineStatus";
 import Modal from "react-modal";
-import "./MachineDetails.scss";
 import { Component, Uptime } from "../../../globalTypes";
 import { useHistory } from "react-router-dom";
 import { getUptimesFromLastDayById } from "../../../api/requests/uptime";
@@ -11,7 +9,14 @@ import { useTranslation } from "react-i18next";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { CancelTokenSource } from "axios";
-import { FaArrowRight as RightArrowIcon, FaBan as BanIcon } from "react-icons/fa";
+import {
+    FaArrowRight as RightArrowIcon,
+    FaPause as PauseIcon,
+    FaPlay as PlayIcon,
+    FaStop as StopIcon,
+} from "react-icons/fa";
+import "./MachineDetails.scss";
+import { IconButton } from "@mui/material";
 
 interface IMachineDetails {
     id: number;
@@ -30,12 +35,24 @@ const ComponentNameTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
+const StatusTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        fontSize: 14,
+    },
+}));
+
 export default function MachineDetails(props: IMachineDetails) {
     const { bool } = useContext(UpdaterContext);
     const [show, setShow] = useState(false);
     const [uptime, setUptime] = useState<Uptime[]>([]);
     const history = useHistory();
     const { t } = useTranslation();
+
+    const stopTitle = t("stoptitle.label");
+    const playTitle = t("playtitle.label");
+    const pauseTitle = t("pausetitle.label");
 
     if (bool) {
         getUptime();
@@ -98,14 +115,30 @@ export default function MachineDetails(props: IMachineDetails) {
                 >
                     {uptime && uptime.length ? (
                         uptime[uptime.length - 1].active ? (
-                            <OnlineIcon className="IconSpin" />
+                            <StatusTooltip title={playTitle}>
+                                <IconButton disableRipple className="green">
+                                    <PlayIcon className="IconSpin" />
+                                </IconButton>
+                            </StatusTooltip>
                         ) : props.components && props.components.length === 0 ? (
-                            <BanIcon className="grey" />
+                            <StatusTooltip title={stopTitle}>
+                                <IconButton disableRipple>
+                                    <StopIcon className="grey" />
+                                </IconButton>
+                            </StatusTooltip>
                         ) : (
-                            <OfflineIcon />
+                            <StatusTooltip title={pauseTitle}>
+                                <IconButton disableRipple className="red">
+                                    <PauseIcon />
+                                </IconButton>
+                            </StatusTooltip>
                         )
                     ) : (
-                        <OfflineIcon />
+                        <StatusTooltip title={pauseTitle}>
+                            <IconButton disableRipple className="red">
+                                <PauseIcon />
+                            </IconButton>
+                        </StatusTooltip>
                     )}
                 </td>
                 <td>{props.productionLine}</td>

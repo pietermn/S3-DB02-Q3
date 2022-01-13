@@ -59,5 +59,8 @@
   "predictedto.label": "Predicted to require maintenance on:",
   "loading.label": "Loading",
   "performed.label": "Perfomed on:",
-  "finish.label": "Finish now: "
+  "finish.label": "Finish now: ",
+  "pausetitle.label": "Productionline is off",
+  "stoptitle.label": "Productionline has no components on it",
+  "playtitle.label": "Productionline is currently producing products"
 }

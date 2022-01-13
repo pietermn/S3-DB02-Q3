@@ -59,5 +59,8 @@
   "predictedto.label": "Voruassichtlicher instandhaltung auf:",
   "loading.label": "Wird geladen",
   "performed.label": "Durchgeführt am:",
-  "finish.label": "Jetzt beenden: "
+  "finish.label": "Jetzt beenden: ",
+  "pausetitle.label": "Fließband ist aus",
+  "stoptitle.label": "Die Fließband enthält keine Komponenten",
+  "playtitle.label": "Fließband produziert derzeit Produkte"
 }

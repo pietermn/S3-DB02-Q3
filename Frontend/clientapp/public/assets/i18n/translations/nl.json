@@ -59,5 +59,8 @@
   "predictedto.label": "Voorspeld onderhoud op:",
   "loading.label": "Aan het laden",
   "performed.label": "Uitgevoerd op:",
-  "finish.label": "Nu afronden: "
+  "finish.label": "Nu afronden: ",
+  "pausetitle.label": "Productie lijn staat stil",
+  "stoptitle.label": "Productie lijn niet gekoppeld aan component",
+  "playtitle.label": "Productie lijn is aan het produceren"
 }

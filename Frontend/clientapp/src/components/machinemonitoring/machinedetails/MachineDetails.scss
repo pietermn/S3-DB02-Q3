@@ -18,6 +18,14 @@
         color: grey;
     }
 
+    .green {
+        color: map-get($map: $accent-colors, $key: "green");
+    }
+
+    .red {
+        color: map-get($map: $accent-colors, $key: "red");
+    }
+
     td {
         height: calc(100% - 1rem);
         $padding: 1.5rem;
