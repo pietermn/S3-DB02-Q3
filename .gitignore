@@ -296,3 +296,4 @@ Backend/Predictive-Maintenance/SklearnComponentModels
 Backend/Predictive-Maintenance/SklearnProductionlineModels
 
 *.env
+env
